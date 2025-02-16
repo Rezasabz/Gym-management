@@ -38,7 +38,7 @@
         <thead>
           <tr>
             <th>عکس پروفایل</th>
-            <th>نام کامل</th>
+            <th>نام</th>
             <th>شماره عضویت</th>
             <th>وضعیت عضویت</th>
             <th>تاریخ ثبت‌نام</th>
@@ -160,7 +160,8 @@
   </div>
 </div>
 </template>
-<script>
+<!-- <script>
+
 import { ref, computed } from "vue";
 
 export default {
@@ -286,4 +287,112 @@ export default {
     };
   },
 };
+</script> -->
+
+<script>
+import { ref, computed, onMounted } from 'vue';
+
+export default {
+  name: "UsersTableWithAddModal",
+  setup() {
+    const users = ref([]);
+    const searchQuery = ref("");
+    const showModal = ref(false);
+    const isEditMode = ref(false);
+    const editedUserId = ref(null);
+    const newUser = ref({
+      fullName: "",
+      memberId: "",
+      profilePic: "",
+      status: "فعال",
+      registrationDate: "",
+    });
+
+    // دریافت کاربران از دیتابیس هنگام بارگذاری صفحه
+    onMounted(async () => {
+      users.value = await window.electron.getUsers();
+    });
+
+    // فیلتر کردن کاربران براساس جستجو
+    const filteredUsers = computed(() => {
+      if (!searchQuery.value) return users.value;
+      return users.value.filter(
+        (user) =>
+          user.fullName.includes(searchQuery.value) ||
+          user.memberId.includes(searchQuery.value)
+      );
+    });
+
+    const resetNewUser = () => {
+      newUser.value = {
+        fullName: "",
+        memberId: "",
+        profilePic: "",
+        status: "فعال",
+        registrationDate: "",
+      };
+      editedUserId.value = null;
+      isEditMode.value = false;
+    };
+
+    const openAddModal = () => {
+      resetNewUser();
+      isEditMode.value = false;
+      showModal.value = true;
+    };
+
+    const openEditModal = (user) => {
+      newUser.value = { ...user };
+      editedUserId.value = user.id;
+      isEditMode.value = true;
+      showModal.value = true;
+    };
+
+    const closeModal = () => {
+      showModal.value = false;
+      resetNewUser();
+    };
+
+    // ارسال فرم (افزودن یا ویرایش)
+    const submitForm = async () => {
+      if (isEditMode.value) {
+        // ویرایش کاربر
+        await window.electron.updateUser({ ...newUser.value, id: editedUserId.value });
+      } else {
+        // افزودن کاربر جدید
+        await window.electron.addUser(newUser.value);
+      }
+      users.value = await window.electron.getUsers();  // به‌روزرسانی لیست کاربران
+      closeModal();
+    };
+
+    // توابع عملیات
+    const viewUser = (user) => {
+      alert(`نمایش اطلاعات کاربر: ${user.fullName}`);
+    };
+
+    const deleteUser = async (id) => {
+      if (confirm("آیا از حذف این کاربر مطمئن هستید؟")) {
+        await window.electron.deleteUser(id);
+        users.value = await window.electron.getUsers();  // به‌روزرسانی لیست کاربران
+      }
+    };
+
+    return {
+      users,
+      searchQuery,
+      filteredUsers,
+      showModal,
+      newUser,
+      isEditMode,
+      openAddModal,
+      openEditModal,
+      closeModal,
+      submitForm,
+      viewUser,
+      deleteUser,
+    };
+  },
+};
+
 </script>
