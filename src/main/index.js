@@ -100,6 +100,71 @@ app.whenReady().then(() => {
     ipcMain.on('ping', () => console.log('pong'))
     initDatabase();
 
+    // دریافت کاربران
+    ipcMain.handle('fetch-users', async() => {
+        return new Promise((resolve, reject) => {
+            db.all("SELECT * FROM users", [], (err, rows) => {
+                if (err) {
+                    console.error('Error fetching users', err);
+                    reject(err);
+                } else {
+                    resolve(rows);
+                }
+            });
+        });
+    });
+
+    // افزودن کاربر جدید
+    ipcMain.handle('add-user', async(_, user) => {
+        return new Promise((resolve, reject) => {
+            const { profilePic, fullName, memberId, status, registrationDate } = user;
+            db.run(`
+          INSERT INTO users (profilePic, fullName, memberId, status, registrationDate)
+          VALUES (?, ?, ?, ?, ?)
+      `, [profilePic, fullName, memberId, status, registrationDate], function(err) {
+                if (err) {
+                    console.error('Error adding user', err);
+                    reject(err);
+                } else {
+                    resolve({ id: this.lastID });
+                }
+            });
+        });
+    });
+
+    // به‌روزرسانی کاربر
+    ipcMain.handle('update-user', async(_, user) => {
+        return new Promise((resolve, reject) => {
+            const { id, profilePic, fullName, memberId, status, registrationDate } = user;
+            db.run(`
+          UPDATE users 
+          SET profilePic = ?, fullName = ?, memberId = ?, status = ?, registrationDate = ?
+          WHERE id = ?
+      `, [profilePic, fullName, memberId, status, registrationDate, id], function(err) {
+                if (err) {
+                    console.error('Error updating user', err);
+                    reject(err);
+                } else {
+                    resolve({ changes: this.changes });
+                }
+            });
+        });
+    });
+
+    // حذف کاربر
+    ipcMain.handle('delete-user', async(_, userId) => {
+        return new Promise((resolve, reject) => {
+            db.run("DELETE FROM users WHERE id = ?", [userId], function(err) {
+                if (err) {
+                    console.error('Error deleting user', err);
+                    reject(err);
+                } else {
+                    resolve({ changes: this.changes });
+                }
+            });
+        });
+    });
+
     createWindow()
 
     app.on('activate', function() {

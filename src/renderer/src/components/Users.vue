@@ -17,7 +17,7 @@
 
 
 
-<div class="p-6">
+  <div class="p-6">
     <!-- بخش جستجو و دکمه افزودن کاربر -->
     <div class="flex md:flex-row justify-between mb-4 gap-2">
       <input
@@ -289,7 +289,7 @@ export default {
 };
 </script> -->
 
-<script>
+<!-- <script>
 import { ref, computed, onMounted } from 'vue';
 
 export default {
@@ -393,6 +393,103 @@ export default {
       deleteUser,
     };
   },
+};
+
+</script> -->
+
+<script>
+export default {
+  data() {
+    return {
+      users: [],
+      newUser: {
+        fullName: '',
+        memberId: '',
+        profilePic: '',
+        status: 'فعال',
+        registrationDate: new Date().toISOString().split('T')[0]
+      },
+      showModal: false,
+      isEditMode: false,
+      searchQuery: '',
+      selectedUser: null
+    };
+  },
+  computed: {
+    filteredUsers() {
+      return this.users.filter(user => 
+        user.fullName.includes(this.searchQuery) || 
+        user.memberId.includes(this.searchQuery)
+      );
+    }
+  },
+  methods: {
+    async fetchUsers() {
+      try {
+        this.users = await window.api.getUsers();
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    },
+    openAddModal() {
+      this.newUser = {
+        fullName: '',
+        memberId: '',
+        profilePic: '',
+        status: 'فعال',
+        registrationDate: new Date().toISOString().split('T')[0]
+      };
+      this.isEditMode = false;
+      this.showModal = true;
+    },
+    openEditModal(user) {
+      this.selectedUser = { ...user };
+      this.newUser = { ...user };
+      this.isEditMode = true;
+      this.showModal = true;
+    },
+    closeModal() {
+      this.showModal = false;
+    },
+    async submitForm() {
+      if (this.isEditMode) {
+        await this.updateUser();
+      } else {
+        await this.addUser();
+      }
+      await this.fetchUsers();
+      this.closeModal();
+    },
+    async addUser() {
+      try {
+        console.log("New User Data:", this.newUser); // بررسی مقدار قبل از ارسال
+        const addedUser = await window.api.addUser({ ...this.newUser }); // ارسال نسخه‌ای از شیء
+        if (addedUser) {
+          this.users.push(addedUser);
+        }
+      } catch (error) {
+        console.error('Error adding user:', error);
+      }
+    },
+    async updateUser() {
+      try {
+        await window.api.updateUser({ ...this.newUser });
+      } catch (error) {
+        console.error('Error updating user:', error);
+      }
+    },
+    async deleteUser(userId) {
+      try {
+        await window.api.deleteUser({ ...this.newUser });
+        this.users = this.users.filter(user => user.id !== userId);
+      } catch (error) {
+        console.error('Error deleting user:', error);
+      }
+    }
+  },
+  async mounted() {
+    await this.fetchUsers();
+  }
 };
 
 </script>
