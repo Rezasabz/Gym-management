@@ -31,10 +31,13 @@ function initDatabase() {
             db.run(`
                 CREATE TABLE IF NOT EXISTS users (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    profilePic TEXT,
-                    fullName TEXT,
+                    firstName TEXT,
+                    lastName TEXT,
                     memberId TEXT,
+                    phone TEXT,
                     status TEXT,
+                    emergencyPhone TEXT,
+                    address TEXT,
                     registrationDate TEXT
                 )
             `, (err) => {
@@ -53,8 +56,8 @@ module.exports = { initDatabase, db };
 function createWindow() {
     // Create the browser window.
     const mainWindow = new BrowserWindow({
-        width: 900,
-        height: 670,
+        width: 1024,
+        height: 768,
         show: false,
         autoHideMenuBar: true,
         ...(process.platform === 'linux' ? { icon } : {}),
@@ -73,6 +76,23 @@ function createWindow() {
         return { action: 'deny' }
     })
 
+    // close window
+    // mainWindow.on('close', (event) => {
+    //     const choice = dialog.showMessageBoxSync({
+    //         type: 'question',
+    //         buttons: ['Yes', 'No'],
+    //         defaultId: 0,
+    //         message: 'Are you sure you want to quit?'
+    //     })
+
+    //     if (choice === 1) {
+    //         event.preventDefault()
+    //     }
+    // })
+
+    // Open the DevTools.
+    mainWindow.webContents.openDevTools()
+
     // HMR for renderer base on electron-vite cli.
     // Load the remote URL for development or the local html file for production.
     if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
@@ -81,6 +101,7 @@ function createWindow() {
         mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
     }
 }
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -117,11 +138,11 @@ app.whenReady().then(() => {
     // افزودن کاربر جدید
     ipcMain.handle('add-user', async(_, user) => {
         return new Promise((resolve, reject) => {
-            const { profilePic, fullName, memberId, status, registrationDate } = user;
+            const { firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate } = user;
             db.run(`
-          INSERT INTO users (profilePic, fullName, memberId, status, registrationDate)
-          VALUES (?, ?, ?, ?, ?)
-      `, [profilePic, fullName, memberId, status, registrationDate], function(err) {
+          INSERT INTO users (firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+      `, [firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate], function(err) {
                 if (err) {
                     console.error('Error adding user', err);
                     reject(err);
@@ -135,12 +156,12 @@ app.whenReady().then(() => {
     // به‌روزرسانی کاربر
     ipcMain.handle('update-user', async(_, user) => {
         return new Promise((resolve, reject) => {
-            const { id, profilePic, fullName, memberId, status, registrationDate } = user;
+            const { id, firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate } = user;
             db.run(`
           UPDATE users 
-          SET profilePic = ?, fullName = ?, memberId = ?, status = ?, registrationDate = ?
+          SET firstName = ?, lastName = ?, memberId = ?, phone = ?, status = ?, emergencyPhone = ?, address = ?, registrationDate = ?
           WHERE id = ?
-      `, [profilePic, fullName, memberId, status, registrationDate, id], function(err) {
+      `, [firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate, id], function(err) {
                 if (err) {
                     console.error('Error updating user', err);
                     reject(err);
@@ -159,6 +180,8 @@ app.whenReady().then(() => {
                     console.error('Error deleting user', err);
                     reject(err);
                 } else {
+                    console.log("ID =>", userId);
+                    console.log('Deleted rows:', this.changes);
                     resolve({ changes: this.changes });
                 }
             });
@@ -192,13 +215,13 @@ app.on('before-quit', () => {
 // مدیریت پیام‌های ارتباطی بین Renderer و Main
 
 // ipcMain.on('insert-user', (event, user) => {
-//     addUser(user.profilePic, user.fullName, user.memberId, user.status, user.registrationDate, (err, newUser) => {
+//     addUser(user.profilePic, user.firstName, user.memberId, user.status, user.registrationDate, (err, newUser) => {
 //         event.reply('user-inserted', err ? { error: err.message } : newUser);
 //     });
 // });
 
 // ipcMain.on('update-user', (event, user) => {
-//     updateUser(user.id, user.profilePic, user.fullName, user.memberId, user.status, user.registrationDate, (err, updatedUser) => {
+//     updateUser(user.id, user.profilePic, user.firstName, user.memberId, user.status, user.registrationDate, (err, updatedUser) => {
 //         event.reply('user-updated', err ? { error: err.message } : updatedUser);
 //     });
 // });
