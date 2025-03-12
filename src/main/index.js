@@ -5,6 +5,7 @@ import icon from '../../resources/icon.png?asset'
 const path = require('path');
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
+import moment from 'jalali-moment';
 // import { addUser, updateUser, deleteUser, getUsers } from './database/database.js';
 
 let db;
@@ -47,6 +48,26 @@ function initDatabase() {
                     console.log('Users table is ready.');
                 }
             });
+            // ایجاد جدول payments
+            db.run(`
+            CREATE TABLE IF NOT EXISTS payments (
+                paymentId INTEGER PRIMARY KEY AUTOINCREMENT,
+                userId INTEGER,
+                firstName TEXT,
+                lastName TEXT,
+                amount REAL NOT NULL,
+                paymentDate TEXT DEFAULT CURRENT_TIMESTAMP,
+                paymentMethod TEXT NOT NULL,
+                status TEXT DEFAULT 'pending',
+                FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+            )
+          `, (err) => {
+                if (err) {
+                    console.error('Error creating payments table', err);
+                } else {
+                    console.log('Payments table is ready.');
+                }
+            });
         }
     });
 }
@@ -63,7 +84,8 @@ function createWindow() {
         ...(process.platform === 'linux' ? { icon } : {}),
         webPreferences: {
             preload: join(__dirname, '../preload/index.js'),
-            sandbox: false
+            sandbox: false,
+            nodeIntegration: true,
         }
     })
 
@@ -135,7 +157,95 @@ app.whenReady().then(() => {
         });
     });
 
+    // دریافت وضعیت کاربر
+    ipcMain.handle('get-user-status', async(_, userId) => {
+        return new Promise((resolve, reject) => {
+            db.get('SELECT registrationDate, status FROM users WHERE id = ?', [userId], (err, row) => {
+                if (err) {
+                    console.error('Error fetching user status', err);
+                    reject(err);
+                } else {
+                    // تبدیل تاریخ شمسی به میلادی
+                    // تبدیل تاریخ شمسی به میلادی
+                    const [year, month, day] = row.registrationDate.split('-').map(Number); // فرض می‌کنیم تاریخ شمسی به فرمت YYYY-MM-DD ذخیره شده
+                    const gregorianDate = moment(moment.from(row.registrationDate, "fa", "jYYYY/jMM/jDD").locale("en").format("YYYY-MM-DD")); // تبدیل تاریخ شمسی به میلادی
+
+                    // تاریخ شمسی به میلادی تبدیل شده
+                    const registrationDate = new Date(gregorianDate.year(), gregorianDate.month(), gregorianDate.date());
+
+                    // محاسبه تاریخ انقضا (یک ماه بعد از تاریخ ثبت‌نام)
+                    const expirationDate = moment(gregorianDate).add(30, "days");
+
+                    const currentTime = new Date();
+                    // // تاریخ ثبت‌نام کاربر را دریافت کنید
+                    // const registrationDate = new Date(row.registrationDate);
+
+                    // // محاسبه تاریخ انقضا (یک ماه بعد از تاریخ ثبت‌نام)
+                    // const expirationDate = new Date(registrationDate.getTime() + 30 * 24 * 60 * 60 * 1000); // 30 روز
+
+                    // const currentTime = new Date();
+
+                    // اگر تاریخ انقضا گذشته باشد، وضعیت را "منقضی شده" تغییر دهید
+                    if (currentTime > expirationDate) {
+                        db.run('UPDATE users SET status = ? WHERE id = ?', ['منقضی شده', userId], function(err) {
+                            if (err) {
+                                console.error('Error updating user status', err);
+                                reject(err);
+                            } else {
+                                console.log('User status updated to expired');
+                            }
+                        });
+                    } else {
+                        // اگر هنوز اعتبار دارند، وضعیت را "فعال" نگه دارید
+                        db.run('UPDATE users SET status = ? WHERE id = ?', ['فعال', userId], function(err) {
+                            if (err) {
+                                console.error('Error updating user status', err);
+                                reject(err);
+                            } else {
+                                console.log('User status updated to enable');
+                            }
+                        });
+                    }
+
+                    resolve(row); // بازگرداندن اطلاعات کاربر
+                }
+            });
+        });
+    });
+
+
     // افزودن کاربر جدید
+    ipcMain.handle('add-user-with-payment', async(_, user) => {
+        return new Promise((resolve, reject) => {
+            const { firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate, paymentAmount, paymentMethod, paymentStatus } = user;
+
+            db.run(`
+                INSERT INTO users (firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            `, [firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate], function(err) {
+                if (err) {
+                    console.error('Error adding user', err);
+                    reject(err);
+                } else {
+                    const userId = this.lastID; // دریافت شناسه کاربر اضافه شده
+
+                    db.run(`
+                        INSERT INTO payments (userId, amount, paymentDate, paymentMethod, status)
+                        VALUES (?, ?, datetime('now'), ?, ?)
+                    `, [userId, paymentAmount, paymentMethod, paymentStatus], function(err) {
+                        if (err) {
+                            console.error('Error inserting payment', err);
+                            reject(err);
+                        } else {
+                            console.log('User and payment added successfully');
+                            resolve({ userId, paymentId: this.lastID });
+                        }
+                    });
+                }
+            });
+        });
+    });
+
     ipcMain.handle('add-user', async(_, user) => {
         return new Promise((resolve, reject) => {
             const { firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate } = user;
@@ -166,6 +276,7 @@ app.whenReady().then(() => {
                     console.error('Error updating user', err);
                     reject(err);
                 } else {
+                    console.log('User Udated successfully');
                     resolve({ changes: this.changes });
                 }
             });
@@ -183,6 +294,59 @@ app.whenReady().then(() => {
                     console.log("ID =>", userId);
                     console.log('Deleted rows:', this.changes);
                     resolve({ changes: this.changes });
+                }
+            });
+        });
+    });
+
+    // افزودن پرداختی جدید
+    ipcMain.handle('add-payment', async(_, payment) => {
+        return new Promise((resolve, reject) => {
+            const { userId, firstName, lastName, amount, paymentDate, paymentMethod, status } = payment;
+            db.run(`
+                INSERT INTO payments (userId, firstName, lastName, amount, paymentDate, paymentMethod, status)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+        `, [userId, firstName, lastName, amount, paymentDate, paymentMethod, status], function(err) {
+                if (err) {
+                    console.error('Error inserting payment', err);
+                    reject(err); // ارسال خطا به renderer
+                } else {
+                    console.log('Payment added successfully with paymentId:', this.lastID);
+                    resolve({ success: true, paymentId: this.lastID }); // ارسال نتیجه موفقیت
+                }
+            });
+        });
+    });
+
+    // ویرایش پرداختی موجود
+    ipcMain.handle('edit-payment', async(_, payment) => {
+        return new Promise((resolve, reject) => {
+            const { paymentId, userId, firstName, lastName, amount, paymentDate, paymentMethod, status } = payment;
+            db.run(`
+            UPDATE payments
+            SET userId = ?, firstName = ?, lastName = ?, amount = ?, paymentDate = ?, paymentMethod = ?, status = ?
+            WHERE paymentId = ?
+        `, [userId, firstName, lastName, amount, paymentDate, paymentMethod, status, paymentId], function(err) {
+                if (err) {
+                    console.error('Error updating payment', err);
+                    reject(err); // ارسال خطا به renderer
+                } else {
+                    console.log('Payment updated successfully with paymentId:', paymentId);
+                    resolve({ success: true, paymentId: paymentId }); // ارسال نتیجه موفقیت
+                }
+            });
+        });
+    });
+
+    // دریافت پرداخت ها
+    ipcMain.handle('fetch-payments', async() => {
+        return new Promise((resolve, reject) => {
+            db.all("SELECT * FROM payments", [], (err, rows) => {
+                if (err) {
+                    console.error('Error fetching payment', err);
+                    reject(err);
+                } else {
+                    resolve(rows);
                 }
             });
         });

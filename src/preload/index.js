@@ -8,9 +8,18 @@ import { electronAPI } from '@electron-toolkit/preload'
 const api = {
     invoke: (channel, data) => ipcRenderer.invoke(channel, data),
     getUsers: () => ipcRenderer.invoke('fetch-users'),
+    getUserStatus: (userId) => ipcRenderer.invoke('get-user-status', userId),
     addUser: (newUser) => ipcRenderer.invoke('add-user', newUser),
     updateUser: (updatedUser) => ipcRenderer.invoke('update-user', updatedUser),
     deleteUser: (userId) => ipcRenderer.invoke('delete-user', userId),
+    addPayment: (paymentData) => ipcRenderer.invoke('add-payment', paymentData),
+    getPayments: () => ipcRenderer.invoke('fetch-payments'),
+    editPayments: (editPayments) => ipcRenderer.invoke('edit-payment', editPayments),
+    // افزودن کاربر همراه با اطلاعات پرداخت
+    addUserWithPayment: (userData) => ipcRenderer.invoke('add-user-with-payment', userData),
+    // ویرایش کاربر همراه با اطلاعات پرداخت
+    updateUserWithPayment: (userData) => ipcRenderer.invoke('update-user-with-payment', userData),
+
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

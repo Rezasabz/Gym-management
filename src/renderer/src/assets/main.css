@@ -370,3 +370,17 @@ small,
     background-color: var(--fallback-er, #f1416c) !important;
     color: var(--fallback-erc, #fff5f8) !important;
 }
+
+.custom-rtl {
+    direction: rtl;
+}
+
+.bgl-secondary {
+    background: #f1dffe;
+    border-color: #f1dffe;
+}
+
+.bgl-success {
+    background: #e3f9e9;
+    border-color: #e3f9e9;
+}

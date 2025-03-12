@@ -1,24 +1,11 @@
 <template>
-<form class="w-full">
-    <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
-    <div class="relative w-full">
-        <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-            <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
-            </svg>
-        </div>
-        <input type="search" id="default-search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="..." required />
-        <button type="submit" class="text-white absolute end-2.5 bottom-2.5 bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">جستجو</button>
-    </div>
-</form>
 
 <div className="overflow-x-auto w-full">
-
-    <div class="p-6">
+  <input type="text" v-model="searchQuery" placeholder="جستجو براساس نام یا نام خانوادگی..." class="input input-bordered w-full md:max text-right rtl custom-rtl" />
+    <div class="bg-base-100 shadow-lg rounded-lg mt-6 mb-6 p-6">
         <!-- بخش جستجو و دکمه افزودن کاربر -->
-        <div class="flex md:flex-row justify-between mb-4 gap-2">
-            <input type="text" v-model="searchQuery" placeholder="جستجو براساس نام یا شماره عضویت..." class="input input-bordered w-full md:max-w-xs" />
-            <button class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="openAddModal">
+        <div class="mb-6">
+            <button class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" @click="openAddModal">
                 افزودن کاربر
             </button>
         </div>
@@ -28,21 +15,22 @@
             <table class="table w-full text-right rtl">
                 <!-- head -->
                 <thead>
-                    <tr>
+                    <tr class="bg-base-200">
                         <th class="text-right">عملیات</th>
                         <th class="text-right">تاریخ ثبت‌نام</th>
-                        <th class="text-right">آدرس</th>
-                        <th class="text-right">شماره تماس اضطراری</th>
+                        <!-- <th class="text-right">آدرس</th>
+                        <th class="text-right">شماره تماس اضطراری</th> -->
                         <th class="text-right">وضعیت عضویت</th>
                         <th class="text-right">شماره موبایل</th>
                         <th class="text-right">شماره عضویت</th>
                         <th class="text-right">نام خانوادگی</th>
                         <!-- <th class="text-right">عکس پروفایل</th> -->
                         <th class="text-right">نام</th>
+                        <th>ردیف</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="user in filteredUsers" :key="user.id">
+                    <tr v-for="(user, index) in filteredUsers" :key="user.id">
                         <td>
                             <button class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="confirmDeleteUser(user)">
                                 حذف
@@ -51,17 +39,17 @@
                                 ویرایش
                             </button>
                             <button class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="viewUser(user)">
-                                نمایش
+                                جزئیات
                             </button>
 
                         </td>
                         <td class="font-semibold">{{ user.registrationDate }}</td>
-                        <td class="font-bold">{{ user.address }}</td>
-                        <td class="font-bold">{{ user.emergencyPhone }}</td>
+                        <!-- <td class="font-bold">{{ user.address }}</td>
+                        <td class="font-bold">{{ user.emergencyPhone }}</td> -->
                         <td>
                             <span class="font-semibold" :class="{
-                  'bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300': user.status === 'فعال',
-                  'bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300': user.status !== 'فعال'
+                  'bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 shadow-sm shadow-blue-500/50': user.status === 'فعال',
+                  'bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300 shadow-sm shadow-blue-500/50': user.status !== 'فعال'
                 }">
                                 {{ user.status }}</span>
                         </td>
@@ -76,6 +64,7 @@
               />
             </td> -->
                         <td class="font-semibold">{{ user.firstName }}</td>
+                        <td>{{ index + 1 }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -83,82 +72,106 @@
 
         <!-- مدال افزودن/ویرایش کاربر -->
         <div v-if="showModal" class="modal modal-open">
-            <div class="modal-box">
+            
+
+            <div class="modal-box w-11/12 max-w-4xl">
                 <h3 class="font-bold text-lg mb-4">
                     {{ isEditMode ? "ویرایش کاربر" : "افزودن کاربر جدید" }}
                 </h3>
+                <div class="gap-4 flex flex-col flex-auto">
                 <form @submit.prevent="submitForm">
-                    <div class="form-control">
-                        <label class="label">
-                            <span class="label-text">نام </span>
-                        </label>
-                        <input type="text" v-model="newUser.firstName" class="input input-bordered" required />
-                    </div>
-                    <div class="form-control">
-                        <label class="label">
+                    <div class="grid md:grid-cols-2 gap-4">
+                        <div class="form-control">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                             <span class="label-text">نام خانوادگی</span>
                         </label>
-                        <input type="text" v-model="newUser.lastName" class="input input-bordered" required />
+                        <input type="text" v-model="newUser.lastName" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" required />
                     </div>
-                    <div class="form-control mt-2">
-                        <label class="label">
+                    <div class="form-control">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <span class="label-text">نام </span>
+                        </label>
+                        <input type="text" v-model="newUser.firstName" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" required />
+                    </div>
+                </div>
+
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="form-control mt-4">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                             <span class="label-text">شماره عضویت</span>
                         </label>
-                        <input type="text" v-model="newUser.memberId" class="input input-bordered" required />
+                        <input type="text" v-model="newUser.memberId" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" required />
                     </div>
-                    <div class="form-control mt-2">
-                        <label class="label">
+                    <div class="form-control mt-4">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                             <span class="label-text">شماره موبایل</span>
                         </label>
-                        <input type="text" v-model="newUser.phone" class="input input-bordered" required />
+                        <input type="text" v-model="newUser.phone" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" required />
                     </div>
-                    <!-- <div class="form-control mt-2">
-            <label class="label">
-              <span class="label-text">عکس پروفایل (URL)</span>
-            </label>
-            <input
-              type="text"
-              v-model="newUser.profilePic"
-              class="input input-bordered"
-              placeholder="https://..."
-            />
-          </div> -->
-                    <div class="form-control mt-2">
-                        <label class="label">
+                </div>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="form-control mt-4">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                             <span class="label-text">وضعیت عضویت</span>
                         </label>
-                        <select v-model="newUser.status" class="select select-bordered">
+                        <select v-model="newUser.status" class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl">
                             <option value="فعال">فعال</option>
                             <option value="منقضی‌شده">منقضی‌شده</option>
                         </select>
                     </div>
-                    <div class="form-control mt-2">
-                        <label class="label">
+                    <div class="form-control mt-4">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                             <span class="label-text"> شماره موبایل اضطراری</span>
                         </label>
-                        <input type="text" v-model="newUser.emergencyPhone" class="input input-bordered" required />
+                        <input type="text" v-model="newUser.emergencyPhone" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" required />
                     </div>
-                    <div class="form-control mt-2">
-                        <label class="label">
-                            <span class="label-text"> آدرس</span>
-                        </label>
-                        <input type="text" v-model="newUser.address" class="input input-bordered" required />
+                </div>
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="mt-4">
+                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">روش پرداخت</label>
+                        <select id="countries" v-model="newUser.paymentMethod" class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl">
+                            <option value="کارت" selected>کارت</option>
+                            <option value="نقدی">نقدی</option>
+                        </select>
                     </div>
-                    <div class="form-control mt-2">
-                        <label class="label">
+                    <div class="form-control mt-4">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                             <span class="label-text">تاریخ ثبت‌نام</span>
                         </label>
-                        <input type="date" v-model="newUser.registrationDate" class="input input-bordered" required />
+                        <input ref="dateInput" v-model="newUser.registrationDate" data-jdp class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" />
+                        <!-- <input type="date" v-model="newUser.registrationDate" class="input input-bordered" required /> -->
                     </div>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-4">
+                    <div class="mb-2 mt-4">
+                        <label for="small-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">مبلغ</label>
+                        <input type="text" v-model="newUser.paymentAmount" id="small-input" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl">
+                    </div>
+                    <div class="mb-2 mt-4">
+                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">وضعیت</label>
+                        <select id="countries" v-model="newUser.paymentStatus" class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl">
+                            <option value="پرداخت شده" selected>پرداخت شده</option>
+                            <option value="پرداخت نشده">پرداخت نشده</option>
+                        </select>
+                    </div>
+                    </div>
+                    <div class="form-control mt-2">
+                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                            <span class="label-text"> آدرس</span>
+                        </label>
+                        <input type="text" v-model="newUser.address" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" required />
+                    </div>
+
                     <div class="modal-action mt-4">
-                        <button type="button" class="btn" @click="closeModal">
-                            بستن
+                        <button type="button" class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="closeModal">
+                            لغو
                         </button>
-                        <button type="submit" class="btn btn-primary">
+                        <button type="submit" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
                             {{ isEditMode ? "ویرایش" : "افزودن" }}
                         </button>
                     </div>
                 </form>
+            </div>
             </div>
         </div>
         <div>
@@ -168,8 +181,8 @@
                     <h3 class="font-bold text-lg mb-4">حذف کاربر</h3>
                     <p>آیا از حذف این کاربر مطمئن هستید؟</p>
                     <div class="modal-action mt-4">
-                        <button type="button" class="btn" @click="closeDeleteModal">انصراف</button>
-                        <button type="button" class="btn btn-error" @click="deleteUserConfirmed">حذف</button>
+                        <button type="button" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="closeDeleteModal">انصراف</button>
+                        <button type="button" class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="deleteUserConfirmed">حذف</button>
                     </div>
                 </div>
             </div>
@@ -177,6 +190,20 @@
 
             <dialog v-if="showDetailsModal" className="modal modal-open">
                 <div className="modal-box w-11/12 max-w-7xl">
+                  <button className="btn btn-square btn-sm" @click="closeDetailsModal">
+                    <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
                     <!-- <h3 class="font-bold text-lg mb-6">مشخصات کامل کاربر</h3> -->
                     <div class="card w-full bg-base-100 shadow-xl p-5 flex flex-col md:flex-row items-center md:items-start">
                         <div class="flex-1 ml-5">
@@ -199,7 +226,22 @@
                                 </svg>
 
                             </div>
-                            <div className="divider"></div>
+                            <!-- <div className="divider"></div> -->
+                            
+                        <!-- <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+                            <div class="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full" :style="{ width: progress + '%' }"> {{ progress.toFixed(0) }}%</div>
+                        </div> -->
+                        <div class="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+                            <div
+                                class="text-xs font-medium text-center p-0.5 leading-none rounded-full"
+                                :class="progress >= 100 ? 'bg-red-600 text-white' : 'bg-blue-600 text-white'"
+                                :style="{ width: progress + '%' }">
+                                {{ progress.toFixed(0) }}%
+                            </div>
+                        </div>
+
+
+
                             <div class="mt-2 flex gap-4 text-center">
                                 <div class="stat">
                                     <div class="stat-title">مبلغ بدهی</div>
@@ -207,13 +249,13 @@
     direction: rtl;">0</div>
                                 </div>
                                 <div class="stat">
-                                    <div class="stat-title">آخرین شهریه پرداخت شده</div>
+                                    <div class="stat-title">جلسات باقی مانده</div>
                                     <div class="stat-value text-blue-500" style="
-    direction: rtl;">300,000 تومان</div>
+    direction: rtl;">{{ remainingDays }}</div>
                                 </div>
                                 <div class="stat">
                                     <div class="stat-title">پایان اعتبار</div>
-                                    <div class="stat-value text-green-500">{{ selectedUser.registrationDate }}</div>
+                                    <div class="stat-value text-green-500">{{ expirationDateMiladi }}</div>
                                 </div>
                                 <div class="stat">
                                     <div class="stat-title">مجموع تمام شهریه‌های پرداخت شده</div>
@@ -379,15 +421,20 @@
 </template>
 
 <script>
+import "@majidh1/jalalidatepicker/dist/jalalidatepicker.min.js";
+import "@majidh1/jalalidatepicker/dist/jalalidatepicker.min.css";
+import moment from 'jalali-moment';
 export default {
     data() {
         return {
             users: [],
+            payments: [],
             showDeleteModal: false,
             userToDelete: null,
             selectedUser: null,
             showDetailsModal: false, // متغیر جدید برای نمایش مدال
             newUser: {
+                id: '',
                 firstName: '',
                 lastName: '',
                 memberId: '',
@@ -395,28 +442,78 @@ export default {
                 status: 'فعال',
                 emergencyPhone: '',
                 address: '',
-                registrationDate: new Date().toISOString().split('T')[0]
+                registrationDate: '',
+                paymentAmount: '', // مبلغ پرداختی
+                paymentMethod: '', // روش پرداخت
+                paymentStatus: 'موفق' // وضعیت پرداخت
             },
+            progress: 0, // مقدار اولیه پراگرس بار
+            expirationDateMiladi: null,
+            remainingDays: 0,
             showModal: false,
             isEditMode: false,
             searchQuery: '',
             selectedUser: null
         };
     },
-    computed: {
-        filteredUsers() {
-            return (this.users || []).filter(user =>
-                (user.firstName ?.includes(this.searchQuery) ||
-                    user.lastName ?.includes(this.searchQuery))
-            );
-        }
-
-    },
+        computed: {
+            filteredUsers() {
+                return this.users.filter(user => 
+                    (user.firstName?.includes(this.searchQuery) || user.lastName?.includes(this.searchQuery))
+                );
+            }
+        },
     methods: {
+        async calculateProgress() {
+
+            const shamsiDate = this.selectedUser.registrationDate; // تاریخ شمسی به‌صورت متن
+            // const miladiDate = moment.from(shamsiDate, "fa", "jYYYY/jMM/jDD").locale("en").format("YYYY/MM/DD");
+            const registrationDateMiladi = moment(moment.from(shamsiDate, "fa", "jYYYY/jMM/jDD").locale("en").format("YYYY-MM-DD"));
+            // ۲. محاسبه تاریخ انقضا (با اضافه کردن 1 ماه)
+            // const expirationDateMiladi = moment(registrationDateMiladi).add(1, "month");
+            const expirationDateMiladi = moment(registrationDateMiladi).add(30, "days");
+
+
+            // ۳. محاسبه اختلاف روزها
+            const totalDays = expirationDateMiladi.diff(registrationDateMiladi, "days"); // کل روزهای دوره
+            const passedDays = moment().diff(registrationDateMiladi, "days"); // روزهای سپری‌شده
+
+            // ۴. محاسبه درصد مصرف‌شده
+            const usedPercentage = (passedDays / totalDays) * 100;
+
+            // جلوگیری از مقدار بیش از 100% (مثلاً اگر تاریخ انقضا گذشته باشد)
+            const progress = Math.min(usedPercentage, 100);
+
+            // ۵. محاسبه تعداد روزهای باقی‌مانده
+            const remainingDays = Math.max(0, totalDays - passedDays);
+
+                    // تغییر وضعیت کاربر بر اساس تاریخ انقضا
+            if (moment().isAfter(expirationDateMiladi)) {
+                this.selectedUser.status = 'منقضی‌شده';
+            }
+
+            // به روزرسانی وضعیت در دیتابیس
+            try {
+                await window.api.getUserStatus(this.selectedUser.id);
+            } catch (error) {
+                console.error('Error updating user status in database:', error);
+            }
+
+            console.log("تاریخ ثبت‌نام:", registrationDateMiladi.format("YYYY-MM-DD"));
+            console.log("تاریخ انقضا:", expirationDateMiladi.format("YYYY-MM-DD"));
+            console.log("کل روزهای اعتبار:", totalDays);
+            console.log("روزهای سپری‌شده:", passedDays);
+            console.log("درصد مصرف‌شده:", progress.toFixed() + "%");
+            this.progress = progress;
+            this.expirationDateMiladi = expirationDateMiladi.format("jYYYY/jMM/jDD");
+            this.remainingDays = remainingDays;
+
+        },
         // متد برای باز کردن مدال نمایش مشخصات کاربر
         viewUser(user) {
             this.selectedUser = user;
             this.showDetailsModal = true;
+            this.calculateProgress()
         },
         closeDetailsModal() {
             this.showDetailsModal = false;
@@ -454,6 +551,14 @@ export default {
             //   console.error('Error deleting user:', error);
             // }
         },
+        async fetchPayments() {
+            try {
+                const response = await window.api.getPayments();
+                this.payments = response || [];  // در صورتی که پاسخ خالی باشد، آرایه خالی اختصاص داده می‌شود
+            } catch (error) {
+                console.error("Error fetching payments:", error);
+            }
+        },
         openAddModal() {
             this.newUser = {
                 firstName: '',
@@ -463,17 +568,40 @@ export default {
                 status: 'فعال',
                 emergencyPhone: '',
                 address: '',
-                registrationDate: new Date().toISOString().split('T')[0]
+                registrationDate: '',
+                paymentAmount: '',
+                paymentMethod: '',
+                paymentStatus: 'موفق'
             };
             this.isEditMode = false;
             this.showModal = true;
         },
         openEditModal(user) {
+            // console.log("---------------------");
+            // this.fetchPayments();
+            // console.log("---------------------");
             this.selectedUser = {
                 ...user
             };
+
+            console.log("this.selectedUser => ", this.selectedUser);
+            
+                // پیدا کردن پرداخت مربوط به این کاربر
+            const payment = this.payments.find(payment => payment.userId === user.id);
+            console.log("openEditModal ==> ", payment);
+
             this.newUser = {
-                ...user
+                firstName: user.firstName,
+                lastName: user.lastName,
+                memberId: user.memberId,
+                phone: user.phone,
+                status: user.status,
+                emergencyPhone: user.emergencyPhone,
+                address: user.address,
+                registrationDate: user.registrationDate,
+                paymentAmount: payment ? payment.amount : '', // اگر پرداختی برای کاربر موجود باشد
+                paymentMethod: payment ? payment.paymentMethod : '', // اگر روش پرداخت موجود باشد
+                paymentStatus: payment ? payment.status : 'موفق' // اگر وضعیت پرداخت موجود باشد
             };
             this.isEditMode = true;
             this.showModal = true;
@@ -484,30 +612,91 @@ export default {
         async submitForm() {
             if (this.isEditMode) {
                 await this.updateUser();
+                console.log("*********** @@")
             } else {
+                console.log("*********** %%")
                 await this.addUser();
             }
+            console.log("*********** 1")
             await this.fetchUsers();
+            console.log("*********** 2")
             this.closeModal();
         },
         async addUser() {
             try {
                 console.log("New User Data:", this.newUser); // بررسی مقدار قبل از ارسال
                 const addedUser = await window.api.addUser({
-                    ...this.newUser
+                    firstName: this.newUser.firstName,
+                    lastName: this.newUser.lastName,
+                    memberId: this.newUser.memberId,
+                    phone: this.newUser.phone,
+                    status: this.newUser.status,
+                    emergencyPhone: this.newUser.emergencyPhone,
+                    address: this.newUser.address,
+                    registrationDate: this.newUser.registrationDate
                 }); // ارسال نسخه‌ای از شیء
-                if (addedUser) {
+
+                console.log("New Payment:", this.newUser);
+                if (addedUser && addedUser.id) {
+                    const resPayment = await window.api.addPayment({
+                        userId: addedUser.id,
+                        firstName: this.newUser.firstName,
+                        lastName: this.newUser.lastName,
+                        amount: this.newUser.paymentAmount,
+                        paymentDate: this.newUser.registrationDate,
+                        paymentMethod: this.newUser.paymentMethod,
+                        status: this.newUser.paymentStatus
+                    });
+
                     this.users.push(addedUser);
+                    this.payments.push(resPayment);
                 }
+
+                // if (addedUser) {
+                //     this.users.push(addedUser);
+                // }
             } catch (error) {
                 console.error('Error adding user:', error);
             }
+
+
         },
         async updateUser() {
             try {
+                console.log("########## ", this.users);
                 await window.api.updateUser({
-                    ...this.newUser
+                    id: this.selectedUser.id,
+                    firstName: this.newUser.firstName,
+                    lastName: this.newUser.lastName,
+                    memberId: this.newUser.memberId,
+                    phone: this.newUser.phone,
+                    status: this.newUser.status,
+                    emergencyPhone: this.newUser.emergencyPhone,
+                    address: this.newUser.address,
+                    registrationDate: this.newUser.registrationDate
                 });
+                
+                console.log("payments Arr ==> ", this.payments);
+                console.log("this.selectedUser ==> ", this.selectedUser);
+                console.log("this.users ==> ", this.users);
+                                // پیدا کردن پرداخت مربوط به این کاربر
+                const payment = this.payments.find(payment => payment.userId === this.selectedUser.id); 
+                console.log("payment => ", payment)
+                console.log("this.newUser => ", this.newUser)
+
+                if (payment) {
+                    console.log("step 1 payment ==> ");
+                    await window.api.editPayments({
+                        paymentId: payment.paymentId, // آیدی پرداختی که قرار است ویرایش شود
+                        userId: payment.userId,
+                        firstName: this.newUser.firstName,
+                        lastName: this.newUser.lastName,
+                        amount: this.newUser.paymentAmount,
+                        paymentDate: this.newUser.registrationDate,
+                        paymentMethod: this.newUser.paymentMethod,
+                        status: this.newUser.paymentStatus
+                    });
+                }
             } catch (error) {
                 console.error('Error updating user:', error);
             }
@@ -523,7 +712,18 @@ export default {
     },
     async mounted() {
         await this.fetchUsers();
+        await this.fetchPayments();  // دریافت پرداخت‌ها
+        this.calculateProgress(); // محاسبه درصد زمان در زمان بارگذاری کامپوننت
         console.log("users:", this.users);
-    }
+         // بررسی داده‌های پرداخت‌ها
+    console.log("payments:", this.payments);
+        jalaliDatepicker.startWatch();
+    },
+    watch: {
+    // اگر تاریخ ثبت‌نام تغییر کند، دوباره پراگرس بار را به‌روز می‌کنیم
+    'newUser.registrationDate': function () {
+      this.calculateProgress();
+    },
+  },
 };
 </script>
