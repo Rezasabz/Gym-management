@@ -384,3 +384,17 @@ small,
     background: #e3f9e9;
     border-color: #e3f9e9;
 }
+
+.bgl-fail {
+    background: #fbf1f1;
+    border-color: #fbf1f1;
+}
+
+.dahsed-border {
+    border-top: 2px dashed #ebedf0;
+    margin: 10px 0;
+}
+
+.border-active-menu {
+    border-left: 3px solid #1c274c;
+}
