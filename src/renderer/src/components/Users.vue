@@ -424,6 +424,7 @@
 import "@majidh1/jalalidatepicker/dist/jalalidatepicker.min.js";
 import "@majidh1/jalalidatepicker/dist/jalalidatepicker.min.css";
 import moment from 'jalali-moment';
+
 export default {
     data() {
         return {
@@ -726,4 +727,5 @@ export default {
     },
   },
 };
+
 </script>

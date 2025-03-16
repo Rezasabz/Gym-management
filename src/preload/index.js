@@ -19,6 +19,8 @@ const api = {
     addUserWithPayment: (userData) => ipcRenderer.invoke('add-user-with-payment', userData),
     // ویرایش کاربر همراه با اطلاعات پرداخت
     updateUserWithPayment: (userData) => ipcRenderer.invoke('update-user-with-payment', userData),
+    // دریافت جدیدترین اعضا
+    getLatestUsers: () => ipcRenderer.invoke('fetch-new-users'),
 
 }
 

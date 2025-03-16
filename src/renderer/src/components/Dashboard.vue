@@ -106,12 +106,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="user in filteredUsers" :key="user.id">
-                       <td class="font-semibold">{{ user.registrationDate }}</td>
-                       <td class="font-bold">{{ user.phone }}</td>
-                       <td class="font-bold">{{ user.memberId }}</td>
-                       <td class="font-semibold">{{ user.lastName }}</td>
-                       <td class="font-semibold">{{ user.firstName }}</td>
+                    <tr v-for="user in users" :key="user.id">
+                       <td class="font-semibold text-right">{{ user.registrationDate }}</td>
+                       <td class="font-bold text-right">{{ user.phone }}</td>
+                       <td class="font-bold text-right">{{ user.memberId }}</td>
+                       <td class="font-semibold text-right">{{ user.lastName }}</td>
+                       <td class="font-semibold text-right">{{ user.firstName }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -146,9 +146,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="user in filteredUsers" :key="user.id">
-                       <td class="font-semibold">{{ user.lastName }}</td>
-                       <td class="font-semibold">{{ user.firstName }}</td>
+                    <tr v-for="user in users" :key="user.id">
+                       <td class="font-semibold text-right">{{ user.lastName }}</td>
+                       <td class="font-semibold text-right">{{ user.firstName }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -161,6 +161,36 @@
 
 
 </template>
-<script setup>
-import Sidebar from './Sidebar.vue'
+<script>
+
+export default {
+    data() {
+        return {
+            users: [],
+        }
+    },
+
+    computed: {
+        filteredUsers() {
+                return this.users.filter(user => 
+                    (user.firstName?.includes(this.searchQuery) || user.lastName?.includes(this.searchQuery))
+                );
+            }
+    },
+    
+    methods: {
+        async getLatestUsers() {
+            try {
+                this.users = await window.api.getLatestUsers();
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        }
+    },
+
+    async mounted() {
+        await this.getLatestUsers();
+        console.log(this.users);
+    }
+};
 </script>

@@ -79,12 +79,15 @@ function initDatabase() {
             // ایجاد جدول اگر وجود نداشت
             const stmt = db.prepare(`
                 CREATE TABLE IF NOT EXISTS users (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    profilePic TEXT,
-                    fullName TEXT,
-                    memberId TEXT,
-                    status TEXT,
-                    registrationDate TEXT
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                firstName TEXT,
+                lastName TEXT,
+                memberId TEXT,
+                phone TEXT,
+                status TEXT,
+                emergencyPhone TEXT,
+                address TEXT,
+                registrationDate TEXT
                 )
             `);
             stmt.run();
@@ -92,6 +95,29 @@ function initDatabase() {
         } catch (err) {
             console.error('Error opening database', err);
         }
+
+        // ایجاد جدول payments
+        try {
+            const stmt = db.prepare(`
+                CREATE TABLE IF NOT EXISTS payments (
+                paymentId INTEGER PRIMARY KEY AUTOINCREMENT,
+                userId INTEGER,
+                firstName TEXT,
+                lastName TEXT,
+                amount REAL NOT NULL,
+                paymentDate TEXT DEFAULT CURRENT_TIMESTAMP,
+                paymentMethod TEXT NOT NULL,
+                status TEXT DEFAULT 'pending',
+                FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
+                )
+            `);
+            stmt.run();
+            console.log('Payments table is ready.');
+        } catch (err) {
+            console.error('Error creating payments table', err);
+        }
+
+        
 }
 
 module.exports = { initDatabase, db };
@@ -460,6 +486,32 @@ app.whenReady().then(() => {
             resolve(rows);
         });
     });
+
+// 📌 هندل کردن درخواست برای دریافت لیست کاربران جدید
+ipcMain.handle("fetch-new-users", async () => {
+    return new Promise((resolve, reject) => {
+        try {
+            const stmt = db.prepare(
+                `SELECT 
+                  registrationDate,
+                  phone,
+                  memberId,
+                  lastName,
+                  firstName
+                FROM users
+                ORDER BY registrationDate DESC
+                LIMIT 5`
+            );
+            const rows = stmt.all(); // استفاده از all برای دریافت تمامی ردیف‌ها
+            resolve(rows);
+        } catch (err) {
+            console.error('Error fetching users', err);
+            reject(err);
+        }
+    });
+});
+
+  
 
     createWindow()
 
