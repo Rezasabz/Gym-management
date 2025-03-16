@@ -13,7 +13,7 @@ module.exports = {
     ],
     darkMode: false,
     daisyui: {
-        themes: ["winter"], // Use only the light theme
+        themes: ["light"], // Use only the light theme
         fontFamily: {
             roboto: ["vazir", "shabnam", "sahel", "sans-serif"],
         },
