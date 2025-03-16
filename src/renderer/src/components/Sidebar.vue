@@ -7,6 +7,34 @@
         <a href="" class="flex ms-2 md:me-24">
           <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Sohrabi Gym </span>
         </a>
+
+        <!-- <button type="button" class="relative inline-flex items-center p-2 text-sm font-medium text-center bg-none">
+          <BellAlertIcon class="h-6 w-6 text-black-300 animate-shake animate-infinite hover:text-blue-700" />
+      <span class="sr-only">Notifications</span>
+        <div class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900">20</div>
+      </button> -->
+      <details class="dropdown">
+      <!-- Bell Button as Dropdown Trigger -->
+      <summary class="relative inline-flex items-center p-2 text-sm font-medium text-center bg-none cursor-pointer">
+        <!-- Shaking Bell Icon -->
+        <BellAlertIcon class="h-6 w-6 text-black-300 animate-shake animate-infinite hover:text-blue-700" />
+        <span class="sr-only">Notifications</span>
+
+        <!-- Notification Badge -->
+        <div
+          class="absolute inline-flex items-center justify-center w-6 h-6 text-xs font-bold text-white bg-red-500 border-2 border-white rounded-full -top-2 -end-2 dark:border-gray-900"
+        >
+          20
+        </div>
+      </summary>
+
+      <!-- Dropdown Menu -->
+      <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-lg">
+      <li><a>Item 1</a></li>
+      <li><a>Item 2</a></li>
+    </ul>
+      </details>
+
       </div>
     </div>
     </div>
@@ -77,7 +105,12 @@
 </aside>
 </template>
 <script>
+import { BellAlertIcon } from '@heroicons/vue/24/outline';
+
 export default {
+  components: {
+    BellAlertIcon
+  },
   data() {
     return {
       isSidebarOpen: false,
