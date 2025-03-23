@@ -28,7 +28,7 @@
         <!-- متن و نوار پیشرفت -->
         <div class="flex-1">
             <h3 class="text-gray-600 text-sm">اعضا جدید در ماه جاری</h3>
-            <p class="custom-rtl text-2xl font-bold text-gray-900">10 نفر</p>
+            <p class="custom-rtl text-2xl font-bold text-gray-900">{{ fetch_new_members_count }} نفر</p>
         </div>
     </div>
     <div class="bg-white shadow-lg rounded-xl p-4 flex items-center space-x-4 w-full max-w-md">
@@ -46,7 +46,7 @@
         <!-- متن و نوار پیشرفت -->
         <div class="flex-1">
             <h3 class="text-gray-600 text-sm">درآمد ماه جاری</h3>
-            <p class="custom-rtl text-2xl font-bold text-gray-900">100,000,000 تومان</p>
+            <p class="custom-rtl text-2xl font-bold text-gray-900">{{ current_month_revenue }} تومان</p>
         </div>
     </div>
     <div class="bg-white shadow-lg rounded-xl p-4 flex items-center space-x-4 w-full max-w-md">
@@ -62,7 +62,7 @@
         <!-- متن و نوار پیشرفت -->
         <div class="flex-1">
             <h3 class="text-gray-600 text-sm">تعداد اعضا فعال</h3>
-            <p class="custom-rtl text-2xl font-bold text-gray-900">120 نفر</p>
+            <p class="custom-rtl text-2xl font-bold text-gray-900">{{ active_memebers }} نفر</p>
             <!-- <div class="relative w-full h-2 bg-gray-200 rounded-full mt-2">
                 <div class="absolute top-0 left-0 h-2 bg-green-500 rounded-full" style="width: 42%;"></div>
             </div> -->
@@ -146,9 +146,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr v-for="user in users" :key="user.id">
-                       <td class="font-semibold text-right">{{ user.lastName }}</td>
-                       <td class="font-semibold text-right">{{ user.firstName }}</td>
+                    <tr v-for="debtor in debtors" :key="debtor.id">
+                       <td class="font-semibold text-right">{{ debtor.lastName }}</td>
+                       <td class="font-semibold text-right">{{ debtor.firstName }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -167,6 +167,10 @@ export default {
     data() {
         return {
             users: [],
+            debtors: [],
+            active_memebers: null,
+            current_month_revenue: null,
+            fetch_new_members_count: null
         }
     },
 
@@ -185,11 +189,58 @@ export default {
             } catch (error) {
                 console.error('Error fetching users:', error);
             }
-        }
+        },
+        async fetchDebtors() {
+            try {
+                this.debtors = await window.api.fetchDebtors();
+            } catch (error) {
+                console.error('Error fetching debtors:', error);
+            }
+        },
+        async fetchActiveMembersCount() {
+            try {
+                this.active_memebers = await window.api.fetchActiveMembersCount();
+                console.log(await window.api.fetchActiveMembersCount());
+                
+            } catch (error) {
+                console.error('Error fetching active_memebers:', error);
+            }
+        },
+        async fetchCurrentMonthRevenue() {
+            try {
+                this.current_month_revenue = await window.api.fetchCurrentMonthRevenue();
+                console.log(await window.api.fetchCurrentMonthRevenue());
+                
+            } catch (error) {
+                console.error('Error fetching current_month_revenue:', error);
+            }
+        },
+        async fetchActiveMembersCount() {
+            try {
+                this.active_memebers = await window.api.fetchActiveMembersCount();
+                console.log(await window.api.fetchActiveMembersCount());
+                
+            } catch (error) {
+                console.error('Error fetching active_memebers:', error);
+            }
+        },
+        async fetchNewMembersCount() {
+            try {
+                this.fetch_new_members_count = await window.api.fetchNewMembersCount();
+                console.log(await window.api.fetchNewMembersCount());
+                
+            } catch (error) {
+                console.error('Error fetching fetch_new_members_count:', error);
+            }
+        },
     },
 
     async mounted() {
         await this.getLatestUsers();
+        await this.fetchDebtors();
+        await this.fetchActiveMembersCount();
+        await this.fetchCurrentMonthRevenue();
+        await this.fetchNewMembersCount();
         console.log(this.users);
     }
 };

@@ -71,13 +71,13 @@ function initDatabase() {
     //     }
     // });
 
-        // اتصال به دیتابیس
-        try {
-            db = new sqlite3(dbPath);  // اتصال به دیتابیس بدون نیاز به callback
-            console.log('Connected to SQLite database at:', dbPath);
-    
-            // ایجاد جدول اگر وجود نداشت
-            const stmt = db.prepare(`
+    // اتصال به دیتابیس
+    try {
+        db = new sqlite3(dbPath); // اتصال به دیتابیس بدون نیاز به callback
+        console.log('Connected to SQLite database at:', dbPath);
+
+        // ایجاد جدول اگر وجود نداشت
+        const stmt = db.prepare(`
                 CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 firstName TEXT,
@@ -87,18 +87,19 @@ function initDatabase() {
                 status TEXT,
                 emergencyPhone TEXT,
                 address TEXT,
-                registrationDate TEXT
+                registrationDate TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             `);
-            stmt.run();
-            console.log('Users table is ready.');
-        } catch (err) {
-            console.error('Error opening database', err);
-        }
+        stmt.run();
+        console.log('Users table is ready.');
+    } catch (err) {
+        console.error('Error opening database', err);
+    }
 
-        // ایجاد جدول payments
-        try {
-            const stmt = db.prepare(`
+    // ایجاد جدول payments
+    try {
+        const stmt = db.prepare(`
                 CREATE TABLE IF NOT EXISTS payments (
                 paymentId INTEGER PRIMARY KEY AUTOINCREMENT,
                 userId INTEGER,
@@ -111,13 +112,13 @@ function initDatabase() {
                 FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
                 )
             `);
-            stmt.run();
-            console.log('Payments table is ready.');
-        } catch (err) {
-            console.error('Error creating payments table', err);
-        }
+        stmt.run();
+        console.log('Payments table is ready.');
+    } catch (err) {
+        console.error('Error creating payments table', err);
+    }
 
-        
+
 }
 
 module.exports = { initDatabase, db };
@@ -269,43 +270,43 @@ app.whenReady().then(() => {
     //     });
     // });
 
-    ipcMain.handle('get-user-status', async (_, userId) => {
+    ipcMain.handle('get-user-status', async(_, userId) => {
         try {
             // دریافت اطلاعات کاربر
             const row = db.prepare('SELECT registrationDate, status FROM users WHERE id = ?').get(userId);
-            
+
             if (!row) {
                 throw new Error('User not found');
             }
-    
+
             // تبدیل تاریخ شمسی به میلادی
             const gregorianDate = moment(moment.from(row.registrationDate, "fa", "jYYYY/jMM/jDD").locale("en").format("YYYY-MM-DD"));
-    
+
             // محاسبه تاریخ انقضا (یک ماه بعد از تاریخ ثبت‌نام)
             const expirationDate = moment(gregorianDate).add(30, "days");
             const currentTime = moment();
-    
+
             // بروزرسانی وضعیت کاربر
             let newStatus = 'فعال'; // پیش‌فرض وضعیت فعال است
             if (currentTime.isAfter(expirationDate)) {
                 newStatus = 'منقضی شده'; // اگر تاریخ انقضا گذشته باشد، وضعیت به منقضی شده تغییر می‌کند
             }
-    
+
             if (newStatus !== row.status) {
                 // فقط در صورتی که وضعیت تغییر کند، آن را به‌روزرسانی می‌کنیم
                 db.prepare('UPDATE users SET status = ? WHERE id = ?').run(newStatus, userId);
                 console.log(`User status updated to ${newStatus}`);
             }
-    
+
             // بازگرداندن اطلاعات کاربر
             return row;
-    
+
         } catch (err) {
             console.error('Error fetching or updating user status', err);
             throw err;
         }
     });
-    
+
 
     // افزودن کاربر جدید
     ipcMain.handle('add-user-with-payment', async(_, user) => {
@@ -340,57 +341,97 @@ app.whenReady().then(() => {
     });
 
     ipcMain.handle('add-user', async(_, user) => {
-    //     return new Promise((resolve, reject) => {
-    //         const { firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate } = user;
-    //         db.run(`
-    //       INSERT INTO users (firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate)
-    //       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-    //   `, [firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate], function(err) {
-    //             if (err) {
-    //                 console.error('Error adding user', err);
-    //                 reject(err);
-    //             } else {
-    //                 resolve({ id: this.lastID });
-    //             }
-    //         });
-    //     });
-    return new Promise((resolve, reject) => {
-        const { firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate } = user;
-        db.prepare(`
-            INSERT INTO users (firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-        `).run(firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate);
-        resolve({ id: db.prepare("SELECT last_insert_rowid()").get().last_insert_rowid });
-    });
+        // return new Promise((resolve, reject) => {
+        //     const { firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate } = user;
+        //     db.run(`
+        //       INSERT INTO users (firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate)
+        //       VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        //   `, [firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate], function(err) {
+        //         if (err) {
+        //             console.error('Error adding user', err);
+        //             reject(err);
+        //         } else {
+        //             resolve({ id: this.lastID });
+        //         }
+        //     });
+        // });
+        // return new Promise((resolve, reject) => {
+        //     const { firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate } = user;
+        //     db.prepare(`
+        //     INSERT INTO users (firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate)
+        //     VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        // `).run(firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate);
+        //     // resolve({ id: db.prepare("SELECT last_insert_rowid()").get().last_insert_rowid });
+        //     resolve({ id: this.lastID });
+        // });
+
+        // return new Promise((resolve, reject) => {
+        //     db.run(`
+        //         INSERT INTO users (firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate)
+        //         VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        //     `, [firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate], function(err) {
+        //         if (err) {
+        //             reject(err);
+        //         } else {
+        //             resolve({ id: this.lastID });
+        //         }
+        //     });
+        // });
+
+        try {
+            const stmt = db.prepare(`
+                INSERT INTO users (firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            `);
+
+            const result = stmt.run(
+                user.firstName ?? null,
+                user.lastName ?? null,
+                user.memberId ?? null,
+                user.phone ?? null,
+                user.status ?? null,
+                user.emergencyPhone ?? null,
+                user.address ?? null,
+                user.registrationDate ?? null
+            );
+
+            return { id: result.lastInsertRowid };
+        } catch (err) {
+            console.error('Error adding user:', err);
+            throw err;
+        }
+
+
     });
 
     // به‌روزرسانی کاربر
     ipcMain.handle('update-user', async(_, user) => {
-    //     return new Promise((resolve, reject) => {
-    //         const { id, firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate } = user;
-    //         db.run(`
-    //       UPDATE users 
-    //       SET firstName = ?, lastName = ?, memberId = ?, phone = ?, status = ?, emergencyPhone = ?, address = ?, registrationDate = ?
-    //       WHERE id = ?
-    //   `, [firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate, id], function(err) {
-    //             if (err) {
-    //                 console.error('Error updating user', err);
-    //                 reject(err);
-    //             } else {
-    //                 console.log('User Udated successfully');
-    //                 resolve({ changes: this.changes });
-    //             }
-    //         });
-    //     });
-    return new Promise((resolve, reject) => {
-        const { id, firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate } = user;
-        db.prepare(`
+        //     return new Promise((resolve, reject) => {
+        //         const { id, firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate } = user;
+        //         db.run(`
+        //       UPDATE users 
+        //       SET firstName = ?, lastName = ?, memberId = ?, phone = ?, status = ?, emergencyPhone = ?, address = ?, registrationDate = ?
+        //       WHERE id = ?
+        //   `, [firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate, id], function(err) {
+        //             if (err) {
+        //                 console.error('Error updating user', err);
+        //                 reject(err);
+        //             } else {
+        //                 console.log('User Udated successfully');
+        //                 resolve({ changes: this.changes });
+        //             }
+        //         });
+        //     });
+        return new Promise((resolve, reject) => {
+            const { id, firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate } = user;
+            db.prepare(`
             UPDATE users 
             SET firstName = ?, lastName = ?, memberId = ?, phone = ?, status = ?, emergencyPhone = ?, address = ?, registrationDate = ?
             WHERE id = ?
         `).run(firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate, id);
-        resolve({ changes: db.prepare("SELECT changes()").get().changes });
-    });
+            resolve({ changes: db.prepare("SELECT changes()").get().changes });
+            // resolve({ changes: this.changes });
+        });
     });
 
     // حذف کاربر
@@ -487,31 +528,108 @@ app.whenReady().then(() => {
         });
     });
 
-// 📌 هندل کردن درخواست برای دریافت لیست کاربران جدید
-ipcMain.handle("fetch-new-users", async () => {
-    return new Promise((resolve, reject) => {
+    ipcMain.handle("fetch-debtors", async () => {
         try {
-            const stmt = db.prepare(
-                `SELECT 
+            const stmt = db.prepare(`
+                SELECT 
+                    userId, 
+                    firstName, 
+                    lastName, 
+                    amount, 
+                    paymentDate, 
+                    paymentMethod
+                FROM payments
+                WHERE status = 'پرداخت نشده'
+                ORDER BY paymentDate DESC
+            `);
+            return stmt.all(); // دریافت لیست بدهکاران
+        } catch (err) {
+            console.error("Error fetching debtors:", err);
+            throw err;
+        }
+    });
+
+// 📌 درآمد ماه جاری
+ipcMain.handle("fetch-current-month-revenue", async () => {
+    try {
+        // دریافت سال و ماه جاری شمسی
+        const currentJalaliYearMonth = moment().format("jYYYY/jMM");
+
+        const stmt = db.prepare(`
+            SELECT SUM(amount) AS totalRevenue
+            FROM payments
+            WHERE status = 'پرداخت شده'
+            AND substr(paymentDate, 1, 7) = ?
+        `);
+        const result = stmt.get(currentJalaliYearMonth);
+
+        return result.totalRevenue || 0; // اگر مقدار null بود، 0 برگردان
+    } catch (err) {
+        console.error("Error fetching current month revenue:", err);
+        throw err;
+    }
+});
+
+    // 📌 تعداد افراد جدید در ماه جاری
+ipcMain.handle("fetch-new-members-count", async () => {
+    try {
+        // دریافت سال و ماه جاری شمسی با فرمت صحیح
+        const currentJalaliYearMonth = moment().format("jYYYY/jMM");
+
+        const stmt = db.prepare(`
+            SELECT COUNT(*) AS newMembers
+            FROM users
+            WHERE substr(registrationDate, 1, 7) = ?
+        `);
+        const result = stmt.get(currentJalaliYearMonth);
+
+        return result?.newMembers || 0; // اگر مقدار null بود، 0 برگردان
+    } catch (err) {
+        console.error("Error fetching new members count:", err);
+        return 0; // مقدار پیش‌فرض برای جلوگیری از خطا
+    }
+});
+
+    
+
+    // 📌 هندل کردن درخواست برای دریافت لیست کاربران جدید
+    ipcMain.handle("fetch-new-users", async() => {
+        return new Promise((resolve, reject) => {
+            try {
+                const stmt = db.prepare(
+                    `SELECT 
                   registrationDate,
                   phone,
                   memberId,
                   lastName,
                   firstName
                 FROM users
-                ORDER BY registrationDate DESC
+                ORDER BY created_at DESC
                 LIMIT 5`
-            );
-            const rows = stmt.all(); // استفاده از all برای دریافت تمامی ردیف‌ها
-            resolve(rows);
+                );
+                const rows = stmt.all(); // استفاده از all برای دریافت تمامی ردیف‌ها
+                resolve(rows);
+            } catch (err) {
+                console.error('Error fetching users', err);
+                reject(err);
+            }
+        });
+    });
+
+    ipcMain.handle("fetch-active-members-count", async () => {
+        try {
+            const stmt = db.prepare(`
+                SELECT COUNT(*) AS count FROM users WHERE status = 'فعال'
+            `);
+            const result = stmt.get(); // مقدار را دریافت می‌کنیم
+            return result.count; // فقط عدد تعداد را برمی‌گردانیم
         } catch (err) {
-            console.error('Error fetching users', err);
-            reject(err);
+            console.error("Error fetching active members count:", err);
+            throw err;
         }
     });
-});
+    
 
-  
 
     createWindow()
 

@@ -465,53 +465,89 @@ export default {
             }
         },
     methods: {
-        async calculateProgress() {
+        // async calculateProgress() {
 
-            const shamsiDate = this.selectedUser.registrationDate; // تاریخ شمسی به‌صورت متن
-            // const miladiDate = moment.from(shamsiDate, "fa", "jYYYY/jMM/jDD").locale("en").format("YYYY/MM/DD");
-            const registrationDateMiladi = moment(moment.from(shamsiDate, "fa", "jYYYY/jMM/jDD").locale("en").format("YYYY-MM-DD"));
-            // ۲. محاسبه تاریخ انقضا (با اضافه کردن 1 ماه)
-            // const expirationDateMiladi = moment(registrationDateMiladi).add(1, "month");
-            const expirationDateMiladi = moment(registrationDateMiladi).add(30, "days");
+        //     const shamsiDate = this.selectedUser.registrationDate; // تاریخ شمسی به‌صورت متن
+        //     // const miladiDate = moment.from(shamsiDate, "fa", "jYYYY/jMM/jDD").locale("en").format("YYYY/MM/DD");
+        //     const registrationDateMiladi = moment(moment.from(shamsiDate, "fa", "jYYYY/jMM/jDD").locale("en").format("YYYY-MM-DD"));
+        //     // ۲. محاسبه تاریخ انقضا (با اضافه کردن 1 ماه)
+        //     // const expirationDateMiladi = moment(registrationDateMiladi).add(1, "month");
+        //     const expirationDateMiladi = moment(registrationDateMiladi).add(30, "days");
 
 
-            // ۳. محاسبه اختلاف روزها
-            const totalDays = expirationDateMiladi.diff(registrationDateMiladi, "days"); // کل روزهای دوره
-            const passedDays = moment().diff(registrationDateMiladi, "days"); // روزهای سپری‌شده
+        //     // ۳. محاسبه اختلاف روزها
+        //     const totalDays = expirationDateMiladi.diff(registrationDateMiladi, "days"); // کل روزهای دوره
+        //     const passedDays = moment().diff(registrationDateMiladi, "days"); // روزهای سپری‌شده
 
-            // ۴. محاسبه درصد مصرف‌شده
-            const usedPercentage = (passedDays / totalDays) * 100;
+        //     // ۴. محاسبه درصد مصرف‌شده
+        //     const usedPercentage = (passedDays / totalDays) * 100;
 
-            // جلوگیری از مقدار بیش از 100% (مثلاً اگر تاریخ انقضا گذشته باشد)
-            const progress = Math.min(usedPercentage, 100);
+        //     // جلوگیری از مقدار بیش از 100% (مثلاً اگر تاریخ انقضا گذشته باشد)
+        //     const progress = Math.min(usedPercentage, 100);
 
-            // ۵. محاسبه تعداد روزهای باقی‌مانده
-            const remainingDays = Math.max(0, totalDays - passedDays);
+        //     // ۵. محاسبه تعداد روزهای باقی‌مانده
+        //     const remainingDays = Math.max(0, totalDays - passedDays);
 
-                    // تغییر وضعیت کاربر بر اساس تاریخ انقضا
-            if (moment().isAfter(expirationDateMiladi)) {
-                this.selectedUser.status = 'منقضی‌شده';
-            }
+        //             // تغییر وضعیت کاربر بر اساس تاریخ انقضا
+        //     if (moment().isAfter(expirationDateMiladi)) {
+        //         this.selectedUser.status = 'منقضی‌شده';
+        //     }
 
-            // به روزرسانی وضعیت در دیتابیس
-            try {
-                await window.api.getUserStatus(this.selectedUser.id);
-            } catch (error) {
-                console.error('Error updating user status in database:', error);
-            }
+        //     // به روزرسانی وضعیت در دیتابیس
+        //     try {
+        //         await window.api.getUserStatus(this.selectedUser.id);
+        //     } catch (error) {
+        //         console.error('Error updating user status in database:', error);
+        //     }
 
-            console.log("تاریخ ثبت‌نام:", registrationDateMiladi.format("YYYY-MM-DD"));
-            console.log("تاریخ انقضا:", expirationDateMiladi.format("YYYY-MM-DD"));
-            console.log("کل روزهای اعتبار:", totalDays);
-            console.log("روزهای سپری‌شده:", passedDays);
-            console.log("درصد مصرف‌شده:", progress.toFixed() + "%");
-            this.progress = progress;
-            this.expirationDateMiladi = expirationDateMiladi.format("jYYYY/jMM/jDD");
-            this.remainingDays = remainingDays;
+        //     console.log("تاریخ ثبت‌نام:", registrationDateMiladi.format("YYYY-MM-DD"));
+        //     console.log("تاریخ انقضا:", expirationDateMiladi.format("YYYY-MM-DD"));
+        //     console.log("کل روزهای اعتبار:", totalDays);
+        //     console.log("روزهای سپری‌شده:", passedDays);
+        //     console.log("درصد مصرف‌شده:", progress.toFixed() + "%");
+        //     this.progress = progress;
+        //     this.expirationDateMiladi = expirationDateMiladi.format("jYYYY/jMM/jDD");
+        //     this.remainingDays = remainingDays;
 
-        },
+        // },
         // متد برای باز کردن مدال نمایش مشخصات کاربر
+        async calculateProgress() {
+    if (!this.selectedUser || !this.selectedUser.registrationDate) {
+        console.error('No selected user or registration date available');
+        return; // جلوگیری از ادامه پردازش در صورت نداشتن کاربر یا تاریخ ثبت‌نام
+    }
+
+    const shamsiDate = this.selectedUser.registrationDate; // تاریخ شمسی به‌صورت متن
+    const registrationDateMiladi = moment(moment.from(shamsiDate, "fa", "jYYYY/jMM/jDD").locale("en").format("YYYY-MM-DD"));
+    const expirationDateMiladi = moment(registrationDateMiladi).add(30, "days");
+    const totalDays = expirationDateMiladi.diff(registrationDateMiladi, "days");
+    const passedDays = moment().diff(registrationDateMiladi, "days");
+    const usedPercentage = (passedDays / totalDays) * 100;
+
+    const progress = Math.min(usedPercentage, 100);
+    const remainingDays = Math.max(0, totalDays - passedDays);
+
+    if (moment().isAfter(expirationDateMiladi)) {
+        this.selectedUser.status = 'منقضی‌شده';
+    }
+
+    try {
+        await window.api.getUserStatus(this.selectedUser.id);
+    } catch (error) {
+        console.error('Error updating user status in database:', error);
+    }
+
+    this.progress = progress;
+    this.expirationDateMiladi = expirationDateMiladi.format("jYYYY/jMM/jDD");
+    this.remainingDays = remainingDays;
+},
+
+        
         viewUser(user) {
+            if (!user || !user.registrationDate) {
+        console.error('Selected user or registration date is invalid');
+        return;
+            }
             this.selectedUser = user;
             this.showDetailsModal = true;
             this.calculateProgress()
@@ -638,6 +674,7 @@ export default {
                 }); // ارسال نسخه‌ای از شیء
 
                 console.log("New Payment:", this.newUser);
+                console.log("addedUser ", addedUser)
                 if (addedUser && addedUser.id) {
                     const resPayment = await window.api.addPayment({
                         userId: addedUser.id,
@@ -650,7 +687,9 @@ export default {
                     });
 
                     this.users.push(addedUser);
+                    
                     this.payments.push(resPayment);
+                    console.log("resPayment ", resPayment)
                 }
 
                 // if (addedUser) {

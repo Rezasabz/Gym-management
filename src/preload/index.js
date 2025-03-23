@@ -21,6 +21,10 @@ const api = {
     updateUserWithPayment: (userData) => ipcRenderer.invoke('update-user-with-payment', userData),
     // دریافت جدیدترین اعضا
     getLatestUsers: () => ipcRenderer.invoke('fetch-new-users'),
+    fetchActiveMembersCount: () => ipcRenderer.invoke('fetch-active-members-count'),
+    fetchDebtors: () => ipcRenderer.invoke('fetch-debtors'),
+    fetchCurrentMonthRevenue: () => ipcRenderer.invoke('fetch-current-month-revenue'),
+    fetchNewMembersCount: () => ipcRenderer.invoke('fetch-new-members-count'),
 
 }
 
