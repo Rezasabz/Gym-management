@@ -32,6 +32,9 @@
                 <tbody>
                     <tr v-for="(user, index) in filteredUsers" :key="user.id">
                         <td>
+                            <button v-if="shouldShowRenewButton(user)" class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 shadow-lg shadow-purple-500/50 dark:shadow-lg dark:shadow-purple-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="openRenewalModal(user)">
+                                تمدید
+                            </button>
                             <button class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="confirmDeleteUser(user)">
                                 حذف
                             </button>
@@ -126,12 +129,19 @@
                         <input type="text" v-model="newUser.emergencyPhone" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" required />
                     </div>
                 </div>
-                <div class="grid md:grid-cols-2 gap-4">
+                <div class="grid md:grid-cols-3 gap-4">
                     <div class="mt-4">
                         <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">روش پرداخت</label>
                         <select id="countries" v-model="newUser.paymentMethod" class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl">
-                            <option value="کارت" selected>کارت</option>
+                            <option value="کارت">کارت</option>
                             <option value="نقدی">نقدی</option>
+                        </select>
+                    </div>
+                    <div class="mt-4">
+                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">مدت زمان دوره</label>
+                        <select id="countries" v-model.number="newUser.renewal_duration" class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl">
+                            <option :value="1" selected>1 ماهه</option>
+                            <option :value="2">2 ماهه</option>
                         </select>
                     </div>
                     <div class="form-control mt-4">
@@ -386,6 +396,50 @@
 
             </dialog>
 
+            <!-- تمدید کاربر -->
+             <dialog v-if="showRenewalModal" className="modal modal-open">
+                <div class="modal-box w-11/12 max-w-3xl">
+                    <h3 class="font-bold text-lg">تمدید</h3>
+                    <h4>{{ userToRenewal.firstName }} {{ userToRenewal.lastName }}</h4>
+                    <div className="divider"></div>
+                    <form @submit.prevent="submitFormRenewal">
+                        <div class="grid md:grid-cols-2 gap-4">
+                            <div class="form-control">
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                <span class="label-text">مبلغ</span>
+                            </label>
+                            <input type="text" v-model="renewal_payment" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" disabled readonly />
+                        </div>
+                        <div class="form-control mb-4">
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                <span class="label-text">تاریخ</span>
+                            </label>
+                            <input ref="dateInput" v-model="userToRenewal.registrationDate" aria-label="disabled input 2" data-jdp class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" disabled readonly />
+                        </div>
+                        </div>
+                        <div class="grid md:grid-cols-1 gap-4">
+                    <!-- <div class="mt-4 mb-4">
+                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">روش پرداخت</label>
+                        <select id="countries" v-model="obj_renewals.paymentMethod" class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl">
+                            <option value="کارت">کارت</option>
+                            <option value="نقدی">نقدی</option>
+                        </select>
+                    </div> -->
+                    <div class="mt-4 mb-4">
+                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">مدت زمان دوره</label>
+                        <select id="countries" v-model="obj_renewals.duration" class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl">
+                            <option value="1">1 ماهه</option>
+                            <option value="2">2 ماهه</option>
+                        </select>
+                    </div>
+                        </div>
+                        <button type="button" class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="closeRenewalModal">بستن</button>
+                        <button type="submit" class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                            ثبت
+                        </button>
+                    </form>
+                </div>
+             </dialog>
             <!-- <div v-if="showDetailsModal" class="modal modal-open">
       <div class="modal-box">
         <h3 class="font-bold text-lg mb-4">مشخصات کامل کاربر</h3>
@@ -434,6 +488,9 @@ export default {
             userToDelete: null,
             selectedUser: null,
             showDetailsModal: false, // متغیر جدید برای نمایش مدال
+            showRenewalModal: false,
+            userToRenewal: null,
+            showRenewalBtn: false,
             newUser: {
                 id: '',
                 firstName: '',
@@ -444,9 +501,18 @@ export default {
                 emergencyPhone: '',
                 address: '',
                 registrationDate: '',
+                renewal_duration: '1', // مدت زمان دوره
+                expirationDate: '',
                 paymentAmount: '', // مبلغ پرداختی
-                paymentMethod: '', // روش پرداخت
-                paymentStatus: 'موفق' // وضعیت پرداخت
+                paymentMethod: 'کارت', // روش پرداخت
+                paymentStatus: 'پرداخت شده' // وضعیت پرداخت
+            },
+            obj_renewals: {
+                userId: '',
+                renewal_date: '',
+                duration: '1',
+                new_expiration_date: ''
+
             },
             progress: 0, // مقدار اولیه پراگرس بار
             expirationDateMiladi: null,
@@ -454,7 +520,10 @@ export default {
             showModal: false,
             isEditMode: false,
             searchQuery: '',
-            selectedUser: null
+            selectedUser: null,
+            renewal_payment: '',
+            renewal_user_id: '',
+            renewals: []
         };
     },
         computed: {
@@ -462,9 +531,35 @@ export default {
                 return this.users.filter(user => 
                     (user.firstName?.includes(this.searchQuery) || user.lastName?.includes(this.searchQuery))
                 );
-            }
+            },
+
+
+    
         },
     methods: {
+        shouldShowRenewButton(user) {
+            if (user.status === "منقضی‌شده") {
+                return true; // اگر کاربر منقضی شده باشد، دکمه نمایش داده شود
+            }
+
+            // پیدا کردن آخرین تاریخ انقضا از جدول تمدیدها
+            const lastRenewal = this.renewals.find(renewal => renewal.user_id === user.id);
+
+            if (lastRenewal) {
+                const expirationDate = moment.from(lastRenewal.new_expiration_date, "fa", "jYYYY/jMM/jDD").locale("en");
+                const currentDate = moment();
+
+                return currentDate.isAfter(expirationDate); // اگر تاریخ امروز بعد از تاریخ انقضا باشد، دکمه نمایش داده شود
+            }
+
+            return false; // در غیر این صورت دکمه نمایش داده نشود
+        },
+        // hasExpiredUsers() {
+        //        return this.users.some(user => user.status === "منقضی‌شده");
+        // },
+        // activeUsers() {
+        // return this.users.filter(user => user.status === "فعال");
+        // },
         // async calculateProgress() {
 
         //     const shamsiDate = this.selectedUser.registrationDate; // تاریخ شمسی به‌صورت متن
@@ -512,35 +607,83 @@ export default {
         // },
         // متد برای باز کردن مدال نمایش مشخصات کاربر
         async calculateProgress() {
-    if (!this.selectedUser || !this.selectedUser.registrationDate) {
-        console.error('No selected user or registration date available');
-        return; // جلوگیری از ادامه پردازش در صورت نداشتن کاربر یا تاریخ ثبت‌نام
+    console.log("renewals => ", this.renewals);
+
+    if (!this.selectedUser) {
+        console.error('No selected user available');
+        return;
     }
 
-    const shamsiDate = this.selectedUser.registrationDate; // تاریخ شمسی به‌صورت متن
-    const registrationDateMiladi = moment(moment.from(shamsiDate, "fa", "jYYYY/jMM/jDD").locale("en").format("YYYY-MM-DD"));
-    const expirationDateMiladi = moment(registrationDateMiladi).add(30, "days");
+    let expirationDateMiladi, registrationDateMiladi;
+
+    // پیدا کردن آخرین تمدید کاربر (اگر تمدید شده باشد)
+    const lastRenewal = this.renewals
+        .filter(renewal => renewal.user_id === this.selectedUser.id)
+        .sort((a, b) => moment.from(b.new_expiration_date, "fa").valueOf() - moment.from(a.new_expiration_date, "fa").valueOf())[0];
+
+    if (lastRenewal) {
+        // اگر تمدید دارد، از آخرین تمدید استفاده کنیم
+        expirationDateMiladi = moment.from(lastRenewal.new_expiration_date, "fa").locale("en");
+        registrationDateMiladi = moment.from(lastRenewal.renewal_date, "fa").locale("en");
+    } else {
+        // اگر تمدید ندارد، تاریخ ثبت‌نام را در نظر بگیریم
+        if (!this.selectedUser.registrationDate) {
+            console.error('No registration date found for user');
+            return;
+        }
+
+        registrationDateMiladi = moment.from(this.selectedUser.registrationDate, "fa").locale("en");
+        expirationDateMiladi = moment(registrationDateMiladi).add(30, "days"); // اعتبار اولیه ۳۰ روزه
+    }
+
     const totalDays = expirationDateMiladi.diff(registrationDateMiladi, "days");
     const passedDays = moment().diff(registrationDateMiladi, "days");
     const usedPercentage = (passedDays / totalDays) * 100;
 
-    const progress = Math.min(usedPercentage, 100);
-    const remainingDays = Math.max(0, totalDays - passedDays);
+    // محدود کردن مقدار درصد بین 0 تا 100
+    this.progress = Math.min(Math.max(usedPercentage, 0), 100);
+    this.remainingDays = Math.max(0, totalDays - passedDays);
 
+    // اگر تاریخ انقضا گذشته باشد، وضعیت کاربر را تغییر بده
     if (moment().isAfter(expirationDateMiladi)) {
         this.selectedUser.status = 'منقضی‌شده';
     }
 
-    try {
-        await window.api.getUserStatus(this.selectedUser.id);
-    } catch (error) {
-        console.error('Error updating user status in database:', error);
-    }
-
-    this.progress = progress;
-    this.expirationDateMiladi = expirationDateMiladi.format("jYYYY/jMM/jDD");
-    this.remainingDays = remainingDays;
+    console.log(`Progress: ${this.progress}%, Remaining Days: ${this.remainingDays}`);
 },
+
+
+//         async calculateProgress() {
+//             console.log("renewals => ", this.renewals)
+//     if (!this.selectedUser || !this.selectedUser.registrationDate) {
+//         console.error('No selected user or registration date available');
+//         return; // جلوگیری از ادامه پردازش در صورت نداشتن کاربر یا تاریخ ثبت‌نام
+//     }
+
+//     const shamsiDate = this.selectedUser.registrationDate; // تاریخ شمسی به‌صورت متن
+//     const registrationDateMiladi = moment(moment.from(shamsiDate, "fa", "jYYYY/jMM/jDD").locale("en").format("YYYY-MM-DD"));
+//     const expirationDateMiladi = moment(registrationDateMiladi).add(30, "days");
+//     const totalDays = expirationDateMiladi.diff(registrationDateMiladi, "days");
+//     const passedDays = moment().diff(registrationDateMiladi, "days");
+//     const usedPercentage = (passedDays / totalDays) * 100;
+
+//     const progress = Math.min(usedPercentage, 100);
+//     const remainingDays = Math.max(0, totalDays - passedDays);
+
+//     if (moment().isAfter(expirationDateMiladi)) {
+//         this.selectedUser.status = 'منقضی‌شده';
+//     }
+
+//     try {
+//         await window.api.getUserStatus(this.selectedUser.id);
+//     } catch (error) {
+//         console.error('Error updating user status in database:', error);
+//     }
+
+//     this.progress = progress;
+//     this.expirationDateMiladi = expirationDateMiladi.format("jYYYY/jMM/jDD");
+//     this.remainingDays = remainingDays;
+// },
 
         
         viewUser(user) {
@@ -606,9 +749,11 @@ export default {
                 emergencyPhone: '',
                 address: '',
                 registrationDate: '',
+                renewal_duration: '1',
+                expirationDate: '',
                 paymentAmount: '',
-                paymentMethod: '',
-                paymentStatus: 'موفق'
+                paymentMethod: 'کارت',
+                paymentStatus: 'پرداخت شده'
             };
             this.isEditMode = false;
             this.showModal = true;
@@ -621,6 +766,8 @@ export default {
                 ...user
             };
 
+                // محاسبه تاریخ انقضا بر اساس مقادیر موجود
+    this.calculateExpirationDate();
             console.log("this.selectedUser => ", this.selectedUser);
             
                 // پیدا کردن پرداخت مربوط به این کاربر
@@ -636,6 +783,8 @@ export default {
                 emergencyPhone: user.emergencyPhone,
                 address: user.address,
                 registrationDate: user.registrationDate,
+                renewal_duration: user.renewal_duration,
+                expirationDate: user.expirationDate,
                 paymentAmount: payment ? payment.amount : '', // اگر پرداختی برای کاربر موجود باشد
                 paymentMethod: payment ? payment.paymentMethod : '', // اگر روش پرداخت موجود باشد
                 paymentStatus: payment ? payment.status : 'موفق' // اگر وضعیت پرداخت موجود باشد
@@ -659,6 +808,61 @@ export default {
             console.log("*********** 2")
             this.closeModal();
         },
+            calculateExpirationDate() {
+            if (!this.newUser.registrationDate || !this.newUser.renewal_duration) {
+                this.newUser.expirationDate = ''; // در صورت عدم مقداردهی، فیلد خالی بماند
+                return;
+            }
+
+            const shamsiDate = this.newUser.registrationDate;
+            const durationDays = parseInt(this.newUser.renewal_duration, 10); // تبدیل مدت به عدد صحیح
+
+            if (isNaN(durationDays) || durationDays <= 0) {
+                console.error('مدت دوره معتبر نیست');
+                return;
+            }
+
+            // تبدیل تاریخ ثبت‌نام از شمسی به میلادی
+            const registrationDateMiladi = moment(moment.from(shamsiDate, "fa", "jYYYY/jMM/jDD").locale("en").format("YYYY-MM-DD"));
+            
+            // افزودن مدت دوره (روزها) به تاریخ ثبت‌نام
+            const expirationDateMiladi = moment(registrationDateMiladi).add(durationDays, "months");
+            
+            // تبدیل دوباره به شمسی و ذخیره در متغیر expirationDate
+            this.newUser.expirationDate = expirationDateMiladi.format("jYYYY/jMM/jDD");
+
+            console.log("تاریخ انقضا:", this.newUser.expirationDate);
+        },
+        calculateExpirationDate_Renewal() {
+    // اگر مدت دوره مشخص نشده، مقداردهی نکن
+    // if (!this.newUser.duration) {
+    //     this.obj_renewals = ''; 
+    //     return;
+    // }
+
+    // دریافت تاریخ امروز به‌شکل میلادی
+    const currentDateMiladi = moment(); 
+    
+    const durationMonths = parseInt(this.obj_renewals.duration, 10); // تبدیل مدت به عدد صحیح
+
+    if (isNaN(durationMonths) || durationMonths <= 0) {
+        console.error('مدت دوره معتبر نیست');
+        return;
+    }
+
+    // افزودن مدت دوره (ماه‌ها) به تاریخ امروز
+    const expirationDateMiladi = moment(currentDateMiladi).add(durationMonths, "months");
+
+    const currentDate = moment(currentDateMiladi).format("jYYYY/jMM/jDD")
+
+    this.obj_renewals.renewal_date = currentDate
+    // تبدیل دوباره به شمسی و ذخیره در متغیر expirationDate
+    this.obj_renewals.new_expiration_date = expirationDateMiladi.format("jYYYY/jMM/jDD");
+
+    console.log("تاریخ جدید انقضا:", this.obj_renewals.new_expiration_date);
+    console.log("تاریخ جاری:", currentDate);
+}
+,
         async addUser() {
             try {
                 console.log("New User Data:", this.newUser); // بررسی مقدار قبل از ارسال
@@ -670,7 +874,9 @@ export default {
                     status: this.newUser.status,
                     emergencyPhone: this.newUser.emergencyPhone,
                     address: this.newUser.address,
-                    registrationDate: this.newUser.registrationDate
+                    registrationDate: this.newUser.registrationDate,
+                    renewal_duration: this.newUser.renewal_duration,
+                    expirationDate: this.newUser.expirationDate
                 }); // ارسال نسخه‌ای از شیء
 
                 console.log("New Payment:", this.newUser);
@@ -713,7 +919,9 @@ export default {
                     status: this.newUser.status,
                     emergencyPhone: this.newUser.emergencyPhone,
                     address: this.newUser.address,
-                    registrationDate: this.newUser.registrationDate
+                    registrationDate: this.newUser.registrationDate,
+                    renewal_duration: this.newUser.renewal_duration,
+                    expirationDate: this.newUser.expirationDate
                 });
                 
                 console.log("payments Arr ==> ", this.payments);
@@ -748,6 +956,57 @@ export default {
             } catch (error) {
                 console.error('Error deleting user:', error);
             }
+        },
+        openRenewalModal(user){
+            this.fetchPayments();
+            let amount
+            this.userToRenewal = user;
+            this.renewal_user_id = user.id;
+            this.showRenewalModal = true
+            this.calculateExpirationDate_Renewal();
+            this.renewal_payment = this.payments[0].amount
+            console.log("newUser  ==> ", this.payments[0].amount)
+        },
+        closeRenewalModal(){
+            this.userToRenewal = null;
+            this.showRenewalModal = false
+        },
+        async submitFormRenewal(){
+            console.log("this.userToRenewal.id ==> ", this.renewal_user_id);  // باید "1" را چاپ کند
+
+            await this.addRenewals()
+            await this.closeRenewalModal()
+        },
+        async addRenewals(){
+            console.log("🚀 ارسال داده‌ها به API:", this.obj_renewals);
+            console.log("this.userToRenewal => ", this.userToRenewal)
+            const response = await window.api.addRenewals({
+                user_id: this.renewal_user_id,
+                renewal_date: this.obj_renewals.renewal_date,
+                duration: this.obj_renewals.duration,
+                new_expiration_date: this.obj_renewals.new_expiration_date
+            })
+
+                // اگر عملیات موفقیت‌آمیز بود، وضعیت کاربر را به‌روزرسانی کن
+            if (response.success) {
+                this.checkAndUpdateUserStatus(this.userToRenewal.id);
+            }
+        },
+
+        async checkAndUpdateUserStatus(userId) {
+            const response = await window.api.checkUserStatus(userId);
+            if (response.success) {
+                this.updateUserStatus(userId, response.status); // وضعیت جدید را به‌روزرسانی کن
+            }
+        },
+
+
+        async updateUserStatus(userId, newStatus) {
+            console.log(`Updating status for user ${userId} to ${newStatus}`);
+            await window.api.updateUserStatus({
+                userId: userId,
+                status: newStatus
+            });
         }
     },
     async mounted() {
@@ -755,15 +1014,29 @@ export default {
         await this.fetchPayments();  // دریافت پرداخت‌ها
         this.calculateProgress(); // محاسبه درصد زمان در زمان بارگذاری کامپوننت
         console.log("users:", this.users);
+        // console.log(this.hasExpiredUsers())
          // بررسی داده‌های پرداخت‌ها
     console.log("payments:", this.payments);
         jalaliDatepicker.startWatch();
+        for (const user of this.users) {
+        await this.checkAndUpdateUserStatus(user.id);
+    }
+
+    this.renewals = await window.api.fetchRenewals()
+        
     },
     watch: {
+
+            
+
     // اگر تاریخ ثبت‌نام تغییر کند، دوباره پراگرس بار را به‌روز می‌کنیم
     'newUser.registrationDate': function () {
       this.calculateProgress();
     },
+    'newUser.renewal_duration': function () {
+        this.calculateExpirationDate();
+    },
+
   },
 };
 

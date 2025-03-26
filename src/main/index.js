@@ -79,16 +79,18 @@ function initDatabase() {
         // ایجاد جدول اگر وجود نداشت
         const stmt = db.prepare(`
                 CREATE TABLE IF NOT EXISTS users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                firstName TEXT,
-                lastName TEXT,
-                memberId TEXT,
-                phone TEXT,
-                status TEXT,
-                emergencyPhone TEXT,
-                address TEXT,
-                registrationDate TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    firstName TEXT,
+                    lastName TEXT,
+                    memberId TEXT,
+                    phone TEXT,
+                    status TEXT, -- active, expired
+                    emergencyPhone TEXT,
+                    address TEXT,
+                    registrationDate TEXT, -- تاریخ ثبت‌نام اولیه
+                    renewal_duration INTEGER, -- مدت‌زمان دوره اولیه (مثلاً 1 ماه)
+                    expirationDate TEXT, -- تاریخ انقضای عضویت فعلی
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 )
             `);
         stmt.run();
@@ -118,6 +120,23 @@ function initDatabase() {
         console.error('Error creating payments table', err);
     }
 
+        // ایجاد جدول renewal
+        try {
+            const stmt = db.prepare(`
+                    CREATE TABLE IF NOT EXISTS renewals (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        user_id INTEGER,
+                        renewal_date TEXT, -- تاریخ تمدید
+                        duration INTEGER, -- مدت‌زمان تمدید (مثلاً 3 ماه)
+                        new_expiration_date TEXT, -- تاریخ جدید انقضا
+                        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+                    )
+                `);
+            stmt.run();
+            console.log('Renewals table is ready.');
+        } catch (err) {
+            console.error('Error creating Renewals table', err);
+        }
 
 }
 
@@ -380,8 +399,8 @@ app.whenReady().then(() => {
 
         try {
             const stmt = db.prepare(`
-                INSERT INTO users (firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO users (firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate, renewal_duration, expirationDate)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `);
 
             const result = stmt.run(
@@ -392,7 +411,10 @@ app.whenReady().then(() => {
                 user.status ?? null,
                 user.emergencyPhone ?? null,
                 user.address ?? null,
-                user.registrationDate ?? null
+                user.registrationDate ?? null,
+                user.renewal_duration ?? null,
+                user.expirationDate ?? null
+                
             );
 
             return { id: result.lastInsertRowid };
@@ -423,12 +445,12 @@ app.whenReady().then(() => {
         //         });
         //     });
         return new Promise((resolve, reject) => {
-            const { id, firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate } = user;
+            const { id, firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate, renewal_duration, expirationDate } = user;
             db.prepare(`
             UPDATE users 
-            SET firstName = ?, lastName = ?, memberId = ?, phone = ?, status = ?, emergencyPhone = ?, address = ?, registrationDate = ?
+            SET firstName = ?, lastName = ?, memberId = ?, phone = ?, status = ?, emergencyPhone = ?, address = ?, registrationDate = ?, renewal_duration = ?, expirationDate = ?
             WHERE id = ?
-        `).run(firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate, id);
+        `).run(firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate, renewal_duration, expirationDate, id);
             resolve({ changes: db.prepare("SELECT changes()").get().changes });
             // resolve({ changes: this.changes });
         });
@@ -630,6 +652,77 @@ ipcMain.handle("fetch-new-members-count", async () => {
     });
     
 
+    // افزودن تمدید 
+    ipcMain.handle('add-renewals', async(_, renewal) => {
+        return new Promise((resolve, reject) => {
+            const { user_id, renewal_date, duration, new_expiration_date } = renewal;
+            db.prepare(`
+                INSERT INTO renewals (user_id, renewal_date, duration, new_expiration_date)
+                VALUES (?, ?, ?, ?)
+            `).run(user_id, renewal_date, duration, new_expiration_date);
+            resolve({ success: true, renewalId: db.prepare("SELECT last_insert_rowid()").get().last_insert_rowid });
+        });
+    });
+
+    // دبروزرسانی وضعیت کاربر
+ipcMain.handle('update-user-status', async(_, { userId, status }) => {
+    return new Promise((resolve, reject) => {
+        try {
+            // آپدیت وضعیت کاربر در جدول users
+            db.prepare(`
+                UPDATE users
+                SET status = ?
+                WHERE id = ?
+            `).run(status, userId);
+
+            resolve({ success: true });
+        } catch (error) {
+            reject({ success: false, error: error.message });
+        }
+    });
+});
+
+ipcMain.handle('check-user-status', async(_, userId) => {
+    return new Promise((resolve, reject) => {
+        try {
+            // پیدا کردن آخرین تاریخ انقضا برای کاربر
+            const renewal = db.prepare(`
+                SELECT new_expiration_date
+                FROM renewals
+                WHERE user_id = ?
+                ORDER BY new_expiration_date DESC
+                LIMIT 1
+            `).get(userId);
+
+            if (!renewal) {
+                resolve({ success: false, status: 'نامشخص' });
+                return;
+            }
+
+            // تبدیل تاریخ شمسی به میلادی
+            const expirationDate = moment
+                .from(renewal.new_expiration_date, "fa", "jYYYY/jMM/jDD")
+                .locale("en");
+
+            // گرفتن تاریخ امروز
+            const currentDate = moment();
+
+            // مقایسه تاریخ انقضا با تاریخ امروز
+            const status = currentDate.isAfter(expirationDate) ? "منقضی شده" : "فعال";
+            resolve({ success: true, status });
+        } catch (error) {
+            reject({ success: false, error: error.message });
+        }
+    });
+});
+
+    // دریافت پرداخت ها
+    ipcMain.handle('fetch-renewals', async() => {
+        return new Promise((resolve, reject) => {
+            const rows = db.prepare("SELECT * FROM renewals").all();
+            resolve(rows);
+        });
+    });
 
     createWindow()
 
@@ -638,7 +731,10 @@ ipcMain.handle("fetch-new-members-count", async () => {
         // dock icon is clicked and there are no other windows open.
         if (BrowserWindow.getAllWindows().length === 0) createWindow()
     })
-})
+});
+
+
+
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
