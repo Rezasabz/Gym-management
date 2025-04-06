@@ -20,6 +20,17 @@
             </button>
         </div> -->
         <!-- <h3 class="text-lg font-semibold mb-3">پرداخت‌های گذشته</h3> -->
+        <div class="h-full flex justify-between items-center mb-6">
+            <div className="tooltip" data-tip="چاپ لیست پرداخت‌ها">
+            <button type="button" class="btn-widetext-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500" @click="downloadExcelPayments">
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M16.444 18H19a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h2.556M17 11V5a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v6h10ZM7 15h10v4a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-4Z"/>
+            </svg>
+
+            <span class="sr-only">Print</span>
+            </button>
+            </div>
+        </div>
         <div class="overflow-x-auto">
           <table class="table w-full text-right rtl">
             <thead>
@@ -256,6 +267,7 @@
   <script>
   import "@majidh1/jalalidatepicker/dist/jalalidatepicker.min.js";
   import "@majidh1/jalalidatepicker/dist/jalalidatepicker.min.css";
+  import * as XLSX from 'xlsx';
 export default {
   data() {
     return {
@@ -269,11 +281,58 @@ export default {
     };
   },
   methods: {
-    openModal() {
-      this.isModalOpen = true;
-    },
-    closeModal() {
-      this.isModalOpen = false;
+    downloadExcelPayments() {
+
+      // ایجاد هدر فارسی
+      const headers = [[
+        "ردیف",
+        "نام",
+        "نام خانوادگی",
+        "تاریخ",
+        "مبلغ (تومان)",
+        "روش پرداخت",
+        "وضعیت",
+      ]];
+      // reverse headers to show the latest date first
+      headers[0].reverse();
+      // فیلتر کردن فقط داده‌های غیر دکمه‌ای
+
+      const filteredPayments = this.payments.map( payment => {
+      const { status, paymentMethod, amount, paymentDate, lastName, firstName, paymentId } = payment; // فقط داده‌های غیر دکمه‌ای را نگه می‌داریم
+      return { status, paymentMethod, amount, paymentDate, lastName, firstName, paymentId };
+      });
+
+      const ws = XLSX.utils.json_to_sheet(filteredPayments); // تبدیل جدول به sheet
+      // اضافه کردن هدر به شیت
+      XLSX.utils.sheet_add_aoa(ws, headers, { origin: "A1" });
+
+      // تنظیم عرض ستون‌ها متناسب با محتوا و هدر
+      const colWidths = [];
+
+      // ابتدا طول هدر را بررسی می‌کنیم
+      headers[0].forEach((header, idx) => {
+      colWidths[idx] = Math.max(colWidths[idx] || 0, header.length);
+      });
+
+      // سپس طول داده‌ها را بررسی می‌کنیم
+      for (let i = 0; i < filteredPayments.length; i++) {
+      Object.values(filteredPayments[i]).forEach((value, idx) => {
+      const length = value ? value.toString().length : 0;
+      colWidths[idx] = Math.max(colWidths[idx] || 0, length);
+      });
+      }
+
+      // اعمال عرض به ستون‌ها
+      ws['!cols'] = colWidths.map(width => ({ wch: width }));
+      const wb = XLSX.utils.book_new(); // ایجاد کتابچه (workbook)
+      XLSX.utils.book_append_sheet(wb, ws, 'Payments'); // افزودن sheet به workbook
+      XLSX.writeFile(wb, 'payment_list.xlsx'); // دانلود فایل Excel
+      },
+          openModal() {
+            this.isModalOpen = true;
+          },
+          closeModal() {
+            this.isModalOpen = false;
     },
     async fetchPayments() {
         try {
