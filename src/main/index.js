@@ -153,7 +153,9 @@ function createWindow() {
         webPreferences: {
             preload: join(__dirname, '../preload/index.js'),
             sandbox: false,
-            nodeIntegration: true,
+            nodeIntegration: false,
+            ontextIsolation: true,
+            enableRemoteModule: false,
         }
     })
 
@@ -710,6 +712,11 @@ ipcMain.handle('check-user-status', async(_, userId) => {
             // مقایسه تاریخ انقضا با تاریخ امروز
             const status = currentDate.isAfter(expirationDate) ? "منقضی شده" : "فعال";
             resolve({ success: true, status });
+
+            // 🔥 وقتی وضعیت تغییر کند، به Renderer اطلاع بده
+            const win = BrowserWindow.getAllWindows()[0];
+            win.webContents.send("user-status-updated", { userId, status });
+
         } catch (error) {
             reject({ success: false, error: error.message });
         }

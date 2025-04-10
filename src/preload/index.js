@@ -28,7 +28,15 @@ const api = {
     addRenewals: (renewal) => ipcRenderer.invoke('add-renewals', renewal),
     updateUserStatus: (userId, status) => ipcRenderer.invoke('update-user-status', userId, status),
     checkUserStatus: (userId) => ipcRenderer.invoke('check-user-status', userId),
-    fetchRenewals: () => ipcRenderer.invoke('fetch-renewals')
+    fetchRenewals: () => ipcRenderer.invoke('fetch-renewals'),
+    // اضافه کردن لیسنر برای آپدیت وضعیت کاربر
+    onUserStatusUpdated: (callback) => {
+        ipcRenderer.on("user-status-updated", (event, data) => callback(data));
+    },
+
+    removeUserStatusListener: () => {
+        ipcRenderer.removeAllListeners("user-status-updated");
+    }
 
 }
 

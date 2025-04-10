@@ -478,6 +478,7 @@
 import "@majidh1/jalalidatepicker/dist/jalalidatepicker.min.js";
 import "@majidh1/jalalidatepicker/dist/jalalidatepicker.min.css";
 import moment from 'jalali-moment';
+import { ref, onMounted, onUnmounted } from "vue";
 
 export default {
     data() {
@@ -1007,6 +1008,16 @@ export default {
                 userId: userId,
                 status: newStatus
             });
+        },
+
+        // 🚀 گوش دادن به تغییرات وضعیت کاربر
+         listenForUserStatusUpdates() {
+            window.api.onUserStatusUpdated((data) => {
+                console.log("User status changed:", data);
+
+                const user = users.value.find(u => u.id === data.userId);
+                if (user) user.status = data.status;
+            });
         }
     },
     async mounted() {
@@ -1038,6 +1049,17 @@ export default {
     },
 
   },
+
 };
+
+  // اجرا هنگام لود شدن کامپوننت
+  onMounted(() => {
+    listenForUserStatusUpdates();
+});
+
+// پاک کردن لیسنر هنگام خروج از صفحه
+onUnmounted(() => {
+    window.api.removeUserStatusListener();
+});
 
 </script>
