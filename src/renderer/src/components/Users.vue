@@ -4,9 +4,22 @@
   <input type="text" v-model="searchQuery" placeholder="جستجو براساس نام یا نام خانوادگی..." class="input input-bordered w-full md:max text-right rtl custom-rtl" />
     <div class="bg-base-100 shadow-lg rounded-lg mt-6 mb-6 p-6">
         <!-- بخش جستجو و دکمه افزودن کاربر -->
-        <div class="mb-6">
+        <div class="h-full flex justify-between items-center mb-6">
+            <div className="tooltip" data-tip="چاپ لیست اعضا">
+            <button type="button" class="text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500" @click="downloadExcel">
+            <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M16.444 18H19a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h2.556M17 11V5a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v6h10ZM7 15h10v4a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-4Z"/>
+            </svg>
+
+            <span class="sr-only">Icon description</span>
+            </button>
+            </div>
             <button class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" @click="openAddModal">
-                افزودن کاربر
+                افزودن عضو جدید
+                <svg class="w-6 h-6 ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12h4m-2 2v-4M4 18v-1a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v1a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1Zm8-10a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"/>
+                </svg>
+
             </button>
         </div>
 
@@ -172,11 +185,11 @@
                         <input type="text" v-model="newUser.address" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" required />
                     </div>
 
-                    <div class="modal-action mt-4">
-                        <button type="button" class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="closeModal">
+                    <div class="flex justify-center items-center modal-action mt-5">
+                        <button type="button" class="btn-wide text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="closeModal">
                             لغو
                         </button>
-                        <button type="submit" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
+                        <button type="submit" class="btn-wide text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2">
                             {{ isEditMode ? "ویرایش" : "افزودن" }}
                         </button>
                     </div>
@@ -188,11 +201,15 @@
             <!-- مدال تأیید حذف -->
             <div v-if="showDeleteModal" class="modal modal-open">
                 <div class="modal-box">
-                    <h3 class="font-bold text-lg mb-4">حذف کاربر</h3>
+                    <div class="flex justify-end">
+                        <h3 class="font-bold text-lg mb-4 mr-3">حذف کاربر</h3>
+                        <svg width="25" height="25" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" class="iconify iconify--twemoji" preserveAspectRatio="xMidYMid meet"><path fill="#FFCC4D" d="M2.653 35C.811 35-.001 33.662.847 32.027L16.456 1.972c.849-1.635 2.238-1.635 3.087 0l15.609 30.056c.85 1.634.037 2.972-1.805 2.972H2.653z"></path><path fill="#231F20" d="M15.583 28.953a2.421 2.421 0 0 1 2.419-2.418a2.421 2.421 0 0 1 2.418 2.418a2.422 2.422 0 0 1-2.418 2.419a2.422 2.422 0 0 1-2.419-2.419zm.186-18.293c0-1.302.961-2.108 2.232-2.108c1.241 0 2.233.837 2.233 2.108v11.938c0 1.271-.992 2.108-2.233 2.108c-1.271 0-2.232-.807-2.232-2.108V10.66z"></path></svg>
+                    </div>
+
                     <p>آیا از حذف این کاربر مطمئن هستید؟</p>
-                    <div class="modal-action mt-4">
-                        <button type="button" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="closeDeleteModal">انصراف</button>
-                        <button type="button" class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="deleteUserConfirmed">حذف</button>
+                    <div class="flex justify-center items-center modal-action mt-4">
+                        <button type="button" class="btn-wide text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="closeDeleteModal">انصراف</button>
+                        <button type="button" class="btn-wide text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="deleteUserConfirmed">حذف</button>
                     </div>
                 </div>
             </div>
@@ -342,7 +359,7 @@
                   </div>
             </div> -->
                     <div class="modal-action mt-4">
-                        <button class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="closeDetailsModal">بستن</button>
+                        <button class="btn-wide text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="closeDetailsModal">بستن</button>
                     </div>
                 </div>
                 <!-- <div className="modal-box w-11/12 max-w-5xl">
@@ -425,7 +442,7 @@
                             <option value="نقدی">نقدی</option>
                         </select>
                     </div> -->
-                    <div class="mt-4 mb-4">
+                    <div class="flex justify-center items-center mt-4 mb-4">
                         <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">مدت زمان دوره</label>
                         <select id="countries" v-model="obj_renewals.duration" class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl">
                             <option value="1">1 ماهه</option>
@@ -479,6 +496,7 @@ import "@majidh1/jalalidatepicker/dist/jalalidatepicker.min.js";
 import "@majidh1/jalalidatepicker/dist/jalalidatepicker.min.css";
 import moment from 'jalali-moment';
 import { ref, onMounted, onUnmounted } from "vue";
+import * as XLSX from 'xlsx';
 
 export default {
     data() {
@@ -538,6 +556,62 @@ export default {
     
         },
     methods: {
+        downloadExcel() {
+
+// ایجاد هدر فارسی
+const headers = [["ردیف", "نام", "نام خانوادگی", "شماره عضویت", "شماره موبایل", "وضعیت", "تاریخ ثبت‌نام"]];
+// reverse headers to show the latest date first
+headers[0].reverse();
+ // فیلتر کردن فقط داده‌های غیر دکمه‌ای
+const filteredUsers = this.users.map(user => {
+const { registrationDate, status, phone, memberId, lastName, firstName, id} = user; // فقط داده‌های غیر دکمه‌ای را نگه می‌داریم
+return { registrationDate, status, phone, memberId, lastName, firstName, id };
+});
+
+const ws = XLSX.utils.json_to_sheet(filteredUsers); // تبدیل جدول به sheet
+ // اضافه کردن هدر به شیت
+XLSX.utils.sheet_add_aoa(ws, headers, { origin: "A1" });
+
+
+ // تنظیم رنگ پس‌زمینه هدر
+// تنظیم رنگ پس‌زمینه هدر
+const range = XLSX.utils.decode_range(ws['!ref']);
+for (let col = range.s.c; col <= range.e.c; col++) {
+const cell = ws[XLSX.utils.encode_cell({r: 0, c: col})];
+if (cell) {
+cell.s = cell.s || {}; // اگر استایل وجود ندارد، یک شی جدید ایجاد می‌کنیم
+cell.s.fill = {
+   fgColor: { rgb: "4CAF50" } // رنگ پس‌زمینه سبز برای هدر
+};
+cell.s.font = {
+   bold: true, // برای بولد کردن متن
+   color: { rgb: "FFFFFF" } // رنگ متن سفید
+};
+}
+}
+
+ // تنظیم عرض ستون‌ها متناسب با محتوا و هدر
+const colWidths = [];
+
+// ابتدا طول هدر را بررسی می‌کنیم
+headers[0].forEach((header, idx) => {
+colWidths[idx] = Math.max(colWidths[idx] || 0, header.length);
+});
+
+// سپس طول داده‌ها را بررسی می‌کنیم
+for (let i = 0; i < filteredUsers.length; i++) {
+Object.values(filteredUsers[i]).forEach((value, idx) => {
+const length = value ? value.toString().length : 0;
+colWidths[idx] = Math.max(colWidths[idx] || 0, length);
+});
+}
+
+// اعمال عرض به ستون‌ها
+ws['!cols'] = colWidths.map(width => ({ wch: width }));
+const wb = XLSX.utils.book_new(); // ایجاد کتابچه (workbook)
+XLSX.utils.book_append_sheet(wb, ws, 'Users'); // افزودن sheet به workbook
+XLSX.writeFile(wb, 'user_list.xlsx'); // دانلود فایل Excel
+},
         shouldShowRenewButton(user) {
             if (user.status === "منقضی‌شده") {
                 return true; // اگر کاربر منقضی شده باشد، دکمه نمایش داده شود
