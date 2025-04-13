@@ -18,6 +18,7 @@
         "build:linux": "npm run build && electron-builder --linux"
     },
     "dependencies": {
+        "@alireza-ab/vue-persian-datepicker": "^2.3.2",
         "@electron-toolkit/preload": "^3.0.1",
         "@electron-toolkit/utils": "^3.0.0",
         "@electron/fuses": "^1.8.0",
@@ -28,6 +29,7 @@
         "jalali-moment": "^3.3.11",
         "npm": "^11.1.0",
         "pinia": "^3.0.1",
+        "sweetalert2": "^11.17.2",
         "vue-router": "^4.5.0",
         "xlsx": "^0.18.5"
     },
