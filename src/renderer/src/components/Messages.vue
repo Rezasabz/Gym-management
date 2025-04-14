@@ -13,70 +13,71 @@
           <!-- فرم ارسال پیامک -->
           <div class="form-control">
             <label class="label">
-              <span class="label-text text-right">متن پیامک</span>
+              <span class="label-text text-right font-semibold">متن پیامک</span>
             </label>
             <textarea 
               v-model="message" 
-              class="textarea textarea-bordered h-24 text-right" 
+              class="textarea textarea-bordered h-24 text-right font-semibold" 
               placeholder="...متن پیام خود را وارد کنید"
               :maxlength="maxLength"
             ></textarea>
-            <div class="text-sm text-gray-500 mt-1 text-right">
+            <div class="text-sm text-gray-500 mt-1 text-right font-semibold">
               {{ message.length }}/{{ maxLength }} کاراکتر
             </div>
           </div>
   
-          <!-- انتخاب اعضا -->
-          <div class="form-control mt-4 text-right">
-            <label class="label">
-              <span class="label-text text-right">ارسال به</span>
+        <!-- انتخاب اعضا -->
+        <div class="form-control mt-4 text-right font-semibold rtl">
+          <label class="label justify-end">
+            <span class="label-text text-right">ارسال به</span>
+          </label>
+
+          <div class="flex flex-wrap gap-4 justify-end">
+            <label class="cursor-pointer label flex-row-reverse gap-2">
+              <input 
+                type="radio" 
+                name="send-to" 
+                class="radio radio-primary" 
+                v-model="sendTo" 
+                value="all"
+              >
+              <span class="label-text font-semibold">همه اعضا</span> 
             </label>
-            <div class="flex flex-wrap gap-2">
-              <label class="cursor-pointer label">
-                <input 
-                  type="radio" 
-                  name="send-to" 
-                  class="radio radio-primary" 
-                  v-model="sendTo" 
-                  value="all"
-                >
-                <span class="label-text mr-2">همه اعضا</span> 
-              </label>
-              <label class="cursor-pointer label">
-                <input 
-                  type="radio" 
-                  name="send-to" 
-                  class="radio radio-primary" 
-                  v-model="sendTo" 
-                  value="active"
-                >
-                <span class="label-text mr-2">اعضای فعال</span>
-              </label>
-              <label class="cursor-pointer label">
-                <input 
-                  type="radio" 
-                  name="send-to" 
-                  class="radio radio-primary" 
-                  v-model="sendTo" 
-                  value="custom"
-                >
-                <span class="label-text mr-2">انتخاب دستی</span>
-              </label>
-            </div>
-  
-            <!-- لیست انتخاب اعضا (در حالت انتخاب دستی) -->
-            <div v-if="sendTo === 'custom'" class="mt-4">
-              <div class="overflow-x-auto">
-                <table class="table table-zebra">
-                  <thead>
-                    <tr>
-                      <th class="text-right">انتخاب</th>
-                      <th class="text-right">نام</th>
-                      <th class="text-right">شماره تلفن</th>
-                      <th class="text-right">وضعیت</th>
-                    </tr>
-                  </thead>
-                  <tbody>
+            <label class="cursor-pointer label flex-row-reverse gap-2">
+              <input 
+                type="radio" 
+                name="send-to" 
+                class="radio radio-primary" 
+                v-model="sendTo" 
+                value="active"
+              >
+              <span class="label-text font-semibold">اعضای فعال</span>
+            </label>
+            <label class="cursor-pointer label flex-row-reverse gap-2">
+              <input 
+                type="radio" 
+                name="send-to" 
+                class="radio radio-primary" 
+                v-model="sendTo" 
+                value="custom"
+              >
+              <span class="label-text font-semibold">انتخاب دستی</span>
+            </label>
+          </div>
+
+          <!-- لیست انتخاب اعضا (در حالت انتخاب دستی) -->
+          <div v-if="sendTo === 'custom'" class="mt-4">
+            <div class="overflow-x-auto shadow-md rounded-lg">
+              <table class="table w-full text-right rtl">
+                <thead>
+                  <tr class="bg-base-200">
+                    <th class="text-right">انتخاب</th>
+                    <th class="text-right">وضعیت</th>
+                    <th class="text-right">شماره تلفن</th>
+                    <th class="text-right">نام</th>
+                  </tr>
+                </thead>
+                <tbody>
                   <tr v-for="user in users" :key="user.id">
                     <td class="text-right">
                       <input 
@@ -86,76 +87,82 @@
                         :value="user.id"
                       >
                     </td>
-                    <td class="text-right">{{ user.firstName }}{{ user.lastName }}</td>
-                    <td class="text-right">{{ user.phone }}</td>
                     <td class="text-right">
-                            <span class="font-semibold" :class="{
-                  'bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 shadow-sm shadow-blue-500/50': user.status === 'فعال',
-                  'bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300 shadow-sm shadow-blue-500/50': user.status !== 'فعال'
-                }">
-                                {{ user.status }}</span>
-                        </td>
+                      <span class="font-semibold"
+                      :class="{
+                        'text-xs font-medium me-2 px-2.5 py-0.5 rounded-full shadow-sm': true,
+                        'bg-green-100 text-green-800 dark:bg-green-700 dark:text-green-100': user.status === 'فعال',
+                        'bg-red-100 text-red-800 dark:bg-red-700 dark:text-red-100': user.status !== 'فعال'
+                      }">
+                        {{ user.status }}
+                      </span>
+                    </td>
+                    <td class="text-right font-semibold">{{ user.phone }}</td>
+                    <td class="text-right font-semibold">{{ user.firstName }} {{ user.lastName }}</td>
                   </tr>
                 </tbody>
-                </table>
-              </div>
+              </table>
             </div>
           </div>
-  
-          <!-- زمان ارسال -->
-          <div class="form-control mt-4">
-            <label class="label">
-              <span class="label-text">زمان ارسال</span>
+        </div>
+
+        <!-- زمان ارسال -->
+        <div class="form-control mt-4 text-right rtl">
+          <label class="label justify-end">
+            <span class="label-text font-semibold">زمان ارسال</span>
+          </label>
+
+          <div class="flex flex-wrap gap-4 justify-end">
+            <label class="cursor-pointer label flex-row-reverse gap-2">
+              <input 
+                type="radio" 
+                name="send-time" 
+                class="radio radio-primary" 
+                v-model="sendTime" 
+                value="now"
+              >
+              <span class="label-text font-semibold">همین حالا</span> 
             </label>
-            <div class="flex flex-wrap gap-4">
-              <label class="cursor-pointer label">
-                <input 
-                  type="radio" 
-                  name="send-time" 
-                  class="radio radio-primary" 
-                  v-model="sendTime" 
-                  value="now"
-                >
-                <span class="label-text mr-2">همین حالا</span> 
+            <label class="cursor-pointer label flex-row-reverse gap-2">
+              <input 
+                type="radio" 
+                name="send-time" 
+                class="radio radio-primary" 
+                v-model="sendTime" 
+                value="scheduled"
+              >
+              <span class="label-text font-semibold">زمانبندی شده</span>
+            </label>
+          </div>
+
+          <!-- انتخاب تاریخ و زمان (در حالت زمانبندی شده) -->
+          <div v-if="sendTime === 'scheduled'" class="mt-4 flex flex-col sm:flex-row gap-4 text-right rtl">
+            <div class="form-control w-full">
+              <label class="label justify-end">
+                <span class="label-text font-semibold">تاریخ</span>
               </label>
-              <label class="cursor-pointer label">
-                <input 
-                  type="radio" 
-                  name="send-time" 
-                  class="radio radio-primary" 
-                  v-model="sendTime" 
-                  value="scheduled"
-                >
-                <span class="label-text mr-2">زمانبندی شده</span>
-              </label>
+              <input 
+                ref="dateInput" 
+                data-jdp 
+                data-jdp-only-date 
+                class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl my-theme-wrapper"
+              />
             </div>
-  
-            <!-- انتخاب تاریخ و زمان (در حالت زمانبندی شده) -->
-            <div v-if="sendTime === 'scheduled'" class="mt-4 flex gap-4">
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text">تاریخ</span>
-                </label>
-                <!-- <input 
-                  type="date" 
-                  class="input input-bordered" 
-                  v-model="scheduledDate"
-                > -->
-                <input ref="dateInput" data-jdp data-jdp-only-date class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl my-theme-wrapper" />
-              </div>
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text">ساعت</span>
-                </label>
-                <input class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" id="timeInput" data-jdp data-jdp-only-time v-model="scheduledTime">
-                <!-- <input 
-                  type="time" 
-                  class="input input-bordered" 
-                  v-model="scheduledTime"
-                > -->
-              </div>
+            <div class="form-control w-full">
+              <label class="label justify-end">
+                <span class="label-text font-semibold">ساعت</span>
+              </label>
+              <input 
+                class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl"
+                id="timeInput" 
+                data-jdp 
+                data-jdp-only-time 
+                v-model="scheduledTime"
+              >
             </div>
           </div>
+        </div>
+
   
           <!-- دکمه ارسال -->
           <div class="mt-6">

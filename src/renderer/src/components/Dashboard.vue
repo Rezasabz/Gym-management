@@ -96,6 +96,8 @@
     <!-- divider -->
     <div className="dahsed-border"></div>
 
+    <div class="overflow-x-auto mt-2 border border-gray-200 rounded-lg">
+            <!-- جدول اعضای جدید -->
     <table class="table w-full">
                 <thead class="bgl-success">
                     <tr>
@@ -116,6 +118,7 @@
                     </tr>
                 </tbody>
             </table>
+    </div>
     </div>
 
     <!-- لیست بدهکاران -->
@@ -138,9 +141,11 @@
         </div>
     </div>
     <div className="dahsed-border"></div>
-    <table class="table w-full mt-2">
+    <div class="overflow-x-auto mt-2 border border-gray-200 rounded-lg">
+            <!-- جدول بدهکاران -->
+    <table class="table w-full">
                 <!-- head -->
-                <thead class="bgl-success">
+                <thead class="bgl-fail">
                     <tr>
                        <th class="text-right">نام خانوادگی</th>
                        <th class="text-right">نام</th>
@@ -153,6 +158,7 @@
                     </tr>
                 </tbody>
             </table>
+        </div>
     </div>
     </div>
 
