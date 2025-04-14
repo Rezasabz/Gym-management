@@ -2,24 +2,25 @@
         <!-- Sidebar -->
         <!-- <Sidebar /> -->
    
-<div className="grid grid-cols-5 grid-rows gap-4 mb-4 shadow-lg">
+<div className="grid grid-cols-5 grid-rows gap-4 mb-4 shadow-lg rounded-xl">
     <div className="col-span-5">
-      <figure>
-            <img
-               src="../assets/img/header-2.png"
-               alt="Shoes" />
-         </figure>
-    </div>
+  <figure className="w-full max-w-full rounded-xl overflow-hidden">
+    <img
+      src="../assets/img/header-2.png"
+      alt="sohrabi GYM"
+      className="w-full h-auto object-cover"
+    />
+  </figure>
+</div>
+
 </div>
     <br>
-
-
-      <div class="grid grid-cols-3 gap-4 mb-4">
-         <div class="bg-white shadow-lg rounded-xl p-4 flex items-center space-x-4 w-full max-w-md">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+         <div class="bg-white shadow-lg rounded-xl p-4 flex items-center space-x-4 w-full max-w">
         <!-- آیکون -->
         <div class="flex items-center justify-center w-16 h-16 bg-purple-50 rounded-full">
             <span class="text-green-600 text-3xl">
-               <svg class="w-6 h-6 text-purple-700 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+               <svg class="w-6 h-6 text-purple-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                <path fill-rule="evenodd" d="M9 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4H7Zm8-1a1 1 0 0 1 1-1h1v-1a1 1 0 1 1 2 0v1h1a1 1 0 1 1 0 2h-1v1a1 1 0 1 1-2 0v-1h-1a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
                </svg>
 
@@ -31,11 +32,11 @@
             <p class="custom-rtl text-2xl font-bold text-gray-900">{{ fetch_new_members_count }} نفر</p>
         </div>
     </div>
-    <div class="bg-white shadow-lg rounded-xl p-4 flex items-center space-x-4 w-full max-w-md">
+    <div class="bg-white shadow-lg rounded-xl p-4 flex items-center space-x-4 w-full max-w">
         <!-- آیکون -->
         <div class="flex items-center justify-center w-16 h-16 bg-green-50 rounded-full">
             <span class="text-green-600 text-3xl">
-               <svg class="w-6 h-6 text-green-600 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+               <svg class="w-6 h-6 text-green-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
             <path fill-rule="evenodd" d="M7 6a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-2v-4a3 3 0 0 0-3-3H7V6Z" clip-rule="evenodd"/>
             <path fill-rule="evenodd" d="M2 11a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-7Zm7.5 1a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5Z" clip-rule="evenodd"/>
             <path d="M10.5 14.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0Z"/>
@@ -49,11 +50,11 @@
             <p class="custom-rtl text-2xl font-bold text-gray-900">{{ current_month_revenue }} تومان</p>
         </div>
     </div>
-    <div class="bg-white shadow-lg rounded-xl p-4 flex items-center space-x-4 w-full max-w-md">
+    <div class="bg-white shadow-lg rounded-xl p-4 flex items-center space-x-4 w-full max-w">
         <!-- آیکون -->
         <div class="flex items-center justify-center w-16 h-16 bg-blue-50 rounded-full">
             <span class="text-green-600 text-3xl">
-               <svg class="w-6 h-6 text-blue-700 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+               <svg class="w-6 h-6 text-blue-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                <path fill-rule="evenodd" d="M8 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4H6Zm7.25-2.095c.478-.86.75-1.85.75-2.905a5.973 5.973 0 0 0-.75-2.906 4 4 0 1 1 0 5.811ZM15.466 20c.34-.588.535-1.271.535-2v-1a5.978 5.978 0 0 0-1.528-4H18a4 4 0 0 1 4 4v1a2 2 0 0 1-2 2h-4.535Z" clip-rule="evenodd"/>
                </svg>
 
@@ -158,90 +159,257 @@
     
 <br>
 
+<!-- نمودارها و جداول -->
+<div class="grid grid-cols-1 bg-white shadow-lg rounded-xl">
+  <!-- نمودار حضور ماهانه -->
+  <div class="lg:col-span-2 card bg-base-100 shadow-lg rounded-xl">
+    <div class="card-body p-6">
+      <!-- استفاده از Flexbox برای چیدمان درست -->
+      <div class="flex justify-between items-center">
+        <!-- منوی انتخاب سال -->
+        <select v-model="selectedYear" @change="updateChart" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option v-for="year in availableYears" :key="year" :value="year">
+            {{ year }}
+          </option>
+        </select>
+        
+        <!-- عنوان نمودار -->
+        <h3 class="text-lg font-semibold text-gray-700">ثبت نام ماهانه اعضا</h3>
+      </div>
+
+      <!-- نمودار -->
+      <div class="h-64 mt-6 bg-gray-50 p-4 rounded-lg shadow-md" ref="chartContainer">
+        <!-- نمودار اینجا رندر می‌شود -->
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
 </template>
 <script>
-
+import ApexCharts from 'apexcharts'
 export default {
-    data() {
-        return {
-            users: [],
-            debtors: [],
-            active_memebers: null,
-            current_month_revenue: null,
-            fetch_new_members_count: null
-        }
-    },
-
-    computed: {
-        filteredUsers() {
-                return this.users.filter(user => 
-                    (user.firstName?.includes(this.searchQuery) || user.lastName?.includes(this.searchQuery))
-                );
-            }
-    },
-    
-    methods: {
-        async getLatestUsers() {
-            try {
-                this.users = await window.api.getLatestUsers();
-            } catch (error) {
-                console.error('Error fetching users:', error);
-            }
-        },
-        async fetchDebtors() {
-            try {
-                this.debtors = await window.api.fetchDebtors();
-            } catch (error) {
-                console.error('Error fetching debtors:', error);
-            }
-        },
-        async fetchActiveMembersCount() {
-            try {
-                this.active_memebers = await window.api.fetchActiveMembersCount();
-                console.log(await window.api.fetchActiveMembersCount());
-                
-            } catch (error) {
-                console.error('Error fetching active_memebers:', error);
-            }
-        },
-        async fetchCurrentMonthRevenue() {
-            try {
-                this.current_month_revenue = await window.api.fetchCurrentMonthRevenue();
-                console.log(await window.api.fetchCurrentMonthRevenue());
-                
-            } catch (error) {
-                console.error('Error fetching current_month_revenue:', error);
-            }
-        },
-        async fetchActiveMembersCount() {
-            try {
-                this.active_memebers = await window.api.fetchActiveMembersCount();
-                console.log(await window.api.fetchActiveMembersCount());
-                
-            } catch (error) {
-                console.error('Error fetching active_memebers:', error);
-            }
-        },
-        async fetchNewMembersCount() {
-            try {
-                this.fetch_new_members_count = await window.api.fetchNewMembersCount();
-                console.log(await window.api.fetchNewMembersCount());
-                
-            } catch (error) {
-                console.error('Error fetching fetch_new_members_count:', error);
-            }
-        },
-    },
-
-    async mounted() {
-        await this.getLatestUsers();
-        await this.fetchDebtors();
-        await this.fetchActiveMembersCount();
-        await this.fetchCurrentMonthRevenue();
-        await this.fetchNewMembersCount();
-        console.log(this.users);
+  data() {
+    return {
+      allusers: [],
+      users: [],
+      debtors: [],
+      active_memebers: null,
+      current_month_revenue: null,
+      fetch_new_members_count: null,
+      chart: null,
+      selectedYear: 1404,
+      availableYears: [1403, 1404, 1405, 1406, 1407],
     }
+  },
+
+  computed: {
+    filteredUsers() {
+      return this.users.filter(user =>
+        (user.firstName?.includes(this.searchQuery) || user.lastName?.includes(this.searchQuery))
+      );
+    }
+  },
+
+  methods: {
+    async getLatestUsers() {
+      try {
+        this.users = await window.api.getLatestUsers();
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    },
+
+    async fetchDebtors() {
+      try {
+        this.debtors = await window.api.fetchDebtors();
+      } catch (error) {
+        console.error('Error fetching debtors:', error);
+      }
+    },
+
+    async fetchActiveMembersCount() {
+      try {
+        this.active_memebers = await window.api.fetchActiveMembersCount();
+      } catch (error) {
+        console.error('Error fetching active_memebers:', error);
+      }
+    },
+
+    async fetchCurrentMonthRevenue() {
+      try {
+        this.current_month_revenue = await window.api.fetchCurrentMonthRevenue();
+      } catch (error) {
+        console.error('Error fetching current_month_revenue:', error);
+      }
+    },
+
+    async fetchNewMembersCount() {
+      try {
+        this.fetch_new_members_count = await window.api.fetchNewMembersCount();
+      } catch (error) {
+        console.error('Error fetching fetch_new_members_count:', error);
+      }
+    },
+
+    async fetchData() {
+      try {
+        this.allusers = await window.api.getUsers();
+        this.users = this.allusers; // اضافه شد برای اطمینان از پر شدن this.users
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    },
+
+    initChart() {
+      if (this.chart) {
+        this.chart.destroy()
+      }
+
+      const monthlyData = this.calculateMonthlyRegistrations(this.selectedYear)
+
+      const options = {
+        series: [{
+          name: 'ثبت‌نام ماهانه',
+          data: monthlyData
+        }],
+        chart: {
+          type: 'area',
+          events: {
+            dataPointSelection: (event, chartContext, config) => {
+              const monthIndex = config.dataPointIndex;
+              this.showDailyChart(monthIndex);
+            }
+          },
+          height: 350,
+          toolbar: { show: false },
+          fontFamily: 'Vazirmatn, sans-serif'
+        },
+        dataLabels: {
+          enabled: false
+        },
+        stroke: {
+          width: 3,
+          curve: 'smooth'
+        },
+        xaxis: {
+          categories: [
+            'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد',
+            'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'
+          ],
+          labels: {
+            style: {
+              fontFamily: 'Vazirmatn, sans-serif'
+            }
+          }
+        },
+        yaxis: {
+          labels: {
+            style: {
+              fontFamily: 'Vazirmatn, sans-serif'
+            }
+          }
+        },
+        tooltip: {
+          style: {
+            fontFamily: 'Vazirmatn, sans-serif'
+          }
+        }
+      }
+
+      this.chart = new ApexCharts(this.$refs.chartContainer, options)
+      this.chart.render()
+    },
+
+    updateChart() {
+      const monthlyData = this.calculateMonthlyRegistrations(this.selectedYear);
+      if (this.chart) {
+        this.chart.updateOptions({
+          series: [{
+            name: 'ثبت‌نام ماهانه',
+            data: monthlyData
+          }],
+          xaxis: {
+            categories: [
+              'فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد',
+              'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'
+            ]
+          }
+        });
+      }
+    },
+
+    calculateMonthlyRegistrations(targetYear = 1403) {
+      const monthCounts = Array(12).fill(0);
+      this.users.forEach(user => {
+        const jalaliDate = user.registrationDate?.split('/');
+        if (!jalaliDate || jalaliDate.length < 3) return;
+
+        const year = parseInt(jalaliDate[0]);
+        const month = parseInt(jalaliDate[1]) - 1;
+
+        if (year === targetYear && month >= 0 && month < 12) {
+          monthCounts[month]++;
+        }
+      });
+      return monthCounts;
+    },
+
+    getDaysInMonth(jalaliYear, jalaliMonth) {
+      if (jalaliMonth <= 6) return 31;
+      if (jalaliMonth <= 11) return 30;
+      return this.isLeapYear(jalaliYear) ? 30 : 29;
+    },
+
+    isLeapYear(year) {
+      return ((year + 38) * 682) % 2816 < 682;
+    },
+
+    showDailyChart(monthIndex) {
+      const targetYear = this.selectedYear;
+      const dayCounts = Array(31).fill(0);
+
+      this.users.forEach(user => {
+        const [yearStr, monthStr, dayStr] = user.registrationDate?.split('/') || [];
+        const year = parseInt(yearStr);
+        const month = parseInt(monthStr) - 1;
+        const day = parseInt(dayStr);
+
+        if (year === targetYear && month === monthIndex && day >= 1 && day <= 31) {
+          dayCounts[day - 1]++;
+        }
+      });
+
+      const finalDayCounts = dayCounts.slice(0, this.getDaysInMonth(targetYear, monthIndex + 1));
+      const dayLabels = finalDayCounts.map((_, i) => `${i + 1}`);
+
+      this.chart.updateOptions({
+        xaxis: {
+          categories: dayLabels
+        },
+        series: [{
+          name: `ثبت‌نام روزانه`,
+          data: finalDayCounts
+        }]
+      });
+    },
+
+    formatDate(jalaliDate) {
+      return jalaliDate;
+    },
+  },
+
+  async mounted() {
+    await this.fetchData();
+    await this.getLatestUsers();
+    await this.fetchDebtors();
+    await this.fetchActiveMembersCount();
+    await this.fetchCurrentMonthRevenue();
+    await this.fetchNewMembersCount();
+    this.initChart();
+  }
 };
+
 </script>

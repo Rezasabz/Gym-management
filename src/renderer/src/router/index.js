@@ -5,6 +5,7 @@ import User from '../components/Users.vue'
 import Payments from '../components/Payments.vue'
 import Reports from '../components/Reports.vue'
 import Messages from '../components/Messages.vue'
+import Dashboard2 from '../components/Dashboard2.vue'
 
 const routes = [
     { path: '/', component: Dashboard },
@@ -13,6 +14,7 @@ const routes = [
     { path: '/users', component: User },
     { path: '/reports', component: Reports },
     { path: '/messages', component: Messages },
+    { path: '/dashboard', component: Dashboard2 },
 
 ]
 
