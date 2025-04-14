@@ -173,8 +173,8 @@
       <!-- استفاده از Flexbox برای چیدمان درست -->
       <div class="flex justify-between items-center">
         <!-- منوی انتخاب سال -->
-        <select v-model="selectedYear" @change="updateChart" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <option v-for="year in availableYears" :key="year" :value="year">
+        <select v-model="selectedYear" @change="updateChart" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-gray-700">
+          <option v-for="year in availableYears" :key="year" :value="year" class="font-semibold">
             {{ year }}
           </option>
         </select>
