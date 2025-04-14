@@ -50,22 +50,19 @@
                 :key="payment.id"
                 class="hover"
               >
-                
-                
-                
-                
-
                 <td>
                   <span class="font-semibold" :class="{
-                  'bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 shadow-sm shadow-blue-500/50': payment.status === 'پرداخت شده',
-                  'bg-red-100 text-red-800 text-xm font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300 shadow-sm shadow-blue-500/50': payment.status !== 'پرداخت شده'
-                }">{{ payment.status }}</span>
+                    'text-xs font-medium me-2 px-2.5 py-0.5 rounded-full shadow-sm': true,
+                    'bg-green-100 text-green-800 dark:bg-green-700 dark:text-green-100': payment.status === 'پرداخت شده',
+                    'bg-red-100 text-red-800 dark:bg-red-700 dark:text-red-100': payment.status !== 'پرداخت شده'
+                  }">{{ payment.status }}</span>
+
                   <!-- <span class="font-semibold bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 shadow-sm shadow-blue-500/50">{{ payment.status }}</span> -->
                 </td>
                 <td>
                   <span
-                    class="badge"
-                    :class="payment.paymentMethod === 'کارت' ? 'badge-primary shadow-sm shadow-blue-500/50' : 'badge-secondary shadow-sm shadow-blue-500/50'"
+                    class="badge font-semibold"
+                    :class="payment.paymentMethod === 'کارت' ? 'inline-flex items-center rounded-lg bg-blue-100 px-3 py-2 text-xs font-medium text-blue-700 ring-1 ring-blue-700/10 ring-inset shadow-sm' : 'inline-flex items-center rounded-lg bg-pink-100 px-3 py-2 text-xs font-medium text-pink-700 ring-1 ring-pink-700/10 ring-inset shadow-sm'"
                   >
                     {{ payment.paymentMethod === 'کارت' ? 'کارت' : 'نقدی' }}
                   </span>

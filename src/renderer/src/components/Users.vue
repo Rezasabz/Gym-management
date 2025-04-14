@@ -63,11 +63,15 @@
                         <!-- <td class="font-bold">{{ user.address }}</td>
                         <td class="font-bold">{{ user.emergencyPhone }}</td> -->
                         <td>
-                            <span class="font-semibold" :class="{
-                  'bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 shadow-sm shadow-blue-500/50': user.status === 'فعال',
-                  'bg-red-100 text-red-800 text-sm font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-red-900 dark:text-red-300 shadow-sm shadow-blue-500/50': user.status !== 'فعال'
-                }">
-                                {{ user.status }}</span>
+                            <span class="font-semibold"
+                                :class="{
+                                    'text-xs font-medium me-2 px-2.5 py-0.5 rounded-full shadow-sm': true,
+                                    'bg-green-100 text-green-800 dark:bg-green-700 dark:text-green-100': user.status === 'فعال',
+                                    'bg-red-100 text-red-800 dark:bg-red-700 dark:text-red-100': user.status !== 'فعال'
+                                }">
+                            {{ user.status }}
+                            </span>
+
                         </td>
                         <td class="font-bold">{{ user.phone }}</td>
                         <td class="font-bold">{{ user.memberId }}</td>
