@@ -145,7 +145,7 @@
                 ref="dateInput" 
                 data-jdp 
                 data-jdp-only-date 
-                class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl my-theme-wrapper"
+                class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:border-gray-600 dark:placeholder-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl my-theme-wrapper"
               />
             </div>
             <div class="form-control w-full">
@@ -296,7 +296,7 @@
       autoHide: true,
       autoShow: true,
       hideAfterChange: true,
-      container: "#my-datepicker-wrapper"
+      // container: "#my-datepicker-wrapper"
     });
     },
   }

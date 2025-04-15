@@ -2,6 +2,7 @@
 
 <div className="overflow-x-auto w-full">
     <h1 class="text-2xl font-bold text-center mb-6">لیست اعضا</h1>
+
   <input type="text" v-model="searchQuery" placeholder="جستجو براساس نام یا نام خانوادگی..." class="input input-bordered w-full md:max text-right p-3 rtl custom-rtl font-semibold" />
     <div class="bg-base-100 shadow-lg rounded-lg mt-6 mb-6 p-6">
         <!-- بخش جستجو و دکمه افزودن کاربر -->
@@ -165,8 +166,19 @@
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                             <span class="label-text">تاریخ ثبت‌نام</span>
                         </label>
-                        <input ref="dateInput" v-model="newUser.registrationDate" data-jdp class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" />
+                        <input ref="dateInput" v-model="newUser.registrationDate" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl custom-date-input" />
+
+                        <date-picker
+                        v-model="date"
+                        format="YYYY-MM-DD"
+                        display-format="jYYYY/jMM/jDD"
+                        custom-input=".custom-date-input .font-semibold"
+                        />
+                        <!-- <input ref="dateInput" v-model="newUser.registrationDate" data-jdp class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" /> -->
                         <!-- <input type="date" v-model="newUser.registrationDate" class="input input-bordered" required /> -->
+                        <!-- <div id="my-datepicker-wrapper"></div> -->
+                              <!-- تقویم فارسی -->
+
                     </div>
                     </div>
                     <div class="grid md:grid-cols-2 gap-4">
@@ -504,12 +516,16 @@
 </template>
 
 <script>
-import "@majidh1/jalalidatepicker/dist/jalalidatepicker.min.js";
-import "@majidh1/jalalidatepicker/dist/jalalidatepicker.min.css";
+// import "@majidh1/jalalidatepicker/dist/jalalidatepicker.min.js";
+// import "@majidh1/jalalidatepicker/dist/jalalidatepicker.min.css";
 import moment from 'jalali-moment';
 import * as XLSX from 'xlsx';
+import DatePicker from 'vue3-persian-datetime-picker'
 
 export default {
+    components: {
+    DatePicker
+  },
     data() {
         return {
             users: [],
@@ -1103,7 +1119,14 @@ export default {
         // console.log(this.hasExpiredUsers())
          // بررسی داده‌های پرداخت‌ها
     console.log("payments:", this.payments);
-        jalaliDatepicker.startWatch();
+    jalaliDatepicker.startWatch({
+    //   time: true,           // فعال باشه برای input دوم
+    //   hasSecond: false,     // می‌تونی true بزاری اگه ثانیه هم بخوای
+    //   autoHide: true,
+    //   autoShow: true,
+    //   hideAfterChange: true,
+    //   container: "#my-datepicker-wrapper"
+    });
         for (const user of this.users) {
         await this.checkAndUpdateUserStatus(user.id);
     }

@@ -61,10 +61,10 @@
             </div>
             
             <div class="mt-4 flex justify-end gap-2 flex-row-reverse">
-            <button @click="resetFilters" class="btn btn-ghost">
+            <button @click="resetFilters" class="text-white bg-pink-800 hover:bg-pink-800 focus:ring-4 focus:ring-pink-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-pink-700 dark:hover:bg-pink-800 focus:ring-1 focus:outline-none focus:ring-pink-300 dark:focus:ring-pink-800 shadow-lg shadow-pink-500/50 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center me-2 dark:bg-pink-600 dark:hover:bg-pink-700 dark:focus:ring-pink-800">
                 بازنشانی فیلترها
             </button>
-            <button @click="applyFilters" class="btn btn-primary">
+            <button @click="applyFilters" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:ring-1 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 اعمال فیلترها
             </button>
             </div>
@@ -73,7 +73,7 @@
 
       
       <!-- آمار کلی -->
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+      <!-- <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
         <div class="stats bg-primary text-primary-content">
           <div class="stat">
             <div class="stat-title font-semibold">کل اعضا</div>
@@ -105,7 +105,7 @@
             <div class="stat-desc font-semibold">نیاز به تمدید</div>
           </div>
         </div>
-      </div>
+      </div> -->
       
     <!-- جدول گزارش -->
     <div class="card bg-base-100 shadow-lg rtl text-right">
@@ -114,7 +114,7 @@
         <h2 class="card-title justify-end">لیست اعضا</h2>
         <div class="flex gap-2 flex-row-reverse">
             <div class="h-full flex justify-between items-center mb-6">
-            <div className="tooltip" data-tip="چاپ لیست پرداخت‌ها">
+            <div className="tooltip font-semibold" data-tip="چاپ لیست پرداخت‌ها">
 
             <button type="button" class="text-white bg-gradient-to-r from-teal-500 via-teal-600 to-teal-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 shadow-lg shadow-teal-500/50 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center me-2 dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800" @click="exportToExcel">
                 چاپ
