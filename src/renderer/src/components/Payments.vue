@@ -1,14 +1,14 @@
 <template>
     <div class="overflow-x-auto w-full">
-      <!-- <h2 class="text-2xl font-bold text-center mb-6">مدیریت پرداخت‌ها</h2> -->
+      <h2 class="text-2xl font-bold text-center mb-6">مدیریت پرداخت‌ها</h2>
   
       <!-- فیلتر و جستجو -->
       <div class="flex flex-wrap gap-4 mb-6">
         <input
           v-model="searchQueryPayment"
           type="text"
-        placeholder="جستجو براساس نام یا نام خانوادگی..." 
-        class="input input-bordered w-full md:max text-right rtl custom-rtl"
+          placeholder="جستجو براساس نام یا نام خانوادگی..." 
+          class="input input-bordered w-full md:max text-right rtl custom-rtl font-semibold"
         />
       </div>
   
@@ -21,7 +21,7 @@
         </div> -->
         <!-- <h3 class="text-lg font-semibold mb-3">پرداخت‌های گذشته</h3> -->
         <div class="h-full flex justify-between items-center mb-6">
-            <div className="tooltip" data-tip="چاپ لیست پرداخت‌ها">
+            <div className="tooltip font-semibold" data-tip="چاپ لیست پرداخت‌ها">
             <!-- <button type="button" class="btn-widetext-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800 dark:hover:bg-blue-500" @click="downloadExcelPayments">
             <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
             <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M16.444 18H19a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h2.556M17 11V5a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v6h10ZM7 15h10v4a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-4Z"/>
@@ -30,7 +30,7 @@
             <span class="sr-only">Print</span>
             </button> -->
             <button type="button" class="text-white bg-gradient-to-r from-teal-500 via-teal-600 to-teal-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 shadow-lg shadow-teal-500/50 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center me-2 dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800" @click="downloadExcelPayments">
-                چاپ لیست اعضا
+                چاپ 
             <svg class="w-6 h-6 ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
             <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M16.444 18H19a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h2.556M17 11V5a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v6h10ZM7 15h10v4a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-4Z"/>
             </svg>

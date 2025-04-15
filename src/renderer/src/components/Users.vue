@@ -1,13 +1,14 @@
 <template>
 
 <div className="overflow-x-auto w-full">
-  <input type="text" v-model="searchQuery" placeholder="جستجو براساس نام یا نام خانوادگی..." class="input input-bordered w-full md:max text-right rtl custom-rtl" />
+    <h1 class="text-2xl font-bold text-center mb-6">لیست اعضا</h1>
+  <input type="text" v-model="searchQuery" placeholder="جستجو براساس نام یا نام خانوادگی..." class="input input-bordered w-full md:max text-right p-3 rtl custom-rtl font-semibold" />
     <div class="bg-base-100 shadow-lg rounded-lg mt-6 mb-6 p-6">
         <!-- بخش جستجو و دکمه افزودن کاربر -->
         <div class="h-full flex justify-between items-center mb-6">
-            <div className="tooltip" data-tip="چاپ لیست اعضا">
+            <div className="tooltip font-semibold" data-tip="چاپ لیست اعضا">
             <button type="button" class="text-white bg-gradient-to-r from-teal-500 via-teal-600 to-teal-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800 shadow-lg shadow-teal-500/50 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center me-2 dark:bg-teal-600 dark:hover:bg-teal-700 dark:focus:ring-teal-800" @click="downloadExcel">
-                چاپ لیست اعضا
+                چاپ
             <svg class="w-6 h-6 ml-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
             <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M16.444 18H19a1 1 0 0 0 1-1v-5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1h2.556M17 11V5a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v6h10ZM7 15h10v4a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1v-4Z"/>
             </svg>

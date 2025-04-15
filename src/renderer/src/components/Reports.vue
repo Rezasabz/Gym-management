@@ -1,6 +1,6 @@
 <template>
     <div class="p-6 max-w-8xl mx-auto">
-      <h1 class="text-2xl font-bold mb-6">گزارش‌گیری اعضای باشگاه</h1>
+      <h1 class="text-2xl font-bold text-center mb-6">گزارش‌گیری اعضای باشگاه</h1>
       
       <div class="card bg-base-100 shadow-lg mb-6 rtl text-right">
         <div class="card-body">
