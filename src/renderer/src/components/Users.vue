@@ -169,10 +169,10 @@
                         <input ref="dateInput" v-model="newUser.registrationDate" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl custom-date-input" />
 
                         <date-picker
-                        v-model="date"
+                        v-model="newUser.registrationDate"
                         format="YYYY-MM-DD"
                         display-format="jYYYY/jMM/jDD"
-                        custom-input=".custom-date-input .font-semibold"
+                        custom-input=".custom-date-input"
                         />
                         <!-- <input ref="dateInput" v-model="newUser.registrationDate" data-jdp class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" /> -->
                         <!-- <input type="date" v-model="newUser.registrationDate" class="input input-bordered" required /> -->
