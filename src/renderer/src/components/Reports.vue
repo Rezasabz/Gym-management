@@ -7,57 +7,102 @@
             <h2 class="card-title justify-end">فیلتر پیشرفته</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <!-- فیلتر تاریخ شروع -->
-            <div class="form-control">
-                <label class="label justify-end">
-                <span class="label-text font-semibold">از تاریخ</span>
-                </label>
-                <date-picker
-                v-model="filters.startDate"
-                type="date"
-                display-format="jYYYY-jMM-jDD"
-                placeholder="از تاریخ"
-                input-class="input input-bordered w-full text-right"
-                />
-            </div>
+                <!-- فیلتر تا تاریخ -->
+                <div class="form-control">
+      <label class="label justify-end">
+        <span class="label-text font-semibold">تا تاریخ</span>
+      </label>
+
+      <input
+        id="end-date"
+        type="text"
+        class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-dark dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
+        placeholder="تا تاریخ را انتخاب کنید"
+      />
+
+      <date-picker
+        v-model="filters.endDate"
+        format="YYYY-MM-DD"
+        display-format="jYYYY/jMM/jDD"
+        custom-input="#end-date"
+      />
+    </div>
+
+                    <!-- فیلتر از تاریخ -->
+                    <div class="form-control">
+      <label class="label justify-end">
+        <span class="label-text font-semibold">از تاریخ</span>
+      </label>
+
+      <input
+        id="start-date"
+        type="text"
+        class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-100 dark:border-gray-600 dark:placeholder-gray-400 dark:text-dark dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
+        placeholder="از تاریخ را انتخاب کنید"
+      />
+
+      <date-picker
+        v-model="filters.startDate"
+        format="YYYY-MM-DD"
+        display-format="jYYYY/jMM/jDD"
+        custom-input="#start-date"
+      />
+    </div>
             
-            <!-- فیلتر تاریخ پایان -->
-            <div class="form-control">
-                <label class="label justify-end">
-                <span class="label-text font-semibold">تا تاریخ</span>
-                </label>
-                <date-picker
-                v-model="filters.endDate"
-                type="date"
-                display-format="jYYYY-jMM-jDD"
-                placeholder="تا تاریخ"
-                input-class="input input-bordered w-full text-right"
-                />
-            </div>
             
-            <!-- فیلتر نوع عضویت -->
-            <div class="form-control">
-                <label class="label justify-end">
-                <span class="label-text font-semibold">نوع عضویت</span>
-                </label>
-                <select v-model="filters.membershipType" class="select select-bordered text-right font-semibold">
-                <option class="font-semibold" value="">همه</option>
-                <option class="font-semibold" value="regular">عادی</option>
-                <option class="font-semibold" value="vip">ویژه</option>
-                </select>
-            </div>
-            
-            <!-- فیلتر وضعیت -->
-            <div class="form-control">
-                <label class="label justify-end">
-                <span class="label-text font-semibold">وضعیت</span>
-                </label>
-                <select v-model="filters.status" class="select select-bordered text-right font-semibold">
-                <option class="font-semibold" value="">همه</option>
-                <option class="font-semibold" value="active">فعال</option>
-                <option class="font-semibold" value="expired">منقضی‌شده</option>
-                </select>
-            </div>
+<!-- فیلتر نوع عضویت -->
+<div class="form-control relative">
+  <label class="label justify-end">
+    <span class="label-text font-semibold">نوع عضویت</span>
+  </label>
+  <div class="relative">
+    <select
+      v-model="filters.membershipType"
+      class="appearance-none block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs font-semibold pr-10 text-right custom-rtl focus:ring-blue-500 focus:border-blue-500"
+    >
+      <option value="">همه</option>
+      <option value="regular">عادی</option>
+      <option value="vip">ویژه</option>
+    </select>
+    <!-- فلش -->
+    <div class="pointer-events-none absolute inset-y-0 left-3 flex items-center px-2 text-gray-600">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- فیلتر وضعیت -->
+<div class="form-control relative">
+  <label class="label justify-end">
+    <span class="label-text font-semibold">وضعیت</span>
+  </label>
+  <div class="relative">
+    <select
+      v-model="filters.status"
+      class="appearance-none block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs font-semibold pr-10 text-right custom-rtl focus:ring-blue-500 focus:border-blue-500"
+    >
+      <option value="">همه</option>
+      <option value="active">فعال</option>
+      <option value="expired">منقضی‌شده</option>
+    </select>
+    <!-- فلش -->
+    <div class="pointer-events-none absolute inset-y-0 left-3 flex items-center px-2 text-gray-600">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+      </svg>
+    </div>
+  </div>
+</div>
+
+
+                
+
+
+
+
+
             </div>
             
             <div class="mt-4 flex justify-end gap-2 flex-row-reverse">

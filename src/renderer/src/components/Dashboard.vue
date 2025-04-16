@@ -28,7 +28,7 @@
         </div>
         <!-- متن و نوار پیشرفت -->
         <div class="flex-1">
-            <h3 class="text-gray-600 text-sm">اعضا جدید در ماه جاری</h3>
+            <h3 class="text-gray-600 text-sm font-semibold">اعضا جدید در ماه جاری</h3>
             <p class="custom-rtl text-2xl font-bold text-gray-900">{{ fetch_new_members_count }} نفر</p>
         </div>
     </div>
@@ -46,7 +46,7 @@
         </div>
         <!-- متن و نوار پیشرفت -->
         <div class="flex-1">
-            <h3 class="text-gray-600 text-sm">درآمد ماه جاری</h3>
+            <h3 class="text-gray-600 text-sm font-semibold">درآمد ماه جاری</h3>
             <p class="custom-rtl text-2xl font-bold text-gray-900">{{ current_month_revenue }} تومان</p>
         </div>
     </div>
@@ -62,7 +62,7 @@
         </div>
         <!-- متن و نوار پیشرفت -->
         <div class="flex-1">
-            <h3 class="text-gray-600 text-sm">تعداد اعضا فعال</h3>
+            <h3 class="text-gray-600 text-sm font-semibold">تعداد اعضا فعال</h3>
             <p class="custom-rtl text-2xl font-bold text-gray-900">{{ active_memebers }} نفر</p>
             <!-- <div class="relative w-full h-2 bg-gray-200 rounded-full mt-2">
                 <div class="absolute top-0 left-0 h-2 bg-green-500 rounded-full" style="width: 42%;"></div>
