@@ -141,9 +141,10 @@
             
 
             <div class="modal-box w-11/12 max-w-4xl">
-                <h3 class="font-bold text-lg mb-4">
+                <h3 class="font-bold text-lg">
                     {{ isEditMode ? "ویرایش کاربر" : "افزودن کاربر جدید" }}
                 </h3>
+                <div className="divider"></div>
                 <div class="gap-4 flex flex-col flex-auto">
                 <form @submit.prevent="submitForm">
                     <div class="grid md:grid-cols-2 gap-4">
@@ -151,67 +152,67 @@
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                             <span class="label-text">نام خانوادگی</span>
                         </label>
-                        <input type="text" v-model="newUser.lastName" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" required />
+                        <input type="text" v-model="newUser.lastName" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold" required />
                     </div>
                     <div class="form-control">
                         <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                             <span class="label-text">نام </span>
                         </label>
-                        <input type="text" v-model="newUser.firstName" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" required />
+                        <input type="text" v-model="newUser.firstName" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold" required />
                     </div>
                 </div>
 
                 <div class="grid md:grid-cols-2 gap-4">
                     <div class="form-control mt-4">
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <label class="block mb-2 text-sm font-medium text-gray-900">
                             <span class="label-text">شماره عضویت</span>
                         </label>
-                        <input type="text" v-model="newUser.memberId" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" required />
+                        <input type="text" v-model="newUser.memberId" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold" required />
                     </div>
                     <div class="form-control mt-4">
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <label class="block mb-2 text-sm font-medium text-gray-900">
                             <span class="label-text">شماره موبایل</span>
                         </label>
-                        <input type="text" v-model="newUser.phone" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" required />
+                        <input type="text" v-model="newUser.phone" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold" required />
                     </div>
                 </div>
                 <div class="grid md:grid-cols-2 gap-4">
                     <div class="form-control mt-4">
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <label class="block mb-2 text-sm font-medium text-gray-900">
                             <span class="label-text">وضعیت عضویت</span>
                         </label>
-                        <select v-model="newUser.status" class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl">
-                            <option value="فعال">فعال</option>
-                            <option value="منقضی‌شده">منقضی‌شده</option>
+                        <select v-model="newUser.status" class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold">
+                            <option class="font-semibold" value="فعال">فعال</option>
+                            <option class="font-semibold" value="منقضی‌شده">منقضی‌شده</option>
                         </select>
                     </div>
                     <div class="form-control mt-4">
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <label class="block mb-2 text-sm font-medium text-gray-900">
                             <span class="label-text"> شماره موبایل اضطراری</span>
                         </label>
-                        <input type="text" v-model="newUser.emergencyPhone" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" required />
+                        <input type="text" v-model="newUser.emergencyPhone" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold" required />
                     </div>
                 </div>
                 <div class="grid md:grid-cols-3 gap-4">
                     <div class="mt-4">
-                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">روش پرداخت</label>
-                        <select id="countries" v-model="newUser.paymentMethod" class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl">
-                            <option value="کارت">کارت</option>
-                            <option value="نقدی">نقدی</option>
+                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900">روش پرداخت</label>
+                        <select id="countries" v-model="newUser.paymentMethod" class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold">
+                            <option class="font-semibold" value="کارت">کارت</option>
+                            <option class="font-semibold" value="نقدی">نقدی</option>
                         </select>
                     </div>
                     <div class="mt-4">
-                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">مدت زمان دوره</label>
-                        <select id="countries" v-model.number="newUser.renewal_duration" class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl">
-                            <option :value="1" selected>1 ماهه</option>
-                            <option :value="2">2 ماهه</option>
+                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900">مدت زمان دوره</label>
+                        <select id="countries" v-model.number="newUser.renewal_duration" class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold">
+                            <option class="font-semibold" :value="1" selected>1 ماهه</option>
+                            <option class="font-semibold" :value="2">2 ماهه</option>
                         </select>
                     </div>
                     <div class="form-control mt-4">
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <label class="block mb-2 text-sm font-medium text-gray-900">
                             <span class="label-text">تاریخ ثبت‌نام</span>
                         </label>
-                        <input ref="dateInput" v-model="newUser.registrationDate" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl custom-date-input" />
+                        <input ref="dateInput" v-model="newUser.registrationDate" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl custom-date-input font-semibold" />
 
                         <date-picker
                         v-model="newUser.registrationDate"
@@ -228,22 +229,22 @@
                     </div>
                     <div class="grid md:grid-cols-2 gap-4">
                     <div class="mb-2 mt-4">
-                        <label for="small-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">مبلغ</label>
-                        <input type="text" v-model="newUser.paymentAmount" id="small-input" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl">
+                        <label for="small-input" class="block mb-2 text-sm font-medium text-gray-900">مبلغ</label>
+                        <input type="text" v-model="newUser.paymentAmount" id="small-input" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold">
                     </div>
                     <div class="mb-2 mt-4">
-                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">وضعیت</label>
-                        <select id="countries" v-model="newUser.paymentStatus" class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl">
-                            <option value="پرداخت شده" selected>پرداخت شده</option>
-                            <option value="پرداخت نشده">پرداخت نشده</option>
+                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900">وضعیت</label>
+                        <select id="countries" v-model="newUser.paymentStatus" class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold">
+                            <option class="font-semibold" value="پرداخت شده" selected>پرداخت شده</option>
+                            <option class="font-semibold" value="پرداخت نشده">پرداخت نشده</option>
                         </select>
                     </div>
                     </div>
                     <div class="form-control mt-2">
-                        <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                        <label class="block mb-2 text-sm font-medium text-gray-900">
                             <span class="label-text"> آدرس</span>
                         </label>
-                        <input type="text" v-model="newUser.address" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl" required />
+                        <input type="text" v-model="newUser.address" class="block w-full p-4 text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold" required />
                     </div>
 
                     <div class="flex justify-center items-center modal-action mt-5">
