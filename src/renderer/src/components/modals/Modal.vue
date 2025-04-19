@@ -1,6 +1,7 @@
 <template>
   <dialog class="modal" :class="{ 'modal-open': show }" dir="rtl">
     <div class="modal-box w-11/12 max-w-7xl text-right">
+      <h3 class="font-bold text-lg mb-4">{{ title }}</h3>
       <slot></slot>
       <div class="modal-action mt-4">
       <button 
@@ -19,6 +20,7 @@
 export default {
   props: {
     show: Boolean,
+    title: String,
   },
   emits: ['close']
 };

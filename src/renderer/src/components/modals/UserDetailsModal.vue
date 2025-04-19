@@ -1,6 +1,5 @@
 <template>
-    <Modal :show="show" @close="closeDetailsModal">
-    <!-- <div className="modal-box w-11/12 max-w-7xl text-right"> -->
+    <Modal :show="show" @close="closeDetailsModal" title="جزئیات کاربر">
       <!-- دکمه بستن -->
        
       <button className="btn btn-square btn-sm border border-gray-300 shadow-lg" @click="closeDetailsModal">

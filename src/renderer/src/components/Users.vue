@@ -30,24 +30,66 @@
             <table class="table w-full text-right rtl" ref="userTable">
                 <!-- head -->
                 <thead>
-                    <tr class="bg-base-200">
-                        <th class="text-right">عملیات</th>
-                        <th class="text-right">تاریخ ثبت‌نام</th>
-                        <!-- <th class="text-right">آدرس</th>
-                        <th class="text-right">شماره تماس اضطراری</th> -->
-                        <th class="text-right">وضعیت عضویت</th>
-                        <th class="text-right">شماره موبایل</th>
-                        <th class="text-right">شماره عضویت</th>
-                        <th class="text-right">نام خانوادگی</th>
-                        <!-- <th class="text-right">عکس پروفایل</th> -->
-                        <th class="text-right">نام
-
-                        </th>
-                        <th>ردیف</th>
-                    </tr>
-                </thead>
+        <tr class="bg-base-200">
+          <th class="text-right">عملیات</th>
+          <th 
+            class="text-right px-4 py-3 transition-colors duration-200 hover:bg-gray-200 hover:text-gray-800 cursor-pointer select-none"
+            @click="sortBy('registrationDate')"
+            >
+            <div class="flex items-center justify-end">
+                <span>تاریخ ثبت‌نام</span>
+                <span 
+                v-if="sortColumn === 'registrationDate'"
+                class="mr-1 text-sm"
+                :class="{'text-gray-700': sortDirection === 'asc', 'text-gray-500': sortDirection === 'desc'}"
+                >
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span v-else class="mr-1 text-gray-400 text-sm opacity-70">↕</span>
+            </div>
+            </th>
+          <th 
+          class="text-right px-4 py-3 transition-colors duration-200 hover:bg-gray-200 hover:text-gray-800 cursor-pointer select-none"
+          @click="sortBy('status')">
+            وضعیت عضویت
+            <span v-if="sortColumn === 'status'" class="ml-1">
+              {{ sortDirection === 'asc' ? '↑' : '↓' }}
+            </span>
+            <span v-else class="mr-1 text-gray-400 text-sm opacity-70">↕</span>
+          </th>
+          <th class="text-right px-4 py-3 transition-colors duration-200 hover:bg-gray-200 hover:text-gray-800 cursor-pointer select-none" @click="sortBy('phone')">
+            شماره موبایل
+            <span v-if="sortColumn === 'phone'" class="ml-1">
+              {{ sortDirection === 'asc' ? '↑' : '↓' }}
+            </span>
+            <span v-else class="mr-1 text-gray-400 text-sm opacity-70">↕</span>
+          </th>
+          <th class="text-right px-4 py-3 transition-colors duration-200 hover:bg-gray-200 hover:text-gray-800 cursor-pointer select-none" @click="sortBy('memberId')">
+            شماره عضویت
+            <span v-if="sortColumn === 'memberId'" class="ml-1">
+              {{ sortDirection === 'asc' ? '↑' : '↓' }}
+            </span>
+            <span v-else class="mr-1 text-gray-400 text-sm opacity-70">↕</span>
+          </th>
+          <th class="text-right px-4 py-3 transition-colors duration-200 hover:bg-gray-200 hover:text-gray-800 cursor-pointer select-none" @click="sortBy('lastName')">
+            نام خانوادگی
+            <span v-if="sortColumn === 'lastName'" class="ml-1">
+              {{ sortDirection === 'asc' ? '↑' : '↓' }}
+            </span>
+            <span v-else class="mr-1 text-gray-400 text-sm opacity-70">↕</span>
+          </th>
+          <th class="text-right px-4 py-3 transition-colors duration-200 hover:bg-gray-200 hover:text-gray-800 cursor-pointer select-none" @click="sortBy('firstName')">
+            نام
+            <span v-if="sortColumn === 'firstName'" class="ml-1">
+              {{ sortDirection === 'asc' ? '↑' : '↓' }}
+            </span>
+            <span v-else class="mr-3 text-gray-400 text-sm opacity-70">↕</span>
+          </th>
+          <th>ردیف</th>
+        </tr>
+      </thead>
                 <tbody>
-                    <tr v-for="(user, index) in filteredUsers" :key="user.id">
+                    <tr v-for="(user, index) in sortedUsers" :key="user.id">
                         <td>
                             <button v-if="shouldShowRenewButton(user)" class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 shadow-md shadow-purple-200/50 dark:shadow-md dark:shadow-purple-200/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="openRenewalModal(user)">
                                 تمدید
@@ -286,35 +328,6 @@
                     </form>
                 </div>
              </dialog>
-            <!-- <div v-if="showDetailsModal" class="modal modal-open">
-      <div class="modal-box">
-        <h3 class="font-bold text-lg mb-4">مشخصات کامل کاربر</h3>
-        <div class="mb-2">
-          <strong>نام:</strong> {{ selectedUser.firstName }} {{ selectedUser.lastName }}
-        </div>
-        <div class="mb-2">
-          <strong>شماره عضویت:</strong> {{ selectedUser.memberId }}
-        </div>
-        <div class="mb-2">
-          <strong>شماره موبایل:</strong> {{ selectedUser.phone }}
-        </div>
-        <div class="mb-2">
-          <strong>آدرس:</strong> {{ selectedUser.address }}
-        </div>
-        <div class="mb-2">
-          <strong>شماره تماس اضطراری:</strong> {{ selectedUser.emergencyPhone }}
-        </div>
-        <div class="mb-2">
-          <strong>وضعیت عضویت:</strong> {{ selectedUser.status }}
-        </div>
-        <div class="mb-2">
-          <strong>تاریخ ثبت‌نام:</strong> {{ selectedUser.registrationDate }}
-        </div>
-        <div class="modal-action mt-4">
-          <button class="btn" @click="closeDetailsModal">بستن</button>
-        </div>
-      </div>
-    </div> -->
         </div>
     </div>
 </div>
@@ -344,6 +357,9 @@ export default {
             showRenewalModal: false,
             userToRenewal: null,
             showRenewalBtn: false,
+            sortColumn: '',
+            sortDirection: 'asc',
+            sortUsers_arr: [], // کاربران فیلتر شده
             newUser: {
                 id: '',
                 firstName: '',
@@ -386,10 +402,40 @@ export default {
                 );
             },
 
-
+            // لیست نهایی کاربران بعد از فیلتر و مرتب‌سازی
+            sortedUsers() {
+            if (!this.sortColumn) return this.filteredUsers;
+            
+            return [...this.filteredUsers].sort((a, b) => {
+                const modifier = this.sortDirection === 'asc' ? 1 : -1;
+                
+                // حالت خاص برای مرتب‌سازی تاریخ
+                if (this.sortColumn === 'registrationDate') {
+                const dateA = new Date(a.registrationDate).getTime();
+                const dateB = new Date(b.registrationDate).getTime();
+                return (dateA - dateB) * modifier;
+                }
+                
+                // حالت عمومی برای بقیه فیلدها
+                const valueA = a[this.sortColumn] || '';
+                const valueB = b[this.sortColumn] || '';
+                
+                return valueA.toString().localeCompare(valueB.toString()) * modifier;
+            });
+            }
     
         },
     methods: {
+        sortBy(column) {
+            if (this.sortColumn === column) {
+                // اگر ستون فعلی بود، جهت را تغییر بده
+                this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                // اگر ستون جدید بود، جهت پیش‌فرض را تنظیم کن
+                this.sortColumn = column;
+                this.sortDirection = 'asc';
+            }
+        },
         downloadExcel() {
 
                  // ایجاد هدر فارسی
