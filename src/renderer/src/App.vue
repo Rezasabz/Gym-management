@@ -3,10 +3,12 @@
 
 const ipcHandle = () => window.electron.ipcRenderer.send('ping')
 import Sidebar from './components/Sidebar.vue'
+
 </script>
 
 <template>
     <div class="app-container">
+      <SplashScreen v-if="showSplash" />
     <!-- Sidebar -->
     <Sidebar />
     
@@ -21,3 +23,22 @@ import Sidebar from './components/Sidebar.vue'
   <!-- <img alt="logo" class="logo" src="./assets/electron.svg" /> -->
   <!-- <router-view /> -->
 </template>
+<script>
+import SplashScreen from './components/SplashScreen.vue'
+
+export default {
+  components: {
+    SplashScreen
+  },
+  data() {
+    return {
+      showSplash: true
+    }
+  },
+  mounted() {
+    setTimeout(() => {
+      this.showSplash = false
+    }, 3000) // مدت زمان نمایش اسپلش اسکرین
+  }
+}
+</script>
