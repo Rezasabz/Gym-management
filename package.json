@@ -30,6 +30,7 @@
         "better-sqlite3": "^11.8.1",
         "flowbite": "^3.1.2",
         "jalali-moment": "^3.3.11",
+        "lodash-es": "^4.17.21",
         "npm": "^11.1.0",
         "pinia": "^3.0.1",
         "sweetalert2": "^11.17.2",

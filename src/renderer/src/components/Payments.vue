@@ -2,7 +2,11 @@
     <div class="overflow-x-auto w-full">
       <h2 class="text-2xl font-bold text-center mb-6">مدیریت پرداخت‌ها</h2>
   
-      <!-- فیلتر و جستجو -->
+
+  
+      <!-- لیست پرداخت‌های قبلی -->
+      <div class="bg-base-100 shadow-lg rounded-xl p-4 mb-6">
+              <!-- فیلتر و جستجو -->
       <div class="flex flex-wrap gap-4 mb-6">
         <input
           v-model="searchQueryPayment"
@@ -11,9 +15,6 @@
           class="input input-bordered w-full md:max text-right rtl custom-rtl font-semibold"
         />
       </div>
-  
-      <!-- لیست پرداخت‌های قبلی -->
-      <div class="bg-base-100 shadow-lg rounded-xl p-4 mb-6">
         <!-- <div class="mb-6">
             <button  class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" @click="openModal">
                 افزودن پرداختی
