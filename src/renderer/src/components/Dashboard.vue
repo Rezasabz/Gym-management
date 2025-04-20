@@ -1,8 +1,8 @@
 <template>
         <!-- Sidebar -->
         <!-- <Sidebar /> -->
-   
-<div className="grid grid-cols-5 grid-rows gap-4 mb-4 shadow-lg rounded-xl">
+   <div class="overflow-x-auto w-full">
+<div className="grid grid-cols-5 grid-rows gap-4 shadow-lg rounded-xl">
     <div className="col-span-5">
   <figure className="w-full max-w-full rounded-xl overflow-hidden">
     <img
@@ -166,7 +166,7 @@
 <br>
 
 <!-- نمودارها و جداول -->
-<div class="grid grid-cols-1 bg-white shadow-lg rounded-xl">
+<div class="card bg-base-100 shadow-lg mb-6 rtl text-right">
   <!-- نمودار حضور ماهانه -->
   <div class="lg:col-span-2 card bg-base-100 shadow-lg rounded-xl">
     <div class="card-body p-6">
@@ -191,7 +191,7 @@
   </div>
 </div>
 
-
+</div>
 
 </template>
 <script>

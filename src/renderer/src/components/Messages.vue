@@ -1,8 +1,8 @@
 <template>
-  <div class="p-6 max-w-8xl mx-auto rtl">
+  <div class="overflow-x-auto w-full">
     <h1 class="text-2xl font-bold text-center mb-6">ارسال پیامک به اعضا</h1>
     
-    <div class="card bg-base-100 shadow-xl">
+    <div class="card bg-base-100 shadow-lg mb-6 rtl text-right">
       <div class="card-body space-y-6">
         <!-- متن پیامک -->
         <div class="form-control">

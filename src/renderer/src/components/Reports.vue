@@ -1,5 +1,5 @@
 <template>
-    <div class="p-6 max-w-8xl mx-auto">
+    <div class="overflow-x-auto w-full">
       <h1 class="text-2xl font-bold text-center mb-6">گزارش‌گیری اعضای باشگاه</h1>
       
       <div class="card bg-base-100 shadow-lg mb-6 rtl text-right">
@@ -146,7 +146,7 @@
       </div> -->
       
     <!-- جدول گزارش -->
-    <div class="card bg-base-100 shadow-lg rtl text-right">
+    <div class="card bg-base-100 shadow-lg mb-6 rtl text-right">
     <div class="card-body">
         <div class="flex justify-between items-center mb-4 flex-row-reverse">
         <h2 class="card-title justify-end">لیست اعضا</h2>
@@ -227,7 +227,7 @@
         </tr>
       </thead>
             <tbody>
-              <tr v-for="(user, index) in this.filteredMembers" :key="user.id">
+              <tr v-for="(user, index) in paginatedMembers" :key="user.id">
                         <td>
                             <button class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-300/50 dark:shadow-lg dark:shadow-blue-300/90 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="viewUser(user)">
                                 جزئیات
@@ -275,12 +275,12 @@
         
         <!-- صفحه‌بندی -->
         <div class="flex justify-center mt-4">
-        <div class="join flex-row-reverse">
+        <div class="join flex-row">
             <button 
             v-for="page in totalPages" 
             :key="page"
             @click="currentPage = page"
-            class="join-item btn"
+            class="join-item btn border border-gray-300"
             :class="{ 'btn-active': currentPage === page }"
             >
             {{ page }}
@@ -461,20 +461,6 @@ export default {
         return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
       }).length;
     },
-    exportToExcel() {
-      const data = this.filteredMembers.map(m => ({
-        نام: m.name,
-        موبایل: m.phone,
-        'تاریخ عضویت': this.formatDate(m.createdAt),
-        'نوع عضویت': this.membershipTypeText(m.membershipType),
-        'وضعیت': this.statusText(m.status),
-        'نوع پرداخت': this.paymentTypeText(m.paymentType)
-      }));
-      const worksheet = XLSX.utils.json_to_sheet(data);
-      const workbook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(workbook, worksheet, 'اعضا');
-      XLSX.writeFile(workbook, 'members.xlsx');
-    },
     exportToPDF() {
       const doc = new jsPDF();
       const tableData = this.filteredMembers.map(m => [
@@ -504,6 +490,62 @@ export default {
       };
       this.applyFilters();
     },
+    exportToExcel() {
+
+// ایجاد هدر فارسی
+const headers = [["ردیف", "نام", "نام خانوادگی", "شماره عضویت", "شماره موبایل", "وضعیت", "تاریخ ثبت‌نام"]];
+// reverse headers to show the latest date first
+headers[0].reverse();
+ // فیلتر کردن فقط داده‌های غیر دکمه‌ای
+const filteredUsers = this.filteredMembers.map(user => {
+const { registrationDate, status, phone, memberId, lastName, firstName, id} = user; // فقط داده‌های غیر دکمه‌ای را نگه می‌داریم
+return { registrationDate, status, phone, memberId, lastName, firstName, id };
+});
+
+const ws = XLSX.utils.json_to_sheet(filteredUsers); // تبدیل جدول به sheet
+ // اضافه کردن هدر به شیت
+XLSX.utils.sheet_add_aoa(ws, headers, { origin: "A1" });
+
+
+ // تنظیم رنگ پس‌زمینه هدر
+// تنظیم رنگ پس‌زمینه هدر
+const range = XLSX.utils.decode_range(ws['!ref']);
+for (let col = range.s.c; col <= range.e.c; col++) {
+const cell = ws[XLSX.utils.encode_cell({r: 0, c: col})];
+if (cell) {
+cell.s = cell.s || {}; // اگر استایل وجود ندارد، یک شی جدید ایجاد می‌کنیم
+cell.s.fill = {
+   fgColor: { rgb: "4CAF50" } // رنگ پس‌زمینه سبز برای هدر
+};
+cell.s.font = {
+   bold: true, // برای بولد کردن متن
+   color: { rgb: "FFFFFF" } // رنگ متن سفید
+};
+}
+}
+
+ // تنظیم عرض ستون‌ها متناسب با محتوا و هدر
+const colWidths = [];
+
+// ابتدا طول هدر را بررسی می‌کنیم
+headers[0].forEach((header, idx) => {
+colWidths[idx] = Math.max(colWidths[idx] || 0, header.length);
+});
+
+// سپس طول داده‌ها را بررسی می‌کنیم
+for (let i = 0; i < filteredUsers.length; i++) {
+Object.values(filteredUsers[i]).forEach((value, idx) => {
+const length = value ? value.toString().length : 0;
+colWidths[idx] = Math.max(colWidths[idx] || 0, length);
+});
+}
+
+// اعمال عرض به ستون‌ها
+ws['!cols'] = colWidths.map(width => ({ wch: width }));
+const wb = XLSX.utils.book_new(); // ایجاد کتابچه (workbook)
+XLSX.utils.book_append_sheet(wb, ws, 'Users'); // افزودن sheet به workbook
+XLSX.writeFile(wb, 'user_list.xlsx'); // دانلود فایل Excel
+},
   }
 };
 
