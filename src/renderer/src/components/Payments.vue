@@ -41,7 +41,7 @@
         <div class="overflow-x-auto border border-gray-200 rounded-lg">
           <table class="table w-full text-right rtl">
             <thead>
-              <tr class="bg-base-200">
+              <tr class="bg-blue-200">
                 
                   <th>وضعیت</th>
                   <th>روش پرداخت</th>

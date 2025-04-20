@@ -72,7 +72,7 @@
             <div class="overflow-x-auto shadow-md rounded-lg">
               <table class="table w-full text-right">
                 <thead>
-                  <tr class="bg-base-200">
+                  <tr class="bg-blue-200">
                     <th>انتخاب</th>
                     <th>وضعیت</th>
                     <th>شماره تلفن</th>

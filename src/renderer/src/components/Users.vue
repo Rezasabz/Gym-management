@@ -30,7 +30,7 @@
             <table class="table table-zebra w-full text-right rtl" ref="userTable">
                 <!-- head -->
                 <thead>
-        <tr class="bg-base-200">
+        <tr class="bg-blue-200">
           <th class="text-right">عملیات</th>
           <th 
             class="text-right px-4 py-3 transition-colors duration-200 hover:bg-gray-200 hover:text-gray-800 cursor-pointer select-none"
