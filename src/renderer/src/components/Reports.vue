@@ -6,7 +6,7 @@
         <div class="card-body">
             <h2 class="card-title justify-end">فیلتر پیشرفته</h2>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <!-- فیلتر تا تاریخ -->
                 <div class="form-control">
       <label class="label justify-end">
@@ -51,7 +51,7 @@
             
             
 <!-- فیلتر نوع عضویت -->
-<div class="form-control relative">
+<!-- <div class="form-control relative">
   <label class="label justify-end">
     <span class="label-text font-semibold">نوع عضویت</span>
   </label>
@@ -60,18 +60,18 @@
       v-model="filters.membershipType"
       class="appearance-none block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs font-semibold pr-10 text-right custom-rtl focus:ring-blue-500 focus:border-blue-500"
     >
-      <option value="">همه</option>
-      <option value="regular">عادی</option>
-      <option value="vip">ویژه</option>
+      <option class="font-semibold" value="">همه</option>
+      <option class="font-semibold" value="regular">عادی</option>
+      <option class="font-semibold" value="vip">ویژه</option>
     </select>
-    <!-- فلش -->
+
     <div class="pointer-events-none absolute inset-y-0 left-3 flex items-center px-2 text-gray-600">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
       </svg>
     </div>
   </div>
-</div>
+</div> -->
 
 <!-- فیلتر وضعیت -->
 <div class="form-control relative">
@@ -83,9 +83,9 @@
       v-model="filters.status"
       class="appearance-none block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs font-semibold pr-10 text-right custom-rtl focus:ring-blue-500 focus:border-blue-500"
     >
-      <option value="">همه</option>
-      <option value="active">فعال</option>
-      <option value="expired">منقضی‌شده</option>
+      <option class="font-semibold" value="">همه</option>
+      <option class="font-semibold" value="فعال">فعال</option>
+      <option class="font-semibold" value="منقضی‌شده">منقضی‌شده</option>
     </select>
     <!-- فلش -->
     <div class="pointer-events-none absolute inset-y-0 left-3 flex items-center px-2 text-gray-600">
@@ -95,13 +95,6 @@
     </div>
   </div>
 </div>
-
-
-                
-
-
-
-
 
             </div>
             
@@ -174,41 +167,108 @@
         
         <div class="overflow-x-auto border border-gray-200 rounded-lg">
         <table class="table table-zebra text-right">
-            <thead>
-            <tr class="bg-base-200">
-                <th>ردیف</th>
-                <th>نام و نام خانوادگی</th>
-                <th>شماره تماس</th>
-                <th>نوع عضویت</th>
-                <th>تاریخ ثبت‌نام</th>
-                <th>تاریخ انقضا</th>
-                <th>وضعیت</th>
-                <th>عملیات</th>
-            </tr>
-            </thead>
+          <thead>
+        <tr class="bg-base-200">
+          <th class="text-right">عملیات</th>
+          <th 
+            class="text-right px-4 py-3 transition-colors duration-200 hover:bg-gray-200 hover:text-gray-800 cursor-pointer select-none"
+            @click="sortBy('registrationDate')"
+            >
+            <div class="flex items-center justify-end">
+                <span>تاریخ ثبت‌نام</span>
+                <span 
+                v-if="sortColumn === 'registrationDate'"
+                class="mr-1 text-sm"
+                :class="{'text-gray-700': sortDirection === 'asc', 'text-gray-500': sortDirection === 'desc'}"
+                >
+                {{ sortDirection === 'asc' ? '↑' : '↓' }}
+                </span>
+                <span v-else class="mr-1 text-gray-400 text-sm opacity-70">↕</span>
+            </div>
+            </th>
+          <th 
+          class="text-right px-4 py-3 transition-colors duration-200 hover:bg-gray-200 hover:text-gray-800 cursor-pointer select-none"
+          @click="sortBy('status')">
+            وضعیت عضویت
+            <span v-if="sortColumn === 'status'" class="ml-1">
+              {{ sortDirection === 'asc' ? '↑' : '↓' }}
+            </span>
+            <span v-else class="mr-1 text-gray-400 text-sm opacity-70">↕</span>
+          </th>
+          <th class="text-right px-4 py-3 transition-colors duration-200 hover:bg-gray-200 hover:text-gray-800 cursor-pointer select-none" @click="sortBy('phone')">
+            شماره موبایل
+            <span v-if="sortColumn === 'phone'" class="ml-1">
+              {{ sortDirection === 'asc' ? '↑' : '↓' }}
+            </span>
+            <span v-else class="mr-1 text-gray-400 text-sm opacity-70">↕</span>
+          </th>
+          <th class="text-right px-4 py-3 transition-colors duration-200 hover:bg-gray-200 hover:text-gray-800 cursor-pointer select-none" @click="sortBy('memberId')">
+            شماره عضویت
+            <span v-if="sortColumn === 'memberId'" class="ml-1">
+              {{ sortDirection === 'asc' ? '↑' : '↓' }}
+            </span>
+            <span v-else class="mr-1 text-gray-400 text-sm opacity-70">↕</span>
+          </th>
+          <th class="text-right px-4 py-3 transition-colors duration-200 hover:bg-gray-200 hover:text-gray-800 cursor-pointer select-none" @click="sortBy('lastName')">
+            نام خانوادگی
+            <span v-if="sortColumn === 'lastName'" class="ml-1">
+              {{ sortDirection === 'asc' ? '↑' : '↓' }}
+            </span>
+            <span v-else class="mr-1 text-gray-400 text-sm opacity-70">↕</span>
+          </th>
+          <th class="text-right px-4 py-3 transition-colors duration-200 hover:bg-gray-200 hover:text-gray-800 cursor-pointer select-none" @click="sortBy('firstName')">
+            نام
+            <span v-if="sortColumn === 'firstName'" class="ml-1">
+              {{ sortDirection === 'asc' ? '↑' : '↓' }}
+            </span>
+            <span v-else class="mr-3 text-gray-400 text-sm opacity-70">↕</span>
+          </th>
+          <th>ردیف</th>
+        </tr>
+      </thead>
             <tbody>
-            <tr v-for="(member, index) in paginatedMembers" :key="member.id">
-                <td>{{ (currentPage - 1) * pageSize + index + 1 }}</td>
-                <td>{{ member.fullName }}</td>
-                <td>{{ member.phone }}</td>
-                <td>
-                <span :class="membershipBadgeClass(member.membershipType)">
-                    {{ membershipTypeText(member.membershipType) }}
-                </span>
-                </td>
-                <td>{{ formatDate(member.registrationDate) }}</td>
-                <td>{{ formatDate(member.expiryDate) }}</td>
-                <td>
-                <span :class="statusBadgeClass(member.status)">
-                    {{ statusText(member.status) }}
-                </span>
-                </td>
-                <td>
-                <button @click="viewDetails(member)" class="btn btn-xs btn-info">
-                    جزئیات
-                </button>
-                </td>
-            </tr>
+              <tr v-for="(user, index) in this.filteredMembers" :key="user.id">
+                        <td>
+                            <button class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-300/50 dark:shadow-lg dark:shadow-blue-300/90 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="viewUser(user)">
+                                جزئیات
+                            </button>
+
+                        </td>
+                        <td class="font-semibold">{{ user.registrationDate }}</td>
+                        <td>
+                            <span class="font-semibold"
+                                :class="{
+                                    'text-xs font-medium me-2 px-2.5 py-0.5 rounded-full shadow-sm': true,
+                                    'bg-green-100 text-green-800 dark:bg-green-700 dark:text-green-100': user.status === 'فعال',
+                                    'bg-red-100 text-red-800 dark:bg-red-700 dark:text-red-100': user.status !== 'فعال'
+                                }">
+                            {{ user.status }}
+                            </span>
+                        </td>
+                        <td class="font-bold">{{ user.phone }}</td>
+                        <td class="font-bold">{{ user.memberId }}</td>
+                        <td class="font-semibold">{{ user.lastName }}</td>
+                        <td class="font-semibold">{{ user.firstName }}</td>
+                        <td class="font-semibold">{{ index + 1 }}</td>
+                    </tr>
+                    <tr v-if="filteredMembers.length === 0">
+                      <td colspan="12" class="text-center font-semibold">
+                        
+                        <div class="flex justify-center items-center w-full py-8">
+                          <span class="inline-flex items-center gap-2 bg-gray-100 text-gray-800 text-xs font-medium px-3 py-1.5 rounded-full dark:bg-gray-700 dark:text-gray-300 font-semibold">
+                            <!-- آیکون عدم وجود داده -->
+                          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7.55004 9.60004C7.21867 9.35152 7.15152 8.88142 7.40004 8.55004C7.64857 8.21867 8.11867 8.15152 8.45004 8.40004L10.45 9.90004C10.6389 10.0417 10.75 10.264 10.75 10.5C10.75 10.7361 10.6389 10.9584 10.45 11.1L8.45004 12.6C8.11867 12.8486 7.64857 12.7814 7.40004 12.45C7.15152 12.1187 7.21867 11.6486 7.55004 11.4L8.75004 10.5L7.55004 9.60004Z" class="fill-gray-800 dark:fill-gray-200"/>
+                            <path d="M16.6 8.55004C16.8486 8.88142 16.7814 9.35152 16.45 9.60004L15.25 10.5L16.45 11.4C16.7814 11.6486 16.8486 12.1187 16.6 12.45C16.3515 12.7814 15.8814 12.8486 15.55 12.6L13.55 11.1C13.3612 10.9584 13.25 10.7361 13.25 10.5C13.25 10.264 13.3612 10.0417 13.55 9.90004L15.55 8.40004C15.8814 8.15152 16.3515 8.21867 16.6 8.55004Z" class="fill-gray-800 dark:fill-gray-200"/>
+                            <path d="M15.5304 16.5304C15.2375 16.8233 14.7626 16.8233 14.4697 16.5304L13.9996 16.0603C13.4388 16.5896 12.5607 16.5895 12 16.0599C11.4394 16.5895 10.5613 16.5896 10.0005 16.0603L9.53037 16.5304C9.23748 16.8233 8.76261 16.8233 8.46971 16.5304C8.17682 16.2375 8.17682 15.7626 8.46971 15.4697L8.96971 14.9697C9.52875 14.4107 10.429 14.4009 11 14.9403C11.5609 14.4105 12.4392 14.4105 13 14.9403C13.5711 14.4009 14.4713 14.4107 15.0304 14.9697L15.5304 15.4697C15.8233 15.7626 15.8233 16.2375 15.5304 16.5304Z" class="fill-gray-300"/>
+                            <path opacity="0.5" d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" class="fill-gray-300"/>
+                          </svg>
+                          موردی یافت نشد
+                        </span>
+                      </div>
+                      </td>
+                    </tr>
+
             </tbody>
         </table>
         </div>
@@ -232,7 +292,7 @@
 
       
       <!-- مدال نمایش جزئیات -->
-      <dialog id="memberModal" class="modal">
+      <!-- <dialog id="memberModal" class="modal">
         <div class="modal-box">
           <h3 class="font-bold text-lg">جزئیات عضو</h3>
           <div class="py-4" v-if="selectedMember">
@@ -282,86 +342,171 @@
             </form>
           </div>
         </div>
-      </dialog>
+      </dialog> -->
     </div>
   </template>
   
   <script>
-  export default {
-    data() {
-      return {
-        filters: {
-          startDate: null,
-          endDate: null,
-          membershipType: '',
-          status: ''
-        },
-        stats: {
-          totalMembers: 0,
-          activeMembers: 0,
-          newMembers: 0,
-          expiredMembers: 0
-        },
-        currentPage: 1,
-        pageSize: 10,
-        members: [], // داده‌های اعضای باشگاه
-        selectedMember: null // عضو انتخابی برای نمایش جزئیات
-      };
+import * as XLSX from 'xlsx'; // برای خروجی Excel
+// import jsPDF from 'jspdf'; // برای خروجی PDF
+// import autoTable from 'jspdf-autotable'; // جدول در PDF
+import moment from 'jalali-moment';
+
+export default {
+  data() {
+    return {
+      filters: {
+        startDate: null,
+        endDate: null,
+        status: ''
+      },
+      stats: {
+        totalMembers: 0,
+        activeMembers: 0,
+        newMembers: 0,
+        expiredMembers: 0
+      },
+      currentPage: 1,
+      pageSize: 10,
+      members: [], // داده‌های اعضای باشگاه
+      filteredMembers: [],
+      selectedMember: null
+    };
+  },
+  computed: {
+    totalPages() {
+      return Math.ceil(this.filteredMembers.length / this.pageSize);
     },
-    computed: {
-      totalPages() {
-        return Math.ceil(this.members.length / this.pageSize);
-      },
-      paginatedMembers() {
-        const start = (this.currentPage - 1) * this.pageSize;
-        const end = start + this.pageSize;
-        return this.members.slice(start, end);
-      }
-    },
-    methods: {
-      applyFilters() {
-        // اعمال فیلترها و بروزرسانی آمار
-      },
-      resetFilters() {
-        this.filters = {
-          startDate: null,
-          endDate: null,
-          membershipType: '',
-          status: ''
-        };
-        this.applyFilters();
-      },
-      exportToExcel() {
-        // خروجی به فرمت Excel
-      },
-      exportToPDF() {
-        // خروجی به فرمت PDF
-      },
-      formatDate(date) {
-        // فرمت‌بندی تاریخ
-      },
-      viewDetails(member) {
-        this.selectedMember = member;
-        const modal = document.getElementById('memberModal');
-        modal.showModal();
-      },
-      membershipBadgeClass(type) {
-        // تعیین کلاس برای نوع عضویت
-      },
-      membershipTypeText(type) {
-        // متن نوع عضویت
-      },
-      statusBadgeClass(status) {
-        // کلاس وضعیت
-      },
-      statusText(status) {
-        // متن وضعیت
-      },
-      paymentTypeText(type) {
-        // نوع پرداخت
-      }
+    paginatedMembers() {
+      const start = (this.currentPage - 1) * this.pageSize;
+      const end = start + this.pageSize;
+      return this.filteredMembers.slice(start, end);
     }
-  };
+  },
+  mounted() {
+    this.fetchMembers();
+  },
+  methods: {
+    sortBy(column) {
+            if (this.sortColumn === column) {
+                // اگر ستون فعلی بود، جهت را تغییر بده
+                this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                // اگر ستون جدید بود، جهت پیش‌فرض را تنظیم کن
+                this.sortColumn = column;
+                this.sortDirection = 'asc';
+            }
+        },
+    async fetchMembers() {
+      try {
+        const data = await window.api.getUsers(); // یا api خودت
+        this.members = data;
+        this.applyFilters();
+      } catch (err) {
+        console.error('خطا در گرفتن داده‌ها:', err);
+      }
+    },
+    applyFilters() {
+  const { startDate, endDate, status } = this.filters;
+
+  // شروع با همه اعضا
+  let result = [...this.members];
+
+  // اگر فقط وضعیت انتخاب شده (بدون تاریخ)
+  if (!startDate && !endDate && status) {
+    result = result.filter(member => member.status === status);
+  }
+
+  // اگر فقط تاریخ وارد شده (و وضعیت روی "همه" یا خالیه)
+  if (startDate && endDate && (!status || status === 'همه')) {
+    const startShamsi = moment.from(startDate, 'en').locale('fa').format('YYYY/MM/DD');
+    const endShamsi = moment.from(endDate, 'en').locale('fa').format('YYYY/MM/DD');
+
+    result = result.filter(member => {
+      const regDate = member.registrationDate;
+      return regDate >= startShamsi && regDate <= endShamsi;
+    });
+  }
+
+  // اگر هم وضعیت مشخص شده و هم تاریخ‌ها
+  if (startDate && endDate && status && status !== 'همه') {
+    const startShamsi = moment.from(startDate, 'en').locale('fa').format('YYYY/MM/DD');
+    const endShamsi = moment.from(endDate, 'en').locale('fa').format('YYYY/MM/DD');
+
+    result = result.filter(member => {
+      const regDate = member.registrationDate;
+      return (
+        member.status === status &&
+        regDate >= startShamsi &&
+        regDate <= endShamsi
+      );
+    });
+  }
+
+  // در نهایت خروجی رو اختصاص بده
+  this.filteredMembers = result;
+  console.log("اعضای فیلترشده:", this.filteredMembers);
+
+    // در نهایت می‌تونی آمار یا صفحه‌بندی رو هم ریست کنی:
+  this.calculateStats();
+  this.currentPage = 1;
+},
+    calculateStats() {
+      const now = new Date();
+      this.stats.totalMembers = this.filteredMembers.length;
+      this.stats.activeMembers = this.filteredMembers.filter(m => m.status === 'active').length;
+      this.stats.expiredMembers = this.filteredMembers.filter(m => m.status === 'expired').length;
+      this.stats.newMembers = this.filteredMembers.filter(m => {
+        const date = new Date(m.createdAt);
+        return date.getMonth() === now.getMonth() && date.getFullYear() === now.getFullYear();
+      }).length;
+    },
+    exportToExcel() {
+      const data = this.filteredMembers.map(m => ({
+        نام: m.name,
+        موبایل: m.phone,
+        'تاریخ عضویت': this.formatDate(m.createdAt),
+        'نوع عضویت': this.membershipTypeText(m.membershipType),
+        'وضعیت': this.statusText(m.status),
+        'نوع پرداخت': this.paymentTypeText(m.paymentType)
+      }));
+      const worksheet = XLSX.utils.json_to_sheet(data);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'اعضا');
+      XLSX.writeFile(workbook, 'members.xlsx');
+    },
+    exportToPDF() {
+      const doc = new jsPDF();
+      const tableData = this.filteredMembers.map(m => [
+        m.name,
+        m.phone,
+        this.formatDate(m.createdAt),
+        this.membershipTypeText(m.membershipType),
+        this.statusText(m.status),
+        this.paymentTypeText(m.paymentType)
+      ]);
+      autoTable(doc, {
+        head: [['نام', 'موبایل', 'تاریخ عضویت', 'نوع عضویت', 'وضعیت', 'نوع پرداخت']],
+        body: tableData,
+      });
+      doc.save('members.pdf');
+    },
+    viewDetails(member) {
+      this.selectedMember = member;
+      const modal = document.getElementById('memberModal');
+      modal.showModal();
+    },
+    resetFilters() {
+      this.filters = {
+        startDate: null,
+        endDate: null,
+        status: ''
+      };
+      this.applyFilters();
+    },
+  }
+};
+
   </script>
   
   <style scoped>

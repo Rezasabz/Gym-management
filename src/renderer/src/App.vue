@@ -1,9 +1,25 @@
 <script setup>
-// import Versions from './components/Versions.vue'
+import SplashScreen from './components/SplashScreen.vue';
+import Sidebar from './components/Sidebar.vue';
 
-const ipcHandle = () => window.electron.ipcRenderer.send('ping')
-import Sidebar from './components/Sidebar.vue'
+// مدیریت IPC برای Electron
+const ipcHandle = () => {
+  if (window.electron && window.electron.ipcRenderer) {
+    window.electron.ipcRenderer.send('ping');
+  } else {
+    console.error('Electron IPC Renderer is not available.');
+  }
+};
 
+// مدیریت حالت نمایش اسپلش اسکرین
+import { ref, onMounted } from 'vue';
+const showSplash = ref(true);
+
+onMounted(() => {
+  setTimeout(() => {
+    showSplash.value = false;
+  }, 3000); // مدت زمان نمایش اسپلش اسکرین
+});
 </script>
 
 <template>
@@ -23,22 +39,3 @@ import Sidebar from './components/Sidebar.vue'
   <!-- <img alt="logo" class="logo" src="./assets/electron.svg" /> -->
   <!-- <router-view /> -->
 </template>
-<script>
-import SplashScreen from './components/SplashScreen.vue'
-
-export default {
-  components: {
-    SplashScreen
-  },
-  data() {
-    return {
-      showSplash: true
-    }
-  },
-  mounted() {
-    setTimeout(() => {
-      this.showSplash = false
-    }, 3000) // مدت زمان نمایش اسپلش اسکرین
-  }
-}
-</script>
