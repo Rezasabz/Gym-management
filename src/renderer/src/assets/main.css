@@ -367,6 +367,96 @@ code {
   font-display: fallback;
 }
 
+@font-face {
+  font-family: 'Peyda(FaNum)';
+  src: url('fonts/peyda/PeydaFaNum-Thin.woff2') format('woff2'),
+      url('fonts/peyda/PeydaFaNum-Thin.woff') format('woff');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Peyda(FaNum)';
+  src: url('fonts/peyda/PeydaFaNum-SemiBold.woff2') format('woff2'),
+      url('fonts/peyda/PeydaFaNum-SemiBold.woff') format('woff');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Peyda(FaNum)';
+  src: url('fonts/peyda/PeydaFaNum-Regular.woff2') format('woff2'),
+      url('fonts/peyda/PeydaFaNum-Regular.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Peyda(FaNum)';
+  src: url('fonts/peyda/PeydaFaNum-Medium.woff2') format('woff2'),
+      url('fonts/peyda/PeydaFaNum-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Peyda(FaNum)';
+  src: url('fonts/peyda/PeydaFaNum-Light.woff2') format('woff2'),
+      url('fonts/peyda/PeydaFaNum-Light.woff') format('woff');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Peyda(FaNum)';
+  src: url('fonts/peyda/PeydaFaNum-ExtraLight.woff2') format('woff2'),
+      url('fonts/peyda/PeydaFaNum-ExtraLight.woff') format('woff');
+  font-weight: 200;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Peyda(FaNum)';
+  src: url('fonts/peyda/PeydaFaNum-Medium.woff2') format('woff2'),
+      url('fonts/peyda/PeydaFaNum-Medium.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Peyda(FaNum)';
+  src: url('fonts/peyda/PeydaFaNum-ExtraBold.woff2') format('woff2'),
+      url('fonts/peyda/PeydaFaNum-ExtraBold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Peyda(FaNum)';
+  src: url('fonts/peyda/PeydaFaNum-Bold.woff2') format('woff2'),
+      url('fonts/peyda/PeydaFaNum-Bold.woff') format('woff');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Peyda(FaNum)';
+  src: url('fonts/peyda/PeydaFaNum-Black.woff2') format('woff2'),
+      url('fonts/peyda/PeydaFaNum-Black.woff') format('woff');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
 body,
 .body,
 div,
@@ -407,7 +497,7 @@ section,
 summary,
 small,
 .btn {
-    font-family: 'IRANSans', sans-serif;
+    font-family: 'Peyda(FaNum)', sans-serif;
 }
 
 @tailwind base;

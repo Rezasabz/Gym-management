@@ -114,17 +114,35 @@
                       >
                     </td>
                     <td>
-                      <span class="font-semibold"
+                      <div class="flex items-center justify-end">
+
+                          <span 
+                          :class="{
+                            'mr-2 font-semibold text-emerald-500': user.status === 'فعال',
+                            'mr-2 font-semibold text-red-500': user.status !== 'فعال',
+                            }"
+
+                          >
+                          {{ user.status }}
+                          </span>
+                          <span 
+                          :class="{
+                            'badge-dot w-3 h-3 border border-white rounded-full text-xs font-semibold text-white bg-emerald-500': user.status === 'فعال',
+                            'badge-dot w-3 h-3 border border-white rounded-full text-xs font-semibold text-white bg-red-500': user.status !== 'فعال'}
+                            ">
+                          </span>
+                          </div>
+                      <!-- <span class="font-semibold"
                         :class="{
                           'text-xs font-medium me-2 px-2.5 py-0.5 rounded-full shadow-sm': true,
                           'bg-green-100 text-green-800': user.status === 'فعال',
                           'bg-red-100 text-red-800': user.status !== 'فعال'
                         }">
                         {{ user.status }}
-                      </span>
+                      </span> -->
                     </td>
-                    <td class="font-semibold text-blue-800">{{ user.phone }}</td>
-                    <td class="font-semibold text-blue-800">{{ user.firstName }} {{ user.lastName }}</td>
+                    <td class="font-semibold text-gray-600">{{ user.phone }}</td>
+                    <td class="font-semibold text-gray-600">{{ user.firstName }} {{ user.lastName }}</td>
                   </tr>
                 </tbody>
               </table>

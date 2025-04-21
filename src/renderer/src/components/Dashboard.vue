@@ -16,11 +16,11 @@
 </div>
     <br>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-         <div class="bg-white shadow-lg rounded-xl p-4 flex items-center space-x-4 w-full max-w border border-blue-100">
+         <div class="bg-gradient-to-br from-purple-50 to-white shadow-lg rounded-xl p-4 flex items-center space-x-4 w-full max-w border border-blue-100 transition-all hover:shadow-xl">
         <!-- آیکون -->
-        <div class="flex items-center justify-center w-16 h-16 bg-purple-50 rounded-full">
+        <div class="flex items-center justify-center w-16 h-16 bg-purple-100 rounded-full">
             <span class="text-green-600 text-3xl">
-               <svg class="w-6 h-6 text-purple-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+               <svg class="w-6 h-6 text-purple-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                <path fill-rule="evenodd" d="M9 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4H7Zm8-1a1 1 0 0 1 1-1h1v-1a1 1 0 1 1 2 0v1h1a1 1 0 1 1 0 2h-1v1a1 1 0 1 1-2 0v-1h-1a1 1 0 0 1-1-1Z" clip-rule="evenodd"/>
                </svg>
 
@@ -32,9 +32,9 @@
             <p class="custom-rtl text-xl font-semibold text-gray-900">{{ fetch_new_members_count }} نفر</p>
         </div>
     </div>
-    <div class="bg-white shadow-lg rounded-xl p-4 flex items-center space-x-4 w-full max-w border border-blue-100">
+    <div class="bg-gradient-to-br from-green-50 to-white shadow-lg rounded-xl p-4 flex items-center space-x-4 w-full max-w border border-blue-100 transition-all hover:shadow-xl">
         <!-- آیکون -->
-        <div class="flex items-center justify-center w-16 h-16 bg-green-50 rounded-full">
+        <div class="flex items-center justify-center w-16 h-16 bg-green-100 rounded-full">
             <span class="text-green-600 text-3xl">
                <svg class="w-6 h-6 text-green-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
             <path fill-rule="evenodd" d="M7 6a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2h-2v-4a3 3 0 0 0-3-3H7V6Z" clip-rule="evenodd"/>
@@ -50,9 +50,9 @@
             <p class="custom-rtl text-xl font-semibold text-gray-900">{{ current_month_revenue }} تومان</p>
         </div>
     </div>
-    <div class="bg-white shadow-lg rounded-xl p-4 flex items-center space-x-4 w-full max-w border border-blue-100">
+    <div class="bg-gradient-to-br from-blue-50 to-white shadow-lg rounded-xl p-4 flex items-center space-x-4 w-full max-w border border-blue-100 transition-all hover:shadow-xl">
         <!-- آیکون -->
-        <div class="flex items-center justify-center w-16 h-16 bg-blue-50 rounded-full">
+        <div class="flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full">
             <span class="text-green-600 text-3xl">
                <svg class="w-6 h-6 text-blue-700" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
                <path fill-rule="evenodd" d="M8 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4H6Zm7.25-2.095c.478-.86.75-1.85.75-2.905a5.973 5.973 0 0 0-.75-2.906 4 4 0 1 1 0 5.811ZM15.466 20c.34-.588.535-1.271.535-2v-1a5.978 5.978 0 0 0-1.528-4H18a4 4 0 0 1 4 4v1a2 2 0 0 1-2 2h-4.535Z" clip-rule="evenodd"/>
@@ -76,9 +76,9 @@
 <div class="grid grid-cols-3 gap-4">
     <!-- اعضای جدید -->
     <div class="col-span-2 p-4 bg-white shadow-lg rounded-xl border border-blue-100">
-      <div class="bg-white rounded-xl flex items-center space-x-4 w-full max-w">
+      <div class="p-3 bg-gradient-to-r from-green-50 to-white rounded-xl flex items-center space-x-4 w-full max-w">
         <!-- آیکون -->
-        <div class="flex items-center justify-center w-16 h-16 bg-green-50 rounded-full">
+        <div class="flex items-center justify-center w-12 h-12 bg-green-100 rounded-lg">
             <span class="text-green-600 text-3xl">
                <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                <circle cx="12" cy="6" r="4" fill="#16C47F"/>
@@ -123,9 +123,9 @@
 
     <!-- لیست بدهکاران -->
     <div class="p-4 bg-white shadow-lg rounded-xl border border-blue-100">
-      <div class="bg-white rounded-xl flex items-center space-x-4 w-full max-w-md">
+      <div class="p-3 bg-gradient-to-r from-red-50 to-white rounded-xl flex items-center space-x-4 w-full max-w-md">
         <!-- آیکون -->
-        <div class="flex items-center justify-center w-16 h-16 bg-red-50 rounded-full">
+        <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full">
             <span class="text-green-600 text-3xl">
                <svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                      <circle cx="12" cy="6" r="4" fill="#E52020"/>
@@ -164,6 +164,7 @@
 
     
 <br>
+
 
 <!-- نمودارها و جداول -->
 <div class="card bg-base-100 shadow-lg mb-6 rtl text-right border border-blue-100">

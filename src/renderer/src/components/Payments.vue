@@ -8,13 +8,33 @@
       <div class="bg-base-100 shadow-lg rounded-xl p-4 mb-6 border border-blue-100">
               <!-- فیلتر و جستجو -->
       <div class="flex flex-wrap gap-4 mb-6">
+        <div class="relative w-full">
+        <div class="absolute left-3 top-3 text-blue-500">
+          <!-- search svg -->
+                    <!-- <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg> -->
+                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.5 2.75C6.66751 2.75 2.75 6.66751 2.75 11.5C2.75 16.3325 6.66751 20.25 11.5 20.25C16.3325 20.25 20.25 16.3325 20.25 11.5C20.25 6.66751 16.3325 2.75 11.5 2.75ZM1.25 11.5C1.25 5.83908 5.83908 1.25 11.5 1.25C17.1609 1.25 21.75 5.83908 21.75 11.5C21.75 14.0605 20.8111 16.4017 19.2589 18.1982L22.5303 21.4697C22.8232 21.7626 22.8232 22.2374 22.5303 22.5303C22.2374 22.8232 21.7626 22.8232 21.4697 22.5303L18.1982 19.2589C16.4017 20.8111 14.0605 21.75 11.5 21.75C5.83908 21.75 1.25 17.1609 1.25 11.5Z" fill="rgb(59, 130, 246)"/>
+                    </svg>
+                  </div>
         <input
           v-model="searchQueryPayment"
           type="text"
           placeholder="جستجو براساس نام یا نام خانوادگی..." 
-          class="input input-bordered w-full text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl"
+          class="input input-bordered w-full input input-bordered w-full pl-12 bg-white border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 custom-rtl"
         />
+
+                </div>
+        <!-- <input
+          v-model="searchQueryPayment"
+          type="text"
+          placeholder="جستجو براساس نام یا نام خانوادگی..." 
+          class="input input-bordered w-full input input-bordered w-full pl-12 bg-white border-blue-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-200 custom-rtl"
+        /> -->
+        
       </div>
+
         <!-- <div class="mb-6">
             <button  class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" @click="openModal">
                 افزودن پرداختی
@@ -59,11 +79,31 @@
               >
               
                 <td>
-                  <span class="font-semibold" :class="{
+
+                  <div class="flex items-center justify-end">
+
+                    <span 
+                    :class="{
+                      'mr-2 font-semibold text-emerald-500': payment.status === 'پرداخت شده',
+                      'mr-2 font-semibold text-red-500': payment.status !== 'پرداخت شده',
+                      }"
+
+                    >
+                    {{ payment.status }}
+                    </span>
+                    <span 
+                    :class="{
+                      'badge-dot w-3 h-3 border border-white rounded-full text-xs font-semibold text-white bg-emerald-500': payment.status === 'پرداخت شده',
+                      'badge-dot w-3 h-3 border border-white rounded-full text-xs font-semibold text-white bg-red-500': payment.status !== 'پرداخت شده'}
+                      ">
+                    </span>
+                    </div>
+
+                  <!-- <span class="font-semibold" :class="{
                     'text-xs font-medium me-2 px-2.5 py-0.5 rounded-full shadow-sm': true,
                     'bg-green-100 text-green-800 dark:bg-green-700 dark:text-green-100': payment.status === 'پرداخت شده',
                     'bg-red-100 text-red-800 dark:bg-red-700 dark:text-red-100': payment.status !== 'پرداخت شده'
-                  }">{{ payment.status }}</span>
+                  }">{{ payment.status }}</span> -->
 
                   <!-- <span class="font-semibold bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 shadow-sm shadow-blue-500/50">{{ payment.status }}</span> -->
                 </td>
