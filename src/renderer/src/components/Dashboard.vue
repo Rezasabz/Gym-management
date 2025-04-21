@@ -16,7 +16,7 @@
 </div>
     <br>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-         <div class="bg-white shadow-lg rounded-xl p-4 flex items-center space-x-4 w-full max-w">
+         <div class="bg-white shadow-lg rounded-xl p-4 flex items-center space-x-4 w-full max-w border border-blue-100">
         <!-- آیکون -->
         <div class="flex items-center justify-center w-16 h-16 bg-purple-50 rounded-full">
             <span class="text-green-600 text-3xl">
@@ -29,10 +29,10 @@
         <!-- متن و نوار پیشرفت -->
         <div class="flex-1">
             <h3 class="text-gray-600 text-sm font-semibold">اعضا جدید در ماه جاری</h3>
-            <p class="custom-rtl text-2xl font-bold text-gray-900">{{ fetch_new_members_count }} نفر</p>
+            <p class="custom-rtl text-xl font-semibold text-gray-900">{{ fetch_new_members_count }} نفر</p>
         </div>
     </div>
-    <div class="bg-white shadow-lg rounded-xl p-4 flex items-center space-x-4 w-full max-w">
+    <div class="bg-white shadow-lg rounded-xl p-4 flex items-center space-x-4 w-full max-w border border-blue-100">
         <!-- آیکون -->
         <div class="flex items-center justify-center w-16 h-16 bg-green-50 rounded-full">
             <span class="text-green-600 text-3xl">
@@ -47,10 +47,10 @@
         <!-- متن و نوار پیشرفت -->
         <div class="flex-1">
             <h3 class="text-gray-600 text-sm font-semibold">درآمد ماه جاری</h3>
-            <p class="custom-rtl text-2xl font-bold text-gray-900">{{ current_month_revenue }} تومان</p>
+            <p class="custom-rtl text-xl font-semibold text-gray-900">{{ current_month_revenue }} تومان</p>
         </div>
     </div>
-    <div class="bg-white shadow-lg rounded-xl p-4 flex items-center space-x-4 w-full max-w">
+    <div class="bg-white shadow-lg rounded-xl p-4 flex items-center space-x-4 w-full max-w border border-blue-100">
         <!-- آیکون -->
         <div class="flex items-center justify-center w-16 h-16 bg-blue-50 rounded-full">
             <span class="text-green-600 text-3xl">
@@ -63,7 +63,7 @@
         <!-- متن و نوار پیشرفت -->
         <div class="flex-1">
             <h3 class="text-gray-600 text-sm font-semibold">تعداد اعضا فعال</h3>
-            <p class="custom-rtl text-2xl font-bold text-gray-900">{{ active_memebers }} نفر</p>
+            <p class="custom-rtl text-xl font-semibold text-gray-900">{{ active_memebers }} نفر</p>
             <!-- <div class="relative w-full h-2 bg-gray-200 rounded-full mt-2">
                 <div class="absolute top-0 left-0 h-2 bg-green-500 rounded-full" style="width: 42%;"></div>
             </div> -->
@@ -75,7 +75,7 @@
       
 <div class="grid grid-cols-3 gap-4">
     <!-- اعضای جدید -->
-    <div class="col-span-2 p-4 bg-white shadow-lg rounded-xl">
+    <div class="col-span-2 p-4 bg-white shadow-lg rounded-xl border border-blue-100">
       <div class="bg-white rounded-xl flex items-center space-x-4 w-full max-w">
         <!-- آیکون -->
         <div class="flex items-center justify-center w-16 h-16 bg-green-50 rounded-full">
@@ -90,7 +90,7 @@
         </div>
         <!-- متن و نوار پیشرفت -->
         <div class="flex-1">
-            <h3 class="text-lg font-semibold">جدیدترین اعضا ثبت نام شده</h3>
+            <h3 class="font-semibold">جدیدترین اعضا ثبت نام شده</h3>
         </div>
     </div>
     <!-- divider -->
@@ -111,8 +111,8 @@
                 <tbody>
                     <tr v-for="user in users" :key="user.id">
                        <td class="font-semibold text-right">{{ user.registrationDate }}</td>
-                       <td class="font-bold text-right">{{ user.phone }}</td>
-                       <td class="font-bold text-right">{{ user.memberId }}</td>
+                       <td class="font-semibold text-right">{{ user.phone }}</td>
+                       <td class="font-semibold text-right">{{ user.memberId }}</td>
                        <td class="font-semibold text-right">{{ user.lastName }}</td>
                        <td class="font-semibold text-right">{{ user.firstName }}</td>
                     </tr>
@@ -122,7 +122,7 @@
     </div>
 
     <!-- لیست بدهکاران -->
-    <div class="p-4 bg-white shadow-lg rounded-xl">
+    <div class="p-4 bg-white shadow-lg rounded-xl border border-blue-100">
       <div class="bg-white rounded-xl flex items-center space-x-4 w-full max-w-md">
         <!-- آیکون -->
         <div class="flex items-center justify-center w-16 h-16 bg-red-50 rounded-full">
@@ -137,7 +137,7 @@
         </div>
         <!-- متن و نوار پیشرفت -->
         <div class="flex-1">
-            <h3 class="text-lg font-semibold">لیست بدهکاران</h3>
+            <h3 class="font-semibold">لیست بدهکاران</h3>
         </div>
     </div>
     <div className="dahsed-border"></div>
@@ -166,21 +166,21 @@
 <br>
 
 <!-- نمودارها و جداول -->
-<div class="card bg-base-100 shadow-lg mb-6 rtl text-right">
+<div class="card bg-base-100 shadow-lg mb-6 rtl text-right border border-blue-100">
   <!-- نمودار حضور ماهانه -->
   <div class="lg:col-span-2 card bg-base-100 shadow-lg rounded-xl">
     <div class="card-body p-6">
       <!-- استفاده از Flexbox برای چیدمان درست -->
       <div class="flex justify-between items-center">
         <!-- منوی انتخاب سال -->
-        <select v-model="selectedYear" @change="updateChart" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-semibold text-gray-700">
-          <option v-for="year in availableYears" :key="year" :value="year" class="font-semibold">
+        <select v-model="selectedYear" @change="updateChart" class="px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500  text-gray-700">
+          <option v-for="year in availableYears" :key="year" :value="year" class="">
             {{ year }}
           </option>
         </select>
         
         <!-- عنوان نمودار -->
-        <h3 class="text-lg font-semibold text-gray-700">ثبت نام ماهانه اعضا</h3>
+        <h3 class="font-semibold">ثبت نام ماهانه اعضا</h3>
       </div>
 
       <!-- نمودار -->

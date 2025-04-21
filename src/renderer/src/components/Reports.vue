@@ -2,9 +2,9 @@
     <div class="overflow-x-auto w-full">
       <h1 class="text-2xl font-bold text-center mb-6">گزارش‌گیری اعضای باشگاه</h1>
       
-      <div class="card bg-base-100 shadow-lg mb-6 rtl text-right">
+      <div class="card bg-base-100 shadow-lg mb-6 rtl text-right border border-blue-100">
         <div class="card-body">
-            <h2 class="card-title justify-end">فیلتر پیشرفته</h2>
+            <h3 class="card-title justify-end">فیلتر پیشرفته</h3>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <!-- فیلتر تا تاریخ -->
@@ -146,7 +146,7 @@
       </div> -->
       
     <!-- جدول گزارش -->
-    <div class="card bg-base-100 shadow-lg mb-6 rtl text-right">
+    <div class="card bg-base-100 shadow-lg mb-6 rtl text-right border border-blue-100">
     <div class="card-body">
         <div class="flex justify-between items-center mb-4 flex-row-reverse">
         <h2 class="card-title justify-end">لیست اعضا</h2>
@@ -268,12 +268,12 @@
         
         <!-- صفحه‌بندی -->
         <div class="flex justify-center mt-4">
-        <div class="join flex-row">
+        <div class="flex-row">
             <button 
             v-for="page in totalPages" 
             :key="page"
             @click="currentPage = page"
-            class="join-item btn border border-gray-300"
+            class="btn border border-gray-200 mr-1"
             :class="{ 'btn-active': currentPage === page }"
             >
             {{ page }}

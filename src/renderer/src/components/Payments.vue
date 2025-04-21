@@ -5,14 +5,14 @@
 
   
       <!-- لیست پرداخت‌های قبلی -->
-      <div class="bg-base-100 shadow-lg rounded-xl p-4 mb-6">
+      <div class="bg-base-100 shadow-lg rounded-xl p-4 mb-6 border border-blue-100">
               <!-- فیلتر و جستجو -->
       <div class="flex flex-wrap gap-4 mb-6">
         <input
           v-model="searchQueryPayment"
           type="text"
           placeholder="جستجو براساس نام یا نام خانوادگی..." 
-          class="input input-bordered w-full text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
+          class="input input-bordered w-full text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl"
         />
       </div>
         <!-- <div class="mb-6">
@@ -102,12 +102,12 @@
         </div>
                         <!-- صفحه‌بندی -->
                         <div class="flex justify-center mt-4">
-        <div class="join flex-row">
+        <div class="flex-row">
             <button 
             v-for="page in totalPages" 
             :key="page"
             @click="currentPage = page"
-            class="join-item btn border border-gray-300"
+            class="btn border border-gray-300 mr-1"
             :class="{ 'btn-active': currentPage === page }"
             >
             {{ page }}

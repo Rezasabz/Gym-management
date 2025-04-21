@@ -1,11 +1,11 @@
 <template>
 
-<div className="overflow-x-auto w-full">
-    <h1 class="text-2xl font-bold text-center mb-6">لیست اعضا</h1>
+<div className="overflow-x-auto w-full ">
+    <h1 class="text-2xl font-semibold text-center mb-6">لیست اعضا</h1>
 
   
-    <div class="bg-base-100 shadow-lg rounded-lg mb-6 p-4">
-        <input type="text" v-model="searchQuery" placeholder="جستجو براساس نام یا نام خانوادگی..." class="input input-bordered w-full text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold mb-6" />
+    <div class="bg-base-100 shadow-lg rounded-lg mb-6 p-4 border border-blue-100">
+        <input type="text" v-model="searchQuery" placeholder="جستجو براساس نام یا نام خانوادگی..." class="input input-bordered w-full text-gray-900  rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500  dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl mb-6" />
         <!-- بخش جستجو و دکمه افزودن کاربر -->
         <div class="h-full flex justify-between items-center mb-6">
             <div className="tooltip font-semibold" data-tip="چاپ لیست اعضا">
@@ -154,12 +154,12 @@
         </div>
                 <!-- صفحه‌بندی -->
         <div class="flex justify-center mt-4">
-        <div class="join flex-row">
+        <div class="flex-row">
             <button 
             v-for="page in totalPages" 
             :key="page"
             @click="currentPage = page"
-            class="join-item btn border border-gray-300"
+            class="btn border border-gray-300 mr-1"
             :class="{ 'btn-active': currentPage === page }"
             >
             {{ page }}
