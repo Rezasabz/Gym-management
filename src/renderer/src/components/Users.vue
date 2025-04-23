@@ -163,93 +163,107 @@
             <tr v-for="(user, index) in paginatedMembers" :key="user.id">
               <td>
                 <div className="tooltip font-semibold" data-tip="تمدید">
-                <!-- دکمه تمدید (فقط آیکون) -->
-                <button
-                  v-if="shouldShowRenewButton(user)"
-                  class="p-2 text-purple-600 hover:text-purple-800"
-                  @click="openRenewalModal(user)"
-                  title="تمدید"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                  <!-- دکمه تمدید (فقط آیکون) -->
+                  <button
+                    v-if="shouldShowRenewButton(user)"
+                    class="p-2 text-purple-600 hover:text-purple-800"
+                    @click="openRenewalModal(user)"
+                    title="تمدید"
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
-                    />
-                  </svg>
-                </button>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                      />
+                    </svg>
+                  </button>
                 </div>
 
                 <!-- دکمه حذف (فقط آیکون) -->
                 <div className="tooltip font-semibold" data-tip="حذف">
-                <button
-                  class="p-2 text-red-600 hover:text-red-800"
-                  @click="confirmDeleteUser(user)"
-                  title="حذف"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                  <button
+                    class="p-2 text-red-600 hover:text-red-800"
+                    @click="confirmDeleteUser(user)"
+                    title="حذف"
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                    />
-                  </svg>
-                </button>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <!-- دکمه ویرایش (فقط آیکون) -->
                 <div className="tooltip font-semibold" data-tip="ویرایش">
-                <button
-                  class="p-2 text-green-600 hover:text-green-800"
-                  @click="openEditModal(user)"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                  <button
+                    class="p-2 text-green-600 hover:text-green-800"
+                    @click="openEditModal(user)"
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                    />
-                  </svg>
-                </button>
+                    <svg
+                      class="h-4 w-4"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                        d="M11.9426 1.25L13.5 1.25C13.9142 1.25 14.25 1.58579 14.25 2C14.25 2.41421 13.9142 2.75 13.5 2.75H12C9.62178 2.75 7.91356 2.75159 6.61358 2.92637C5.33517 3.09825 4.56445 3.42514 3.9948 3.9948C3.42514 4.56445 3.09825 5.33517 2.92637 6.61358C2.75159 7.91356 2.75 9.62178 2.75 12C2.75 14.3782 2.75159 16.0864 2.92637 17.3864C3.09825 18.6648 3.42514 19.4355 3.9948 20.0052C4.56445 20.5749 5.33517 20.9018 6.61358 21.0736C7.91356 21.2484 9.62178 21.25 12 21.25C14.3782 21.25 16.0864 21.2484 17.3864 21.0736C18.6648 20.9018 19.4355 20.5749 20.0052 20.0052C20.5749 19.4355 20.9018 18.6648 21.0736 17.3864C21.2484 16.0864 21.25 14.3782 21.25 12V10.5C21.25 10.0858 21.5858 9.75 22 9.75C22.4142 9.75 22.75 10.0858 22.75 10.5V12.0574C22.75 14.3658 22.75 16.1748 22.5603 17.5863C22.366 19.031 21.9607 20.1711 21.0659 21.0659C20.1711 21.9607 19.031 22.366 17.5863 22.5603C16.1748 22.75 14.3658 22.75 12.0574 22.75H11.9426C9.63423 22.75 7.82519 22.75 6.41371 22.5603C4.96897 22.366 3.82895 21.9607 2.93414 21.0659C2.03933 20.1711 1.63399 19.031 1.43975 17.5863C1.24998 16.1748 1.24999 14.3658 1.25 12.0574V11.9426C1.24999 9.63423 1.24998 7.82519 1.43975 6.41371C1.63399 4.96897 2.03933 3.82895 2.93414 2.93414C3.82895 2.03933 4.96897 1.63399 6.41371 1.43975C7.82519 1.24998 9.63423 1.24999 11.9426 1.25ZM16.7705 2.27592C18.1384 0.908029 20.3562 0.908029 21.7241 2.27592C23.092 3.6438 23.092 5.86158 21.7241 7.22947L15.076 13.8776C14.7047 14.2489 14.4721 14.4815 14.2126 14.684C13.9069 14.9224 13.5761 15.1268 13.2261 15.2936C12.929 15.4352 12.6169 15.5392 12.1188 15.7052L9.21426 16.6734C8.67801 16.8521 8.0868 16.7126 7.68711 16.3129C7.28742 15.9132 7.14785 15.322 7.3266 14.7857L8.29477 11.8812C8.46079 11.3831 8.56479 11.071 8.7064 10.7739C8.87319 10.4239 9.07761 10.0931 9.31605 9.78742C9.51849 9.52787 9.7511 9.29529 10.1224 8.924L16.7705 2.27592ZM20.6634 3.33658C19.8813 2.55448 18.6133 2.55448 17.8312 3.33658L17.4546 3.7132C17.4773 3.80906 17.509 3.92327 17.5532 4.05066C17.6965 4.46372 17.9677 5.00771 18.48 5.51999C18.9923 6.03227 19.5363 6.30346 19.9493 6.44677C20.0767 6.49097 20.1909 6.52273 20.2868 6.54543L20.6634 6.16881C21.4455 5.38671 21.4455 4.11867 20.6634 3.33658ZM19.1051 7.72709C18.5892 7.50519 17.9882 7.14946 17.4193 6.58065C16.8505 6.01185 16.4948 5.41082 16.2729 4.89486L11.2175 9.95026C10.801 10.3668 10.6376 10.532 10.4988 10.7099C10.3274 10.9297 10.1804 11.1676 10.0605 11.4192C9.96337 11.623 9.88868 11.8429 9.7024 12.4017L9.27051 13.6974L10.3026 14.7295L11.5983 14.2976C12.1571 14.1113 12.377 14.0366 12.5808 13.9395C12.8324 13.8196 13.0703 13.6726 13.2901 13.5012C13.468 13.3624 13.6332 13.199 14.0497 12.7825L19.1051 7.72709Z"
+                        fill="#1C274C"
+                      />
+                    </svg>
+                    <!-- <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                      />
+                    </svg> -->
+                  </button>
                 </div>
                 <!-- دکمه جزئیات (فقط آیکون) -->
                 <div className="tooltip font-semibold" data-tip="اطلاعات کاربر">
-                <button class="p-2 text-blue-600 hover:text-blue-800" @click="viewUser(user)">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
-                </button>
+                  <button class="p-2 text-blue-600 hover:text-blue-800" @click="viewUser(user)">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </button>
                 </div>
                 <!-- <button v-if="shouldShowRenewButton(user)" class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-purple-300 dark:focus:ring-purple-800 shadow-md shadow-purple-200/50 dark:shadow-md dark:shadow-purple-200/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2" @click="openRenewalModal(user)">
                                 تمدید
@@ -359,9 +373,45 @@
       <!-- مدال افزودن/ویرایش کاربر -->
       <div v-if="showModal" class="modal modal-open">
         <div class="modal-box w-11/12 max-w-4xl">
-          <h3 class="font-bold text-lg">
-            {{ isEditMode ? 'ویرایش کاربر' : 'افزودن کاربر جدید' }}
-          </h3>
+          <div
+            class="bg-gradient-to-l from-blue-100 to-white rounded-md p-2 flex items-center space-x-4 w-full max-w justify-end"
+          >
+            <div class="flex items-center justify-end gap-2 rtl">
+              <h3 class="font-bold text-lg">
+                {{ isEditMode ? 'ویرایش کاربر' : 'افزودن کاربر جدید' }}
+              </h3>
+              <!-- آیکون ویرایش یا افزودن -->
+              <svg
+                class="h-9 w-9 text-blue-600"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <circle cx="12" cy="6" r="4" stroke="#1C274C" stroke-width="1.5" />
+                <path
+                  opacity="0.5"
+                  d="M15 13.3271C14.0736 13.1162 13.0609 13 12 13C7.58172 13 4 15.0147 4 17.5C4 19.9853 4 22 12 22C17.6874 22 19.3315 20.9817 19.8068 19.5"
+                  stroke="#1C274C"
+                  stroke-width="1.5"
+                />
+                <circle cx="18" cy="16" r="4" stroke="#1C274C" stroke-width="1.5" />
+                <path
+                  d="M18 14.6667V17.3333"
+                  stroke="#1C274C"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M16.6665 16L19.3332 16"
+                  stroke="#1C274C"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </div>
+          </div>
           <div className="divider"></div>
           <div class="gap-4 flex flex-col flex-auto">
             <form @submit.prevent="submitForm">
@@ -375,6 +425,7 @@
                     v-model="newUser.lastName"
                     class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
                     required
+                    placeholder="نام خانوادگی"
                   />
                 </div>
                 <div class="form-control">
@@ -386,6 +437,7 @@
                     v-model="newUser.firstName"
                     class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
                     required
+                    placeholder="نام"
                   />
                 </div>
               </div>
@@ -400,6 +452,7 @@
                     v-model="newUser.memberId"
                     class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
                     required
+                    placeholder="شماره عضویت"
                   />
                 </div>
                 <div class="form-control mt-4">
@@ -411,6 +464,7 @@
                     v-model="newUser.phone"
                     class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
                     required
+                    placeholder="شماره موبایل"
                   />
                 </div>
               </div>
@@ -436,6 +490,7 @@
                     v-model="newUser.emergencyPhone"
                     class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
                     required
+                    placeholder="شماره موبایل اضطراری"
                   />
                 </div>
               </div>
@@ -498,6 +553,7 @@
                     v-model="newUser.paymentAmount"
                     id="small-input"
                     class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
+                    placeholder="مبلغ"
                   />
                 </div>
                 <div class="mb-2 mt-4">
@@ -523,6 +579,7 @@
                   v-model="newUser.address"
                   class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
                   required
+                  placeholder="آدرس"
                 />
               </div>
 
@@ -784,16 +841,50 @@ export default {
     }
   },
   methods: {
-    sortBy(column) {
-      if (this.sortColumn === column) {
-        // اگر ستون فعلی بود، جهت را تغییر بده
-        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc'
-      } else {
-        // اگر ستون جدید بود، جهت پیش‌فرض را تنظیم کن
-        this.sortColumn = column
-        this.sortDirection = 'asc'
+    // sortBy(column) {
+    //   if (this.sortColumn === column) {
+    //     // اگر ستون فعلی بود، جهت را تغییر بده
+    //     this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc'
+    //   } else {
+    //     // اگر ستون جدید بود، جهت پیش‌فرض را تنظیم کن
+    //     this.sortColumn = column
+    //     this.sortDirection = 'asc'
+    //   }
+    // },
+    sortData() {
+    if (!this.sortColumn) return;
+    
+    this.users.sort((a, b) => {
+      let valueA = a[this.sortColumn];
+      let valueB = b[this.sortColumn];
+      
+      // برای ستون تاریخ شمسی
+      if (this.sortColumn === 'registrationDate') {
+        // تبدیل تاریخ شمسی به میلادی برای مقایسه
+        valueA = moment(valueA, 'jYYYY/jMM/jDD').unix();
+        valueB = moment(valueB, 'jYYYY/jMM/jDD').unix();
       }
-    },
+      
+      // برای مقایسه رشته‌های فارسی
+      if (typeof valueA === 'string' && this.sortColumn !== 'registrationDate') {
+        return this.sortDirection === 'asc' 
+          ? valueA.localeCompare(valueB, 'fa')
+          : valueB.localeCompare(valueA, 'fa');
+      }
+      
+      const comparison = valueA > valueB ? 1 : valueA < valueB ? -1 : 0;
+      return this.sortDirection === 'asc' ? comparison : -comparison;
+    });
+  },
+  sortBy(column) {
+  if (this.sortColumn === column) {
+    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+  } else {
+    this.sortColumn = column;
+    this.sortDirection = 'asc';
+  }
+  this.sortData();
+},
     downloadExcel() {
       // ایجاد هدر فارسی
       const headers = [

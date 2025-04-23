@@ -452,6 +452,40 @@ export default {
     }
   },
   methods: {
+    sortData() {
+      if (!this.sortColumn) return
+
+      this.users.sort((a, b) => {
+        let valueA = a[this.sortColumn]
+        let valueB = b[this.sortColumn]
+
+        // برای ستون تاریخ شمسی
+        if (this.sortColumn === 'registrationDate') {
+          // تبدیل تاریخ شمسی به میلادی برای مقایسه
+          valueA = moment(valueA, 'jYYYY/jMM/jDD').unix()
+          valueB = moment(valueB, 'jYYYY/jMM/jDD').unix()
+        }
+
+        // برای مقایسه رشته‌های فارسی
+        if (typeof valueA === 'string' && this.sortColumn !== 'registrationDate') {
+          return this.sortDirection === 'asc'
+            ? valueA.localeCompare(valueB, 'fa')
+            : valueB.localeCompare(valueA, 'fa')
+        }
+
+        const comparison = valueA > valueB ? 1 : valueA < valueB ? -1 : 0
+        return this.sortDirection === 'asc' ? comparison : -comparison
+      })
+    },
+    sortBy(column) {
+      if (this.sortColumn === column) {
+        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc'
+      } else {
+        this.sortColumn = column
+        this.sortDirection = 'asc'
+      }
+      this.sortData()
+    },
     downloadExcelPayments() {
       // ایجاد هدر فارسی
       const headers = [

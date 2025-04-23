@@ -443,7 +443,9 @@ export default {
       pageSize: 10,
       members: [], // داده‌های اعضای باشگاه
       filteredMembers: [],
-      selectedMember: null
+      selectedMember: null,
+      sortColumn: '',
+      sortDirection: 'asc'
     }
   },
   computed: {
@@ -460,16 +462,18 @@ export default {
     this.fetchMembers()
   },
   methods: {
-    sortBy(column) {
-      if (this.sortColumn === column) {
-        // اگر ستون فعلی بود، جهت را تغییر بده
-        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc'
-      } else {
-        // اگر ستون جدید بود، جهت پیش‌فرض را تنظیم کن
-        this.sortColumn = column
-        this.sortDirection = 'asc'
-      }
-    },
+    // sortBy(column) {
+    //   if (this.sortColumn === column) {
+    //     // اگر ستون فعلی بود، جهت را تغییر بده
+    //     this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc'
+    //   } else {
+    //     // اگر ستون جدید بود، جهت پیش‌فرض را تنظیم کن
+    //     this.sortColumn = column
+    //     this.sortDirection = 'asc'
+    //   }
+    // },
+
+
     async fetchMembers() {
       try {
         const data = await window.api.getUsers() // یا api خودت
@@ -614,7 +618,55 @@ export default {
       const wb = XLSX.utils.book_new() // ایجاد کتابچه (workbook)
       XLSX.utils.book_append_sheet(wb, ws, 'Users') // افزودن sheet به workbook
       XLSX.writeFile(wb, 'user_list.xlsx') // دانلود فایل Excel
-    }
+    },
+    sortData() {
+      if (!this.sortColumn) return
+
+      this.members = [...this.members].sort((a, b) => {
+        let valueA = a[this.sortColumn]
+        let valueB = b[this.sortColumn]
+
+        // برای ستون تاریخ شمسی
+        if (this.sortColumn === 'registrationDate') {
+          try {
+            valueA = moment(valueA, 'jYYYY/jMM/jDD').isValid()
+              ? moment(valueA, 'jYYYY/jMM/jDD').unix()
+              : 0
+            valueB = moment(valueB, 'jYYYY/jMM/jDD').isValid()
+              ? moment(valueB, 'jYYYY/jMM/jDD').unix()
+              : 0
+          } catch (e) {
+            console.error('Error parsing date:', e)
+            valueA = valueB = 0
+          }
+        }
+
+        // برای ستون‌های عددی مثل memberId
+        if (this.sortColumn === 'memberId') {
+          valueA = Number(valueA) || 0
+          valueB = Number(valueB) || 0
+        }
+
+        // برای مقایسه رشته‌های فارسی
+        if (typeof valueA === 'string' && this.sortColumn !== 'registrationDate') {
+          return this.sortDirection === 'asc'
+            ? valueA.localeCompare(valueB, 'fa', { sensitivity: 'base' })
+            : valueB.localeCompare(valueA, 'fa', { sensitivity: 'base' })
+        }
+
+        const comparison = valueA > valueB ? 1 : valueA < valueB ? -1 : 0
+        return this.sortDirection === 'asc' ? comparison : -comparison
+      })
+    },
+    sortBy(column) {
+      if (this.sortColumn === column) {
+        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc'
+      } else {
+        this.sortColumn = column
+        this.sortDirection = 'asc'
+      }
+      this.sortData()
+    },
   }
 }
 </script>
