@@ -10,6 +10,7 @@ const api = {
   getUserStatus: (userId) => ipcRenderer.invoke('get-user-status', userId),
   addUser: (newUser) => ipcRenderer.invoke('add-user', newUser),
   updateUser: (updatedUser) => ipcRenderer.invoke('update-user', updatedUser),
+  updateUserExpiration: (payload) => ipcRenderer.invoke('update-user-expiration', payload),
   deleteUser: (userId) => ipcRenderer.invoke('delete-user', userId),
   addPayment: (paymentData) => ipcRenderer.invoke('add-payment', paymentData),
   getPayments: () => ipcRenderer.invoke('fetch-payments'),

@@ -533,7 +533,7 @@
 
                   <date-picker
                     v-model="newUser.registrationDate"
-                    format="YYYY-MM-DD"
+                    format="jYYYY/jMM/jDD"
                     display-format="jYYYY/jMM/jDD"
                     custom-input=".custom-date-input"
                   />
@@ -666,35 +666,41 @@
             <h4>{{ userToRenewal.firstName }} {{ userToRenewal.lastName }}</h4>
             <div className="divider"></div>
             <form @submit.prevent="submitFormRenewal">
-              <div class="grid md:grid-cols-2 gap-4">
-                <div class="form-control">
+              <div class="grid md:grid-cols-3 gap-4">
+                <div class="form-control mb-8">
                   <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                     <span class="label-text">مبلغ</span>
                   </label>
                   <input
                     type="text"
                     v-model="renewal_payment"
-                    class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl"
+                    class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
                     disabled
                     readonly
                   />
+                  
                 </div>
-                <div class="form-control mb-4">
-                  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    <span class="label-text">تاریخ</span>
-                  </label>
-                  <input
-                    ref="dateInput"
-                    v-model="userToRenewal.registrationDate"
-                    aria-label="disabled input 2"
-                    data-jdp
-                    class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl"
-                    disabled
-                    readonly
-                  />
-                </div>
-              </div>
-              <div class="grid md:grid-cols-1 gap-4">
+
+
+
+
+
+
+
+                <div class="form-control">
+  <label class="block mb-2 text-sm font-medium text-gray-900">
+    <span class="label-text">تاریخ تمدید</span>
+  </label>
+  <input
+    v-model="obj_renewals.renewal_date"
+    class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs font-semibold"
+    disabled
+    readonly
+  />
+</div>
+
+              <!-- </div> -->
+              <!-- <div class="grid md:grid-cols-1 gap-4"> -->
                 <!-- <div class="mt-4 mb-4">
                         <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">روش پرداخت</label>
                         <select id="countries" v-model="obj_renewals.paymentMethod" class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl">
@@ -702,35 +708,39 @@
                             <option value="نقدی">نقدی</option>
                         </select>
                     </div> -->
-                <div class="flex justify-center items-center mt-4 mb-4">
+
+
+                <div class="form-control">
                   <label
                     for="countries"
-                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                    class="block mb-2 text-sm font-medium text-gray-900"
                     >مدت زمان دوره</label
                   >
                   <select
                     id="countries"
                     v-model="obj_renewals.duration"
-                    class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl"
+                    class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
                   >
                     <option value="1">1 ماهه</option>
                     <option value="2">2 ماهه</option>
                   </select>
                 </div>
               </div>
+              <div class="flex justify-center items-center modal-action mt-4">
               <button
                 type="button"
-                class="btn-wide text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                class="btn-wide text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-300/50 dark:shadow-lg dark:shadow-red-300/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
                 @click="closeRenewalModal"
               >
                 بستن
               </button>
               <button
                 type="submit"
-                class="btn-wide text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                class="btn-wide text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-300/50 dark:shadow-lg dark:shadow-blue-300/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
               >
                 ثبت
               </button>
+              </div>
             </form>
           </div>
         </dialog>
@@ -1203,6 +1213,7 @@ export default {
       this.showModal = false
     },
     async submitForm() {
+      this.calculateExpirationDate() // ← بسیار مهم
       if (this.isEditMode) {
         await this.updateUser()
         console.log('*********** @@')
@@ -1215,62 +1226,58 @@ export default {
       console.log('*********** 2')
       this.closeModal()
     },
-    calculateExpirationDate() {
-      if (!this.newUser.registrationDate || !this.newUser.renewal_duration) {
-        this.newUser.expirationDate = '' // در صورت عدم مقداردهی، فیلد خالی بماند
-        return
-      }
+// ✅ نسخه اصلاح‌شده برای ذخیره تاریخ ثبت‌نام و تاریخ انقضا به صورت شمسی در دیتابیس:
 
-      const shamsiDate = this.newUser.registrationDate
-      const durationDays = parseInt(this.newUser.renewal_duration, 10) // تبدیل مدت به عدد صحیح
+calculateExpirationDate() {
+  if (!this.newUser.registrationDate || !this.newUser.renewal_duration) {
+    this.newUser.expirationDate = ''
+    return
+  }
 
-      if (isNaN(durationDays) || durationDays <= 0) {
-        console.error('مدت دوره معتبر نیست')
-        return
-      }
+  const durationMonths = parseInt(this.newUser.renewal_duration, 10)
+  if (isNaN(durationMonths) || durationMonths <= 0) {
+    console.error('مدت دوره معتبر نیست')
+    return
+  }
 
-      // تبدیل تاریخ ثبت‌نام از شمسی به میلادی
-      const registrationDateMiladi = moment(
-        moment.from(shamsiDate, 'fa', 'jYYYY/jMM/jDD').locale('en').format('YYYY-MM-DD')
-      )
+  // تبدیل تاریخ ثبت‌نام از شمسی به میلادی برای محاسبه
+  const registrationMiladi = moment
+    .from(this.newUser.registrationDate, 'fa', 'jYYYY/jMM/jDD')
+    .locale('en')
 
-      // افزودن مدت دوره (روزها) به تاریخ ثبت‌نام
-      const expirationDateMiladi = moment(registrationDateMiladi).add(durationDays, 'months')
+  const expirationMiladi = registrationMiladi.clone().add(durationMonths, 'months')
 
-      // تبدیل دوباره به شمسی و ذخیره در متغیر expirationDate
-      this.newUser.expirationDate = expirationDateMiladi.format('jYYYY/jMM/jDD')
+  // تبدیل هر دو به شمسی و ذخیره در دیتا
+  this.newUser.registrationDate = registrationMiladi
+    .clone()
+    .locale('fa')
+    .format('jYYYY/jMM/jDD')
 
-      console.log('تاریخ انقضا:', this.newUser.expirationDate)
-    },
-    calculateExpirationDate_Renewal() {
-      // اگر مدت دوره مشخص نشده، مقداردهی نکن
-      // if (!this.newUser.duration) {
-      //     this.obj_renewals = '';
-      //     return;
-      // }
+  this.newUser.expirationDate = expirationMiladi
+    .clone()
+    .locale('fa')
+    .format('jYYYY/jMM/jDD')
 
-      // دریافت تاریخ امروز به‌شکل میلادی
-      const currentDateMiladi = moment()
+  console.log('📅 ثبت‌نام شمسی:', this.newUser.registrationDate)
+  console.log('📆 انقضا شمسی:', this.newUser.expirationDate)
+},
+calculateExpirationDate_Renewal() {
+  const durationMonths = parseInt(this.obj_renewals.duration, 10)
+  if (isNaN(durationMonths) || durationMonths <= 0) {
+    console.error('مدت دوره معتبر نیست')
+    return
+  }
 
-      const durationMonths = parseInt(this.obj_renewals.duration, 10) // تبدیل مدت به عدد صحیح
+  const now = moment().locale('en')
+  const expirationMiladi = now.clone().add(durationMonths, 'months')
 
-      if (isNaN(durationMonths) || durationMonths <= 0) {
-        console.error('مدت دوره معتبر نیست')
-        return
-      }
+  this.obj_renewals.renewal_date = now.clone().locale('fa').format('jYYYY/jMM/jDD')
+  this.obj_renewals.new_expiration_date = expirationMiladi.clone().locale('fa').format('jYYYY/jMM/jDD')
 
-      // افزودن مدت دوره (ماه‌ها) به تاریخ امروز
-      const expirationDateMiladi = moment(currentDateMiladi).add(durationMonths, 'months')
-
-      const currentDate = moment(currentDateMiladi).format('jYYYY/jMM/jDD')
-
-      this.obj_renewals.renewal_date = currentDate
-      // تبدیل دوباره به شمسی و ذخیره در متغیر expirationDate
-      this.obj_renewals.new_expiration_date = expirationDateMiladi.format('jYYYY/jMM/jDD')
-
-      console.log('تاریخ جدید انقضا:', this.obj_renewals.new_expiration_date)
-      console.log('تاریخ جاری:', currentDate)
-    },
+  console.log('📅 تمدید:', this.obj_renewals.renewal_date)
+  console.log('📆 انقضا جدید:', this.obj_renewals.new_expiration_date)
+}
+,
     async addUser() {
       try {
         console.log('New User Data:', this.newUser) // بررسی مقدار قبل از ارسال
@@ -1380,24 +1387,44 @@ export default {
     async submitFormRenewal() {
       console.log('this.userToRenewal.id ==> ', this.renewal_user_id) // باید "1" را چاپ کند
 
-      await this.addRenewals()
-      await this.closeRenewalModal()
-    },
-    async addRenewals() {
-      console.log('🚀 ارسال داده‌ها به API:', this.obj_renewals)
-      console.log('this.userToRenewal => ', this.userToRenewal)
-      const response = await window.api.addRenewals({
+
+      console.log('🔁 ارسال به جدول renewals:', {
         user_id: this.renewal_user_id,
         renewal_date: this.obj_renewals.renewal_date,
         duration: this.obj_renewals.duration,
         new_expiration_date: this.obj_renewals.new_expiration_date
       })
 
-      // اگر عملیات موفقیت‌آمیز بود، وضعیت کاربر را به‌روزرسانی کن
-      if (response.success) {
-        this.checkAndUpdateUserStatus(this.userToRenewal.id)
-      }
+
+      await this.addRenewals()
+      await this.fetchUsers() // برای بروزرسانی جدول کاربران در UI
+      await this.closeRenewalModal()
     },
+    async addRenewals() {
+  console.log('🚀 ارسال تمدید:', this.obj_renewals)
+
+  const response = await window.api.addRenewals({
+    user_id: this.renewal_user_id,
+    renewal_date: this.obj_renewals.renewal_date,
+    duration: this.obj_renewals.duration,
+    new_expiration_date: this.obj_renewals.new_expiration_date
+  })
+
+  if (response.success) {
+    // 🔁 به‌روزرسانی users.expirationDate
+    await window.api.updateUserExpiration({
+      id: this.renewal_user_id,
+      expirationDate: this.obj_renewals.new_expiration_date
+    })
+
+    // ⏬ اضافه شده‌ها
+    await this.fetchUsers()
+    this.renewals = await window.api.fetchRenewals()
+    await this.checkAndUpdateUserStatus(this.renewal_user_id)
+  }
+}
+
+,
 
     async checkAndUpdateUserStatus(userId) {
       const response = await window.api.checkUserStatus(userId)
@@ -1407,14 +1434,19 @@ export default {
     },
 
     async updateUserStatus(userId, newStatus) {
+      const user = this.users.find(u => u.id === userId)
+      if (user) user.status = newStatus
       console.log(`Updating status for user ${userId} to ${newStatus}`)
       await window.api.updateUserStatus({
-        userId: userId,
+        userId,
         status: newStatus
       })
     }
   },
   async mounted() {
+    for (const user of this.users) {
+      await this.checkAndUpdateUserStatus(user.id)
+    }
     await this.fetchUsers()
     await this.fetchPayments() // دریافت پرداخت‌ها
     this.calculateProgress() // محاسبه درصد زمان در زمان بارگذاری کامپوننت

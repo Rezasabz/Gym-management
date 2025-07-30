@@ -497,6 +497,13 @@ app.whenReady().then(() => {
     })
   })
 
+
+  ipcMain.handle('update-user-expiration', async (_, { id, expirationDate }) => {
+    db.prepare('UPDATE users SET expirationDate = ? WHERE id = ?').run(expirationDate, id)
+    return { success: true }
+  })
+  
+
   // حذف کاربر
   ipcMain.handle('delete-user', async (_, userId) => {
     // return new Promise((resolve, reject) => {
@@ -699,21 +706,33 @@ app.whenReady().then(() => {
   })
 
   // افزودن تمدید
-  ipcMain.handle('add-renewals', async (_, renewal) => {
-    return new Promise((resolve, reject) => {
-      const { user_id, renewal_date, duration, new_expiration_date } = renewal
-      db.prepare(
-        `
-                INSERT INTO renewals (user_id, renewal_date, duration, new_expiration_date)
-                VALUES (?, ?, ?, ?)
-            `
-      ).run(user_id, renewal_date, duration, new_expiration_date)
-      resolve({
-        success: true,
-        renewalId: db.prepare('SELECT last_insert_rowid()').get().last_insert_rowid
-      })
-    })
-  })
+ipcMain.handle('add-renewals', async (_, renewal) => {
+  try {
+    const { user_id, renewal_date, duration, new_expiration_date } = renewal
+
+    console.log('🟡 دریافت تمدید جدید:', renewal)
+
+    const insert = db.prepare(`
+      INSERT INTO renewals (user_id, renewal_date, duration, new_expiration_date)
+      VALUES (?, ?, ?, ?)
+    `)
+
+    insert.run(user_id, renewal_date, duration, new_expiration_date)
+
+    const result = db.prepare('SELECT last_insert_rowid() AS id').get()
+
+    console.log('🟢 تمدید ثبت شد با ID:', result.id)
+
+    return {
+      success: true,
+      renewalId: result.last_insert_rowid
+    }
+  } catch (err) {
+    console.error('🔴 خطا در ثبت تمدید:', err.message)
+    return { success: false, error: err.message }
+  }
+})
+
 
   // دبروزرسانی وضعیت کاربر
   ipcMain.handle('update-user-status', async (_, { userId, status }) => {
@@ -736,42 +755,21 @@ app.whenReady().then(() => {
   })
 
   ipcMain.handle('check-user-status', async (_, userId) => {
-    return new Promise((resolve, reject) => {
-      try {
-        // پیدا کردن آخرین تاریخ انقضا برای کاربر
-        const renewal = db
-          .prepare(
-            `
-                SELECT new_expiration_date
-                FROM renewals
-                WHERE user_id = ?
-                ORDER BY new_expiration_date DESC
-                LIMIT 1
-            `
-          )
-          .get(userId)
-
-        if (!renewal) {
-          resolve({ success: false, status: 'نامشخص' })
-          return
-        }
-
-        // تبدیل تاریخ شمسی به میلادی
-        const expirationDate = moment
-          .from(renewal.new_expiration_date, 'fa', 'jYYYY/jMM/jDD')
-          .locale('en')
-
-        // گرفتن تاریخ امروز
-        const currentDate = moment()
-
-        // مقایسه تاریخ انقضا با تاریخ امروز
-        const status = currentDate.isAfter(expirationDate) ? 'منقضی شده' : 'فعال'
-        resolve({ success: true, status })
-      } catch (error) {
-        reject({ success: false, error: error.message })
-      }
-    })
+    const user = db.prepare('SELECT expirationDate FROM users WHERE id = ?').get(userId)
+  
+    if (!user) return { success: false }
+  
+    const now = moment().locale('fa')
+    const exp = moment(user.expirationDate, 'jYYYY/jMM/jDD')
+  
+    const isExpired = now.isAfter(exp)
+  
+    return {
+      success: true,
+      status: isExpired ? 'منقضی‌شده' : 'فعال'
+    }
   })
+  
 
   // دریافت پرداخت ها
   ipcMain.handle('fetch-renewals', async () => {
