@@ -118,7 +118,7 @@
             </div>
             <div>
               <div class="text-gray-600 text-sm font-semibold">مجموع پرداختی‌ها</div>
-              <div class="text-green-600 font-bold text-xl mt-1">۲,۰۰۰,۰۰۰ تومان</div>
+              <div class="text-green-600 font-bold text-xl mt-1">{{ totalPaid.toLocaleString() }} تومان</div>
             </div>
           </div>
 
@@ -174,7 +174,7 @@
             </div>
             <div>
               <div class="text-gray-600 text-sm font-semibold">جلسات باقی مانده</div>
-              <div class="text-purple-600 font-bold text-xl mt-1">۱۱</div>
+              <div class="text-purple-600 font-bold text-xl mt-1">{{ remainingSessions }}</div>
             </div>
           </div>
 
@@ -202,7 +202,7 @@
             </div>
             <div>
               <div class="text-gray-600 text-sm font-semibold">مبلغ بدهی</div>
-              <div class="text-red-600 font-bold text-xl mt-1">۰</div>
+              <div class="text-red-600 font-bold text-xl mt-1">{{ debtAmount.toLocaleString() }}</div>
             </div>
           </div>
         </div>
@@ -211,7 +211,7 @@
 
     <!-- اطلاعات کاربری -->
     <div class="card w-full bg-base-100 shadow-xl p-5 mt-3 border border-gray-100">
-      <div class="flex items-center gap-3 mb-4">
+      <div class="flex items-center gap-3">
         <div class="avatar placeholder">
           <div class="bg-indigo-100 text-indigo-800 rounded-full w-10">
             <svg
@@ -438,7 +438,10 @@ export default {
     show: Boolean,
     user: Object,
     progress: Number,
-    expirationDateMiladi: String
+    expirationDateMiladi: String,
+    totalPaid: Number,         
+    remainingSessions: Number,
+    debtAmount: Number 
   },
   emits: ['close'],
   methods: {

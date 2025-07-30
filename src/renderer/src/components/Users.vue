@@ -657,6 +657,9 @@
           :user="selectedUser"
           :progress="progress"
           :expirationDateMiladi="expirationDateMiladi"
+          :totalPaid="calculateTotalPaid(selectedUser.id)"
+          :remainingSessions="calculateRemainingSessions(selectedUser.id)"
+          :debtAmount="calculateDebtAmount(selectedUser.id)"
           @close="closeDetailsModal"
         />
         <!-- تمدید کاربر -->
@@ -756,6 +759,7 @@ import moment from 'jalali-moment'
 import * as XLSX from 'xlsx'
 import DatePicker from 'vue3-persian-datetime-picker'
 import UserDetailsModal from './modals/UserDetailsModal.vue'
+import Swal from 'sweetalert2'
 
 export default {
   components: {
@@ -1068,7 +1072,9 @@ export default {
         this.selectedUser.status = 'منقضی‌شده'
       }
 
-      console.log(`Progress: ${this.progress}%, Remaining Days: ${this.remainingDays}`)
+      this.expirationDateMiladi = expirationDateMiladi.format('jYYYY/jMM/jDD')
+      console.log(`Progress: ${this.progress}%, Remaining Days: ${this.remainingDays} expirationDateMiladi: ${this.expirationDateMiladi} `)
+      // return expirationDateMiladi
     },
 
     //         async calculateProgress() {
@@ -1112,6 +1118,41 @@ export default {
       this.showDetailsModal = true
       this.calculateProgress()
     },
+
+
+    calculateTotalPaid(userId) {
+  const userPayments = this.payments.filter(p =>
+    (p.userId === userId || p.user_id === userId) &&
+    ['پرداخت شده', 'موفق', 'paid'].includes(p.status?.trim())
+  )
+
+  return userPayments.reduce((sum, p) => {
+    const cleanedAmount = (p.amount || '')
+      .toString()
+      .replace(/[٬،,]/g, '')
+      .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+    return sum + Number(cleanedAmount)
+  }, 0)
+}
+,
+  calculateDebtAmount(userId) {
+    const unpaid = this.payments.filter(p => p.userId === userId && p.status === 'پرداخت نشده')
+    return unpaid.reduce((sum, p) => sum + Number(p.amount), 0)
+  },
+  calculateRemainingSessions(userId) {
+  const user = this.users.find(u => u.id === userId)
+  if (!user || !user.registrationDate || !user.expirationDate) return 0
+
+  const today = moment().locale('fa')
+  const expiration = moment.from(user.expirationDate, 'fa')
+  
+  if (today.isSameOrAfter(expiration)) return 0
+
+  const remainingDays = expiration.diff(today, 'days')
+  return remainingDays
+}
+,
+
     closeDetailsModal() {
       this.showDetailsModal = false
       this.selectedUser = null
@@ -1131,11 +1172,30 @@ export default {
       this.showDeleteModal = false
       this.userToDelete = null
     },
+
+    showSwal(title, text, icon) {
+      return Swal.fire({
+        title: title,
+        text: text,
+        icon: icon,
+        confirmButtonText: 'متوجه شدم',
+        confirmButtonColor: '#3085d6',
+        timer: icon === 'success' ? 3000 : undefined
+      })
+    },
     async deleteUserConfirmed() {
       try {
         await window.api.deleteUser(this.userToDelete.id) // ارسال فقط userId
         this.users = this.users.filter((user) => user.id !== this.userToDelete.id)
         this.closeDeleteModal()
+
+        await this.showSwal(
+          'موفقیت',
+          'کاربر با موفقیت حذف شد',
+          'success'
+        )
+        
+
       } catch (error) {
         console.error('Error deleting user:', error)
       }
@@ -1223,6 +1283,7 @@ export default {
       }
       console.log('*********** 1')
       await this.fetchUsers()
+      await this.fetchPayments() // 🔥 این خط حیاتی‌ـه
       console.log('*********** 2')
       this.closeModal()
     },
