@@ -29,6 +29,12 @@ const api = {
   updateUserStatus: (userId, status) => ipcRenderer.invoke('update-user-status', userId, status),
   checkUserStatus: (userId) => ipcRenderer.invoke('check-user-status', userId),
   fetchRenewals: () => ipcRenderer.invoke('fetch-renewals')
+  ,
+  // محصولات
+  addProduct: (currentProduct) => ipcRenderer.invoke('add-product', currentProduct),
+  fetchProducts: () => ipcRenderer.invoke('fetch-products'),
+  updateProduct: (currentProduct) => ipcRenderer.invoke('update-product', currentProduct),
+  deleteProduct: (productId) => ipcRenderer.invoke('delete-product', productId)
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

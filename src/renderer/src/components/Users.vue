@@ -1483,10 +1483,7 @@ calculateExpirationDate_Renewal() {
     this.renewals = await window.api.fetchRenewals()
     await this.checkAndUpdateUserStatus(this.renewal_user_id)
   }
-}
-
-,
-
+},
     async checkAndUpdateUserStatus(userId) {
       const response = await window.api.checkUserStatus(userId)
       if (response.success) {
@@ -1502,7 +1499,7 @@ calculateExpirationDate_Renewal() {
         userId,
         status: newStatus
       })
-    }
+    },
   },
   async mounted() {
     for (const user of this.users) {

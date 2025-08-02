@@ -137,6 +137,31 @@ function initDatabase() {
   } catch (err) {
     console.error('Error creating Renewals table', err)
   }
+
+  // ایجاد جدول محصولات اگر وجود ندارد
+  try {
+    const stmt = db.prepare(`
+      CREATE TABLE IF NOT EXISTS products (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        code TEXT,
+        category TEXT,
+        price INTEGER,
+        stock INTEGER,
+        status TEXT,
+        description TEXT,
+        tag TEXT,
+        image TEXT,
+        brand TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `)
+
+    stmt.run()
+    console.log('products table is ready.')
+  } catch (err) {
+    console.error('Error creating Renewals table', err)
+  }
 }
 
 module.exports = { initDatabase, db }
@@ -497,12 +522,10 @@ app.whenReady().then(() => {
     })
   })
 
-
   ipcMain.handle('update-user-expiration', async (_, { id, expirationDate }) => {
     db.prepare('UPDATE users SET expirationDate = ? WHERE id = ?').run(expirationDate, id)
     return { success: true }
   })
-  
 
   // حذف کاربر
   ipcMain.handle('delete-user', async (_, userId) => {
@@ -706,33 +729,32 @@ app.whenReady().then(() => {
   })
 
   // افزودن تمدید
-ipcMain.handle('add-renewals', async (_, renewal) => {
-  try {
-    const { user_id, renewal_date, duration, new_expiration_date } = renewal
+  ipcMain.handle('add-renewals', async (_, renewal) => {
+    try {
+      const { user_id, renewal_date, duration, new_expiration_date } = renewal
 
-    console.log('🟡 دریافت تمدید جدید:', renewal)
+      console.log('🟡 دریافت تمدید جدید:', renewal)
 
-    const insert = db.prepare(`
+      const insert = db.prepare(`
       INSERT INTO renewals (user_id, renewal_date, duration, new_expiration_date)
       VALUES (?, ?, ?, ?)
     `)
 
-    insert.run(user_id, renewal_date, duration, new_expiration_date)
+      insert.run(user_id, renewal_date, duration, new_expiration_date)
 
-    const result = db.prepare('SELECT last_insert_rowid() AS id').get()
+      const result = db.prepare('SELECT last_insert_rowid() AS id').get()
 
-    console.log('🟢 تمدید ثبت شد با ID:', result.id)
+      console.log('🟢 تمدید ثبت شد با ID:', result.id)
 
-    return {
-      success: true,
-      renewalId: result.last_insert_rowid
+      return {
+        success: true,
+        renewalId: result.last_insert_rowid
+      }
+    } catch (err) {
+      console.error('🔴 خطا در ثبت تمدید:', err.message)
+      return { success: false, error: err.message }
     }
-  } catch (err) {
-    console.error('🔴 خطا در ثبت تمدید:', err.message)
-    return { success: false, error: err.message }
-  }
-})
-
+  })
 
   // دبروزرسانی وضعیت کاربر
   ipcMain.handle('update-user-status', async (_, { userId, status }) => {
@@ -756,20 +778,19 @@ ipcMain.handle('add-renewals', async (_, renewal) => {
 
   ipcMain.handle('check-user-status', async (_, userId) => {
     const user = db.prepare('SELECT expirationDate FROM users WHERE id = ?').get(userId)
-  
+
     if (!user) return { success: false }
-  
+
     const now = moment().locale('fa')
     const exp = moment(user.expirationDate, 'jYYYY/jMM/jDD')
-  
+
     const isExpired = now.isAfter(exp)
-  
+
     return {
       success: true,
       status: isExpired ? 'منقضی‌شده' : 'فعال'
     }
   })
-  
 
   // دریافت پرداخت ها
   ipcMain.handle('fetch-renewals', async () => {
@@ -778,6 +799,149 @@ ipcMain.handle('add-renewals', async (_, renewal) => {
       resolve(rows)
     })
   })
+
+  // add product
+  ipcMain.handle('add-product', async (_, productData) => {
+    try {
+      const {
+        name,
+        code,
+        category,
+        price,
+        stock,
+        status,
+        description,
+        tag,
+        image,
+        brand
+      } = productData
+
+      const stmt = db.prepare(`
+        INSERT INTO products (
+          name,
+          code,
+          category,
+          price,
+          stock,
+          status,
+          description,
+          tag,
+          image,
+          brand
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `)
+
+      const result = stmt.run(
+        name,
+        code,
+        category,
+        price,
+        stock,
+        status,
+        description,
+        tag,
+        image,
+        brand
+      )
+
+      // Return the inserted product with its new id
+      return {
+        success: true,
+        data: {
+          id: result.lastInsertRowid,
+          name,
+          code,
+          category,
+          price,
+          stock,
+          status,
+          description,
+          tag,
+          image,
+          brand
+        }
+      }
+    } catch (error) {
+      return { success: false, error: error.message }
+    }
+  })
+
+  // fetch products
+  ipcMain.handle('fetch-products', async () => {
+    return new Promise((resolve, reject) => {
+      const row = db.prepare('SELECT * FROM products').all()
+      resolve(row)
+    })
+  })
+
+  // update product
+  ipcMain.handle('update-product', async (_, productData) => {
+    try {
+      const {
+        id,
+        name,
+        code,
+        category,
+        price,
+        stock,
+        status,
+        description,
+        tag,
+        image,
+        brand
+      } = productData
+
+      const stmt = db.prepare(`
+        UPDATE products
+        SET
+          name = ?,
+          code = ?,
+          category = ?,
+          price = ?,
+          stock = ?,
+          status = ?,
+          description = ?,
+          tag = ?,
+          image = ?,
+          brand = ?
+        WHERE id = ?
+      `)
+
+      stmt.run(
+        name,
+        code,
+        category,
+        price,
+        stock,
+        status,
+        description,
+        tag,
+        image,
+        brand,
+        id
+      )
+
+      return { success: true }
+    } catch (error) {
+      return { success: false, error: error.message }
+    }
+  })
+
+  // delete product
+  ipcMain.handle('delete-product', async (event, productId) => {
+    try {
+      const stmt = db.prepare('DELETE FROM products WHERE id = ?')
+      const result = stmt.run(productId)
+      if (result.changes > 0) {
+        return { success: true }
+      } else {
+        return { success: false, error: 'Product not found' }
+      }
+    } catch (error) {
+      return { success: false, error: error.message }
+    }
+  })
+
 
   createWindow()
 
