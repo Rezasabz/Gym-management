@@ -162,6 +162,27 @@ function initDatabase() {
   } catch (err) {
     console.error('Error creating Renewals table', err)
   }
+
+  // add sales table
+  // ایجاد جدول فروش (sales) اگر وجود ندارد
+  try {
+    const stmt = db.prepare(`
+      CREATE TABLE IF NOT EXISTS sales (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        invoice TEXT,
+        customer TEXT,
+        date TEXT,
+        amount INTEGER,
+        status TEXT,
+        name TEXT
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `)
+    stmt.run()
+    console.log('sales table is ready.')
+  } catch (err) {
+    console.error('Error creating sales table', err)
+  }
 }
 
 module.exports = { initDatabase, db }
@@ -941,6 +962,37 @@ app.whenReady().then(() => {
       return { success: false, error: error.message }
     }
   })
+
+// add sale
+ipcMain.handle('add-sale', async (_, saleData) => {
+  try {
+    const stmt = db.prepare(`
+      INSERT INTO sales (invoice, customer, date, amount, status, name)
+      VALUES (?, ?, ?, ?, ?, ?)
+    `);
+    const result = stmt.run(
+      saleData.invoice,
+      saleData.customer,
+      saleData.date,
+      saleData.amount,
+      saleData.status,
+      saleData.name
+    );
+    return { success: true, id: result.lastInsertRowid };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+});
+
+// fetch sale
+ipcMain.handle('fetch-sales', async () => {
+  try {
+    const sales = db.prepare('SELECT * FROM sales ORDER BY date DESC').all();
+    return sales;
+  } catch (error) {
+    return [];
+  }
+});
 
 
   createWindow()

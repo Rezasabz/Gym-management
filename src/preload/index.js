@@ -34,7 +34,11 @@ const api = {
   addProduct: (currentProduct) => ipcRenderer.invoke('add-product', currentProduct),
   fetchProducts: () => ipcRenderer.invoke('fetch-products'),
   updateProduct: (currentProduct) => ipcRenderer.invoke('update-product', currentProduct),
-  deleteProduct: (productId) => ipcRenderer.invoke('delete-product', productId)
+  deleteProduct: (productId) => ipcRenderer.invoke('delete-product', productId),
+  
+  // sales
+  addSale: (sale) => ipcRenderer.invoke('add-sale', sale),
+  fetchSales: () => ipcRenderer.invoke('fetch-sales'),
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

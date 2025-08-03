@@ -423,7 +423,8 @@
                   <input
                     type="text"
                     v-model="newUser.lastName"
-                    class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
+                    dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     required
                     placeholder="نام خانوادگی"
                   />
@@ -435,7 +436,8 @@
                   <input
                     type="text"
                     v-model="newUser.firstName"
-                    class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
+                                        dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     required
                     placeholder="نام"
                   />
@@ -450,7 +452,8 @@
                   <input
                     type="text"
                     v-model="newUser.memberId"
-                    class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
+                                        dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     required
                     placeholder="شماره عضویت"
                   />
@@ -462,7 +465,8 @@
                   <input
                     type="text"
                     v-model="newUser.phone"
-                    class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
+                                        dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     required
                     placeholder="شماره موبایل"
                   />
@@ -475,7 +479,8 @@
                   </label>
                   <select
                     v-model="newUser.status"
-                    class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
+                                        dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   >
                     <option class="font-semibold" value="فعال">فعال</option>
                     <option class="font-semibold" value="منقضی‌شده">منقضی‌شده</option>
@@ -488,7 +493,8 @@
                   <input
                     type="text"
                     v-model="newUser.emergencyPhone"
-                    class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
+                    dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     required
                     placeholder="شماره موبایل اضطراری"
                   />
@@ -502,7 +508,8 @@
                   <select
                     id="countries"
                     v-model="newUser.paymentMethod"
-                    class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
+                    dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   >
                     <option class="font-semibold" value="کارت">کارت</option>
                     <option class="font-semibold" value="نقدی">نقدی</option>
@@ -515,7 +522,8 @@
                   <select
                     id="countries"
                     v-model.number="newUser.renewal_duration"
-                    class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
+                    dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   >
                     <option class="font-semibold" :value="1" selected>1 ماهه</option>
                     <option class="font-semibold" :value="2">2 ماهه</option>
@@ -528,7 +536,9 @@
                   <input
                     ref="dateInput"
                     v-model="newUser.registrationDate"
-                    class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl custom-date-input font-semibold"
+
+                    dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 custom-date-input"
                   />
 
                   <date-picker
@@ -552,7 +562,8 @@
                     type="text"
                     v-model="newUser.paymentAmount"
                     id="small-input"
-                    class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
+                    dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     placeholder="مبلغ"
                   />
                 </div>
@@ -563,7 +574,8 @@
                   <select
                     id="countries"
                     v-model="newUser.paymentStatus"
-                    class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
+                    dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   >
                     <option class="font-semibold" value="پرداخت شده" selected>پرداخت شده</option>
                     <option class="font-semibold" value="پرداخت نشده">پرداخت نشده</option>
@@ -577,7 +589,8 @@
                 <input
                   type="text"
                   v-model="newUser.address"
-                  class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
+                  dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   required
                   placeholder="آدرس"
                 />
@@ -677,7 +690,8 @@
                   <input
                     type="text"
                     v-model="renewal_payment"
-                    class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
+                    dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     disabled
                     readonly
                   />
@@ -722,7 +736,8 @@
                   <select
                     id="countries"
                     v-model="obj_renewals.duration"
-                    class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs focus:ring-blue-500 focus:border-blue-500 dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl font-semibold"
+                    dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   >
                     <option value="1">1 ماهه</option>
                     <option value="2">2 ماهه</option>
