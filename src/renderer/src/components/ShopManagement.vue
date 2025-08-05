@@ -756,6 +756,11 @@
                 <thead class="bg-gray-50">
                   <tr>
                     <th
+                      class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      ردیف
+                    </th>
+                    <th
                       scope="col"
                       class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
                     >
@@ -791,7 +796,10 @@
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                  <tr v-for="sale in sales" :key="sale.id">
+                  <tr v-for="(sale, index) in sales" :key="sale.id">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm font-medium text-gray-900">{{ index + 1 }}</div>
+                    </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <div class="text-sm font-medium text-gray-900">{{ sale.invoice }}</div>
                     </td>
@@ -836,7 +844,7 @@
         </div>
 
         <!-- تب گزارشات مالی -->
-        <div v-if="activeTab === 'reports'">
+        <div v-if="activeTab === 'reports'" dir="rtl">
           <h2 class="text-lg font-medium text-gray-900 mb-6">گزارشات مالی</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
             <!-- فیلترهای گزارش -->
@@ -911,19 +919,25 @@
               <div class="space-y-4">
                 <div class="flex justify-between">
                   <span class="text-sm font-medium text-gray-500">تعداد فروش:</span>
-                  <span class="text-sm font-medium text-gray-900">۱۲۴</span>
+                  <span class="text-sm font-medium text-gray-900">{{ salesCount }}</span>
                 </div>
                 <div class="flex justify-between">
                   <span class="text-sm font-medium text-gray-500">درآمد کل:</span>
-                  <span class="text-sm font-medium text-gray-900">۱۲,۴۵۰,۰۰۰ تومان</span>
+                  <span class="text-sm font-medium text-gray-900">
+                    {{ totalRevenue.toLocaleString('fa-IR') }}&nbsp;&nbsp; تومان
+                  </span>
                 </div>
                 <div class="flex justify-between">
                   <span class="text-sm font-medium text-gray-500">میانگین فروش:</span>
-                  <span class="text-sm font-medium text-gray-900">۱۰۰,۴۰۰ تومان</span>
+                  <span class="text-sm font-medium text-gray-900">
+                    {{ averageRevenue.toLocaleString('fa-IR') }}&nbsp;&nbsp; تومان
+                  </span>
                 </div>
                 <div class="flex justify-between">
                   <span class="text-sm font-medium text-gray-500">پرفروش‌ترین محصول:</span>
-                  <span class="text-sm font-medium text-gray-900">پروتئین وی (۲۴ فروش)</span>
+                  <span class="text-sm font-medium text-gray-900">
+                    {{ bestSellingProduct.name }} ({{ bestSellingProduct.count }})&nbsp;&nbsp;عدد
+                  </span>
                 </div>
               </div>
             </div>
@@ -933,7 +947,8 @@
           <div class="bg-white rounded-lg shadow p-6 border border-gray-200 mb-6">
             <h3 class="text-md font-medium text-gray-900 mb-4">نمودار فروش ماهانه</h3>
             <div class="h-64 bg-gray-100 rounded-lg flex items-center justify-center">
-              <p class="text-gray-500">نمودار فروش در اینجا نمایش داده می‌شود</p>
+              <canvas ref="chartContainer" v-if="salesReport.length > 0"></canvas>
+              <p v-else class="text-gray-500">داده‌ای برای نمایش وجود ندارد</p>
             </div>
           </div>
 
@@ -946,6 +961,12 @@
               <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                   <tr>
+                    <th
+                      scope="col"
+                      class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    >
+                      ردیف
+                    </th>
                     <th
                       scope="col"
                       class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -964,41 +985,22 @@
                     >
                       درآمد
                     </th>
-                    <th
-                      scope="col"
-                      class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      تخفیف‌ها
-                    </th>
-                    <th
-                      scope="col"
-                      class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      درآمد خالص
-                    </th>
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                  <tr v-for="report in salesReports" :key="report.date">
+                  <tr v-for="(report, index) in salesReport" :key="report.date">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <div class="text-sm text-gray-900">{{ index + 1 }}</div>
+                    </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <div class="text-sm text-gray-900">{{ report.date }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">{{ report.sales }}</div>
+                      <div class="text-sm text-gray-900">{{ report.total_sales }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <div class="text-sm text-gray-900">
-                        {{ report.revenue.toLocaleString('fa-IR') }} تومان
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">
-                        {{ report.discounts.toLocaleString('fa-IR') }} تومان
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm text-gray-900">
-                        {{ report.netRevenue.toLocaleString('fa-IR') }} تومان
+                        {{ report.total_revenue.toLocaleString('fa-IR') }} تومان
                       </div>
                     </td>
                   </tr>
@@ -1014,6 +1016,7 @@
 
 <script>
 import Swal from 'sweetalert2'
+import ApexCharts from 'apexcharts'
 export default {
   name: 'ShopManagement',
   data() {
@@ -1083,29 +1086,32 @@ export default {
         }
       ],
       reportType: 'daily',
-      salesReports: [
-        {
-          date: '1402/05/01',
-          sales: 24,
-          revenue: 12500000,
-          discounts: 750000,
-          netRevenue: 11750000
-        },
-        {
-          date: '1402/05/02',
-          sales: 18,
-          revenue: 9800000,
-          discounts: 450000,
-          netRevenue: 9350000
-        },
-        {
-          date: '1402/05/03',
-          sales: 32,
-          revenue: 17500000,
-          discounts: 1200000,
-          netRevenue: 16300000
-        }
-      ]
+      salesReport: [],
+      chart: null
+
+      // salesReports: [
+      //   {
+      //     date: '1402/05/01',
+      //     sales: 24,
+      //     revenue: 12500000,
+      //     discounts: 750000,
+      //     netRevenue: 11750000
+      //   },
+      //   {
+      //     date: '1402/05/02',
+      //     sales: 18,
+      //     revenue: 9800000,
+      //     discounts: 450000,
+      //     netRevenue: 9350000
+      //   },
+      //   {
+      //     date: '1402/05/03',
+      //     sales: 32,
+      //     revenue: 17500000,
+      //     discounts: 1200000,
+      //     netRevenue: 16300000
+      //   }
+      // ]
     }
   },
   methods: {
@@ -1204,9 +1210,9 @@ export default {
       }
     },
     viewSale(sale) {
-  Swal.fire({
-    title: `${sale.invoice}جزئیات فاکتور  `,
-    html: `
+      Swal.fire({
+        title: `${sale.invoice}جزئیات فاکتور  `,
+        html: `
       <div class="text-right rtl font-vazir" dir="rtl">
         <!-- هدر فاکتور -->
         <div class="bg-gradient-to-r from-indigo-600 to-indigo-700 p-6 rounded-t-lg shadow-lg">
@@ -1264,16 +1270,16 @@ export default {
         </div>
       </div>
     `,
-    showCloseButton: true,
-    showConfirmButton: false,
-    width: '600px',
-    padding: '0',
-    customClass: {
-      popup: 'rounded-xl shadow-xl border border-gray-200',
-      closeButton: 'm-4 text-gray-500 hover:text-gray-700'
-    }
-  });
-},
+        showCloseButton: true,
+        showConfirmButton: false,
+        width: '600px',
+        padding: '0',
+        customClass: {
+          popup: 'rounded-xl shadow-xl border border-gray-200',
+          closeButton: 'm-4 text-gray-500 hover:text-gray-700'
+        }
+      })
+    },
     confirmDeleteProd(prod) {
       this.prodToDelete = prod
       this.showDeleteModalProd = true
@@ -1360,6 +1366,7 @@ export default {
         const result = await window.api.addSale(this.newSale)
         if (result.success) {
           this.sales.unshift({ ...this.newSale, id: result.id })
+          this.fetchSalesReport() // بروزرسانی داده‌های گزارش
           alert('فروش با موفقیت ثبت شد')
           // ریست فرم
           this.newSale = {
@@ -1449,6 +1456,7 @@ export default {
         if (result.success) {
           // اضافه کردن فروش جدید به آرایه sales برای نمایش در جدول
           this.sales.unshift({ ...saleToAdd, id: result.id })
+          await this.fetchSalesReport() // اضافه کردن این خط
 
           await this.showSwal(
             'موفقیت',
@@ -1474,10 +1482,84 @@ export default {
         console.error(error)
         alert('خطا در ثبت فروش')
       }
-    }
+    },
+    initChart() {
+      if (this.chart) {
+        this.chart.destroy();
+      }
+
+      const ctx = this.$refs.salesChart;
+      if (!ctx) return;
+
+      // آماده‌سازی داده‌ها برای نمودار
+      const labels = this.salesReport.map(item => item.date);
+      const data = this.salesReport.map(item => item.total_revenue);
+
+      this.chart = new ApexCharts(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'فروش ماهانه (تومان)',
+            data: data,
+            backgroundColor: 'rgba(79, 70, 229, 0.7)',
+            borderColor: 'rgba(79, 70, 229, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function(value) {
+                  return value.toLocaleString('fa-IR') + ' تومان';
+                }
+              }
+            }
+          },
+          plugins: {
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  return context.parsed.y.toLocaleString('fa-IR') + ' تومان';
+                }
+              }
+            },
+            legend: {
+              rtl: true,
+              labels: {
+                font: {
+                  family: 'Vazir, sans-serif'
+                }
+              }
+            }
+          }
+        }
+      });
+
+    },
+    async fetchSalesReport() {
+      try {
+        // فراخوانی IPC برای دریافت داده‌های فروش از Electron
+        const salesData = await window.api.fetchSalesReport()
+        this.salesReport = salesData // ذخیره داده‌ها در متغیر salesReport
+        this.$nextTick(() => {
+          this.initChart();
+        });
+        console.log('salesReport =======> ', this.salesReport)
+      } catch (error) {
+        console.error('Error fetching sales report:', error)
+      }
+    },
+
+
+
   },
   mounted() {
-    ;(this.fetchProducts(), this.fetchSales())
+    ;(this.fetchProducts(), this.fetchSales(), this.fetchSalesReport(), this.initChart())
   },
   computed: {
     filteredProducts() {
@@ -1559,44 +1641,63 @@ export default {
     },
 
     bestSellingProduct() {
-  console.log('sales =======> ', this.sales)
+      console.log('sales =======> ', this.sales)
 
-  // اگر داده‌ها هنوز نیومدن (مثلاً undefined یا null)
-  if (!this.sales) {
-    return { name: 'در حال بارگذاری...', count: 0 }
-  }
+      // اگر داده‌ها هنوز نیومدن (مثلاً undefined یا null)
+      if (!this.sales) {
+        return { name: 'در حال بارگذاری...', count: 0 }
+      }
 
-  // اگر هیچ فروش ثبت نشده
-  if (this.sales.length === 0) {
-    return { name: 'هیچ محصولی', count: 0 }
-  }
+      // اگر هیچ فروش ثبت نشده
+      if (this.sales.length === 0) {
+        return { name: 'هیچ محصولی', count: 0 }
+      }
 
-  const productCount = {}
-  this.sales.forEach((sale) => {
-    if (!sale.name) return
-    productCount[sale.name] = (productCount[sale.name] || 0) + 1
-  })
+      const productCount = {}
+      this.sales.forEach((sale) => {
+        if (!sale.name) return
+        productCount[sale.name] = (productCount[sale.name] || 0) + 1
+      })
 
-  if (Object.keys(productCount).length === 0) {
-    return { name: 'هیچ محصولی', count: 0 }
-  }
+      if (Object.keys(productCount).length === 0) {
+        return { name: 'هیچ محصولی', count: 0 }
+      }
 
-  let maxCount = 0
-  let bestProduct = ''
+      let maxCount = 0
+      let bestProduct = ''
 
-  for (const [product, count] of Object.entries(productCount)) {
-    if (count > maxCount) {
-      maxCount = count
-      bestProduct = product
-    }
-  }
+      for (const [product, count] of Object.entries(productCount)) {
+        if (count > maxCount) {
+          maxCount = count
+          bestProduct = product
+        }
+      }
 
-  return { name: bestProduct, count: maxCount }
-}
-,
+      return { name: bestProduct, count: maxCount }
+    },
     availableProducts() {
       return this.products.filter((product) => product.status === 'موجود')
+    },
+    salesCount() {
+      return this.sales.length
+    },
+    // درآمد کل:
+    totalRevenue() {
+      return this.sales.reduce((sum, sale) => sum + sale.amount, 0)
+    },
+    // میانگین فروش:
+    averageRevenue() {
+      return this.totalRevenue / this.salesCount
     }
+    // جزئیات فروش
+    // شامل : تاریخ، تعداد فروش، درآمد
+    // salesReports() {
+    //   return this.sales.map((sale) => ({
+    //     date: sale.date,
+    //     amount: sale.amount,
+    //     revenue: sale.amount * sale.price
+    //   }))
+    // }
   },
   watch: {
     searchQuery() {
@@ -1604,6 +1705,10 @@ export default {
     },
     selectedCategory() {
       this.currentPage = 1
+    },
+    sales() {
+      // زمانی که داده‌های فروش تغییر کنند، گزارشات را بروزرسانی می‌کنیم
+      this.fetchSalesReport()
     }
   }
 }

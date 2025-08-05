@@ -39,6 +39,7 @@ const api = {
   // sales
   addSale: (sale) => ipcRenderer.invoke('add-sale', sale),
   fetchSales: () => ipcRenderer.invoke('fetch-sales'),
+  fetchSalesReport: () => ipcRenderer.invoke('fetch-sales-report'),
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

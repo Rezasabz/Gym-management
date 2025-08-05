@@ -994,6 +994,27 @@ ipcMain.handle('fetch-sales', async () => {
   }
 });
 
+// fetch sales reports
+ipcMain.handle('fetch-sales-report', async () => {
+  try {
+    const stmt = db.prepare(`
+      SELECT
+        date,
+        COUNT(*) AS total_sales,
+        SUM(amount) AS total_revenue
+      FROM sales
+      GROUP BY date
+      ORDER BY date DESC
+    `)
+    const salesReport = stmt.all()
+    return salesReport
+  } catch (err) {
+    console.error('Error fetching sales report:', err)
+    return []
+  }
+})
+
+
 
   createWindow()
 
