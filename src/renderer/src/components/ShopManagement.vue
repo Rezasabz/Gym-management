@@ -844,10 +844,9 @@
         </div>
 
         <!-- تب گزارشات مالی -->
-        <div v-if="activeTab === 'reports'" dir="rtl">
+        <!-- <div v-if="activeTab === 'reports'" dir="rtl">
           <h2 class="text-lg font-medium text-gray-900 mb-6">گزارشات مالی</h2>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <!-- فیلترهای گزارش -->
             <div class="bg-white rounded-lg shadow p-6 border border-gray-200">
               <h3 class="text-md font-medium text-gray-900 mb-4">فیلترها</h3>
               <div class="space-y-4">
@@ -913,7 +912,6 @@
               </div>
             </div>
 
-            <!-- خلاصه گزارش -->
             <div class="bg-white rounded-lg shadow p-6 border border-gray-200">
               <h3 class="text-md font-medium text-gray-900 mb-4">خلاصه گزارش</h3>
               <div class="space-y-4">
@@ -943,7 +941,6 @@
             </div>
           </div>
 
-          <!-- نمودار گزارش -->
           <div class="bg-white rounded-lg shadow p-6 border border-gray-200 mb-6">
             <h3 class="text-md font-medium text-gray-900 mb-4">نمودار فروش ماهانه</h3>
             <div class="h-64 bg-gray-100 rounded-lg flex items-center justify-center">
@@ -952,7 +949,6 @@
             </div>
           </div>
 
-          <!-- جدول گزارش -->
           <div class="bg-white rounded-lg shadow overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200">
               <h3 class="text-lg font-medium text-gray-900">جزئیات فروش</h3>
@@ -1008,7 +1004,7 @@
               </table>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -1032,7 +1028,7 @@ export default {
       tabs: [
         { id: 'products', name: 'مدیریت محصولات' },
         { id: 'sales', name: 'مدیریت فروش' },
-        { id: 'reports', name: 'گزارشات مالی' }
+        // { id: 'reports', name: 'گزارشات مالی' }
       ],
       products: [],
       sales: [], // لیست فروش‌ها از دیتابیس

@@ -5,6 +5,19 @@ import { electronAPI } from '@electron-toolkit/preload'
 // const api = {}
 // توابع سفارشی برای پردازش رندر
 const api = {
+
+  // توابع احراز هویت
+  loginUser: (loginData) => ipcRenderer.invoke('login-user', loginData),
+  registerMember: (memberData) => ipcRenderer.invoke('register-member', memberData),
+  resetPasswordWithRecoveryKey: (payload) => ipcRenderer.invoke('reset-password-with-recovery-key', payload),
+  
+  // توابع مدیریت ادمین
+  fetchAdmins: () => ipcRenderer.invoke('fetch-admins'),
+  addAdmin: (adminData) => ipcRenderer.invoke('add-admin', adminData),
+  updateAdmin: (adminData) => ipcRenderer.invoke('update-admin', adminData),
+  changeAdminPassword: (passwordData) => ipcRenderer.invoke('change-admin-password', passwordData),
+  deleteAdmin: (adminId) => ipcRenderer.invoke('delete-admin', adminId),
+
   invoke: (channel, data) => ipcRenderer.invoke(channel, data),
   getUsers: () => ipcRenderer.invoke('fetch-users'),
   getUserStatus: (userId) => ipcRenderer.invoke('get-user-status', userId),
@@ -40,6 +53,30 @@ const api = {
   addSale: (sale) => ipcRenderer.invoke('add-sale', sale),
   fetchSales: () => ipcRenderer.invoke('fetch-sales'),
   fetchSalesReport: () => ipcRenderer.invoke('fetch-sales-report'),
+
+  // مدیریت وضعیت لاگین
+  logout: () => {
+    localStorage.removeItem('authToken')
+    localStorage.removeItem('userData')
+  },
+  
+  // بررسی وضعیت لاگین
+  isLoggedIn: () => {
+    return !!localStorage.getItem('authToken')
+  },
+  
+  // دریافت اطلاعات کاربر
+  getUserData: () => {
+    const userData = localStorage.getItem('userData')
+    return userData ? JSON.parse(userData) : null
+  },
+  
+  // ذخیره اطلاعات کاربر پس از لاگین
+  setUserData: (userData) => {
+    localStorage.setItem('authToken', 'authenticated')
+    localStorage.setItem('userData', JSON.stringify(userData))
+  }
+
 }
 
 // Use `contextBridge` APIs to expose Electron APIs to

@@ -6,6 +6,7 @@ const path = require('path')
 const sqlite3 = require('better-sqlite3')
 const fs = require('fs')
 import moment from 'jalali-moment'
+const crypto = require('crypto')
 // import { addUser, updateUser, deleteUser, getUsers } from './database/database.js';
 
 let db
@@ -183,8 +184,14 @@ function initDatabase() {
   } catch (err) {
     console.error('Error creating sales table', err)
   }
+
+  // try {
+  //   db.prepare('ALTER TABLE members ADD COLUMN recovery_key_hash TEXT').run()
+  // } catch (e) { /* ستون از قبل وجود دارد */ }
+  
 }
 
+ 
 module.exports = { initDatabase, db }
 
 function createWindow() {
@@ -236,6 +243,7 @@ function createWindow() {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
 }
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -1014,6 +1022,271 @@ ipcMain.handle('fetch-sales-report', async () => {
   }
 })
 
+
+// ایجاد جدول admins برای مدیریت کاربران مدیر
+try {
+  const stmt = db.prepare(`
+    CREATE TABLE IF NOT EXISTS admins (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      full_name TEXT NOT NULL,
+      email TEXT,
+      role TEXT DEFAULT 'admin',
+      is_active INTEGER DEFAULT 1,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      last_login TIMESTAMP
+    )
+  `)
+  stmt.run()
+  console.log('Admins table is ready.')
+  
+  // ایجاد کاربر ادمین پیش‌فرض در صورت عدم وجود
+  const adminCount = db.prepare('SELECT COUNT(*) as count FROM admins').get().count
+  if (adminCount === 0) {
+    const defaultPassword = 'admin123' // پسورد پیش‌فرض
+    const hashedPassword = require('crypto').createHash('sha256').update(defaultPassword).digest('hex')
+    
+    db.prepare(`
+      INSERT INTO admins (username, password_hash, full_name, email, role)
+      VALUES (?, ?, ?, ?, ?)
+    `).run('admin', hashedPassword, 'مدیر سیستم', 'admin@sohrabi.com', 'superadmin')
+    
+    console.log('Default admin user created with username: admin, password: admin123')
+  }
+} catch (err) {
+  console.error('Error creating admins table', err)
+}
+
+
+
+// ثبت‌نام کاربر جدید (اعضا)
+ipcMain.handle('register-member', async (_, memberData) => {
+  try {
+    const { username, password, full_name, email, phone } = memberData
+
+    const existingUser = db.prepare('SELECT id FROM members WHERE username = ?').get(username)
+    if (existingUser) {
+      return { success: false, error: 'نام کاربری تکراری است' }
+    }
+
+    const crypto = require('crypto')
+    const passwordHash = crypto.createHash('sha256').update(password).digest('hex')
+
+    // ساخت Recovery Key ۴ رقمی تصادفی
+    const recoveryKeyPlain = Math.floor(1000 + Math.random() * 9000).toString();  // تولید عدد ۴ رقمی
+    const recoveryKeyHash = crypto.createHash('sha256').update(recoveryKeyPlain).digest('hex')
+
+    const stmt = db.prepare(`
+      INSERT INTO members (username, password_hash, full_name, email, phone, role, recovery_key_hash)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `)
+    const result = stmt.run(username, passwordHash, full_name, email, phone, 'member', recoveryKeyHash)
+
+    return {
+      success: true,
+      message: 'ثبت‌نام موفقیت‌آمیز بود',
+      userId: result.lastInsertRowid,
+      recoveryKey: recoveryKeyPlain // فقط همين يک بار به فرانت برگردون
+    }
+  } catch (err) {
+    console.error('Error registering member:', err)
+    return { success: false, error: err.message }
+  }
+})
+
+
+
+ipcMain.handle('reset-password-with-recovery-key', async (_, { username, recoveryKey, newPassword }) => {
+  try {
+    const user = db.prepare('SELECT id, recovery_key_hash FROM members WHERE username = ?').get(username)
+    if (!user) return { success: false, error: 'کاربر یافت نشد' }
+
+    const crypto = require('crypto')
+    const providedHash = crypto.createHash('sha256').update(recoveryKey).digest('hex')
+    if (providedHash !== user.recovery_key_hash) {
+      return { success: false, error: 'کلید بازیابی نادرست است' }
+    }
+
+    const newHash = crypto.createHash('sha256').update(newPassword).digest('hex')
+    db.prepare('UPDATE members SET password_hash = ? WHERE id = ?').run(newHash, user.id)
+
+    // (اختیاری) کلید بازیابی را با کلید جدید جایگزین کن تا یک‌بار مصرف شود:
+    const newRecKey = Math.floor(1000 + Math.random() * 9000).toString();  // تولید یک کد ۴ رقمی
+    const newRecHash = crypto.createHash('sha256').update(newRecKey).digest('hex')
+    db.prepare('UPDATE members SET recovery_key_hash = ? WHERE id = ?').run(newRecHash, user.id)
+
+    return { success: true, message: 'رمز عبور با موفقیت تغییر کرد', newRecoveryKey: newRecKey }
+  } catch (e) {
+    console.error('reset-password-with-recovery-key error:', e)
+    return { success: false, error: 'خطا در بازیابی رمز عبور' }
+  }
+})
+
+
+
+// ورود کاربر (ادمین یا عضو)
+ipcMain.handle('login-user', async (_, { username, password }) => {
+  try {
+    if (!username || !password) {
+      return { success: false, error: 'نام کاربری و رمز عبور الزامی است.' }
+    }
+
+    const hashed = crypto.createHash('sha256').update(password).digest('hex')
+
+    // 1) تلاش برای پیدا کردن ادمین (اگر جدول admins داری)
+    let user = null
+    try {
+      user = db.prepare(
+        `SELECT id, full_name, username, role 
+           FROM admins 
+          WHERE username = ? AND password_hash = ?`
+      ).get(username, hashed)
+    } catch (_) { /* اگر جدول/ستون وجود نداشت، از این بخش رد شو */ }
+
+    // 2) اگر ادمین نبود، بین اعضا بگرد
+    if (!user) {
+      user = db.prepare(
+        `SELECT id, full_name, username, role 
+           FROM members 
+          WHERE username = ? AND password_hash = ?`
+      ).get(username, hashed)
+    }
+
+    if (!user) {
+      return { success: false, error: 'نام کاربری یا رمز عبور نادرست است.' }
+    }
+
+    // role پیش‌فرض برای اعضا
+    if (!user.role) user.role = 'member'
+
+    return { success: true, user }
+  } catch (e) {
+    console.error('login-user error:', e)
+    return { success: false, error: 'خطا در ورود' }
+  }
+})
+
+// ایجاد جدول members برای کاربران عادی
+try {
+  const stmt = db.prepare(`
+    CREATE TABLE IF NOT EXISTS members (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      username TEXT UNIQUE NOT NULL,
+      password_hash TEXT NOT NULL,
+      full_name TEXT NOT NULL,
+      email TEXT,
+      phone TEXT,
+      role TEXT DEFAULT 'member',
+      is_active INTEGER DEFAULT 1,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      last_login TIMESTAMP
+    )
+  `)
+  stmt.run()
+  console.log('Members table is ready.')
+} catch (err) {
+  console.error('Error creating members table', err)
+}
+
+// مدیریت ادمین‌ها - دریافت لیست
+ipcMain.handle('fetch-admins', async () => {
+  try {
+    const stmt = db.prepare('SELECT id, username, full_name, email, role, is_active, last_login FROM admins')
+    return stmt.all()
+  } catch (err) {
+    console.error('Error fetching admins:', err)
+    throw err
+  }
+})
+
+// افزودن ادمین جدید
+ipcMain.handle('add-admin', async (_, adminData) => {
+  try {
+    const { username, password, full_name, email, role } = adminData
+    
+    // بررسی وجود کاربر با همین نام کاربری
+    const existingAdmin = db.prepare('SELECT id FROM admins WHERE username = ?').get(username)
+    if (existingAdmin) {
+      return { success: false, error: 'نام کاربری already exists' }
+    }
+    
+    // هش کردن رمز عبور
+    const hashedPassword = require('crypto').createHash('sha256').update(password).digest('hex')
+    
+    const stmt = db.prepare(`
+      INSERT INTO admins (username, password_hash, full_name, email, role)
+      VALUES (?, ?, ?, ?, ?)
+    `)
+    const result = stmt.run(username, hashedPassword, full_name, email, role)
+    
+    return { 
+      success: true, 
+      message: 'ادمین با موفقیت اضافه شد',
+      adminId: result.lastInsertRowid
+    }
+  } catch (err) {
+    console.error('Error adding admin:', err)
+    return { success: false, error: err.message }
+  }
+})
+
+// به‌روزرسانی ادمین
+ipcMain.handle('update-admin', async (_, adminData) => {
+  try {
+    const { id, username, full_name, email, role, is_active } = adminData
+    
+    const stmt = db.prepare(`
+      UPDATE admins 
+      SET username = ?, full_name = ?, email = ?, role = ?, is_active = ?
+      WHERE id = ?
+    `)
+    stmt.run(username, full_name, email, role, is_active, id)
+    
+    return { success: true, message: 'ادمین با موفقیت به‌روزرسانی شد' }
+  } catch (err) {
+    console.error('Error updating admin:', err)
+    return { success: false, error: err.message }
+  }
+})
+
+// تغییر رمز عبور ادمین
+ipcMain.handle('change-admin-password', async (_, { id, newPassword }) => {
+  try {
+    const hashedPassword = require('crypto').createHash('sha256').update(newPassword).digest('hex')
+    
+    const stmt = db.prepare('UPDATE admins SET password_hash = ? WHERE id = ?')
+    stmt.run(hashedPassword, id)
+    
+    return { success: true, message: 'رمز عبور با موفقیت تغییر یافت' }
+  } catch (err) {
+    console.error('Error changing password:', err)
+    return { success: false, error: err.message }
+  }
+})
+
+// حذف ادمین
+ipcMain.handle('delete-admin', async (_, adminId) => {
+  try {
+    // بررسی اینکه حداقل یک ادمین باقی بماند
+    const adminCount = db.prepare('SELECT COUNT(*) as count FROM admins').get().count
+    if (adminCount <= 1) {
+      return { success: false, error: 'حداقل یک ادمین باید وجود داشته باشد' }
+    }
+    
+    const stmt = db.prepare('DELETE FROM admins WHERE id = ?')
+    const result = stmt.run(adminId)
+    
+    if (result.changes > 0) {
+      return { success: true, message: 'ادمین با موفقیت حذف شد' }
+    } else {
+      return { success: false, error: 'ادمین یافت نشد' }
+    }
+  } catch (err) {
+    console.error('Error deleting admin:', err)
+    return { success: false, error: err.message }
+  }
+})
 
 
   createWindow()

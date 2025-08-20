@@ -1,6 +1,7 @@
 <template>
   <!-- Sidebar -->
   <!-- <Sidebar /> -->
+   
   <div class="overflow-x-auto w-full">
     <div className="grid grid-cols-5 grid-rows gap-4 shadow-lg rounded-xl">
       <div className="col-span-5">
@@ -276,6 +277,10 @@ import ApexCharts from 'apexcharts'
 export default {
   data() {
     return {
+      isLoggedIn: false,
+      userData: null,
+      activeTab: 'dashboard',
+      
       allusers: [],
       users: [],
       debtors: [],
@@ -289,6 +294,10 @@ export default {
   },
 
   computed: {
+    userInitials() {
+      if (!this.userData || !this.userData.full_name) return 'U'
+      return this.userData.full_name.split(' ').map(n => n[0]).join('').toUpperCase()
+    },
     filteredUsers() {
       return this.users.filter(
         (user) =>
@@ -298,6 +307,47 @@ export default {
   },
 
   methods: {
+
+    checkLoginStatus() {
+      this.isLoggedIn = window.api.isLoggedIn()
+      this.userData = window.api.getUserData()
+      
+      if (this.isLoggedIn) {
+        this.loadDashboardData()
+      }
+    },
+    
+    handleLoginSuccess(user) {
+      this.isLoggedIn = true
+      this.userData = user
+      this.loadDashboardData()
+    },
+    
+    async handleLogout() {
+      window.api.logout()
+      this.isLoggedIn = false
+      this.userData = null
+    },
+    
+    async loadDashboardData() {
+      try {
+        this.allusers = await window.api.getUsers()
+        this.users = await window.api.getLatestUsers()
+        this.debtors = await window.api.fetchDebtors()
+        this.active_memebers = await window.api.fetchActiveMembersCount()
+        this.current_month_revenue = await window.api.fetchCurrentMonthRevenue()
+        this.fetch_new_members_count = await window.api.fetchNewMembersCount()
+        
+        if (this.$refs.chartContainer) {
+          this.initChart()
+        }
+      } catch (error) {
+        console.error('Error loading dashboard data:', error)
+      }
+    },
+
+
+
     async getLatestUsers() {
       try {
         this.users = await window.api.getLatestUsers()
@@ -512,13 +562,19 @@ export default {
   },
 
   async mounted() {
-    await this.fetchData()
-    await this.getLatestUsers()
-    await this.fetchDebtors()
-    await this.fetchActiveMembersCount()
-    await this.fetchCurrentMonthRevenue()
-    await this.fetchNewMembersCount()
-    this.initChart()
+    const isLoggedIn = window?.api?.isLoggedIn?.() || false
+  if (!isLoggedIn) {
+    this.$router.push('/login')
+    return
+  }
+  this.checkLoginStatus()
+  await this.fetchData()
+  await this.getLatestUsers()
+  await this.fetchDebtors()
+  await this.fetchActiveMembersCount()
+  await this.fetchCurrentMonthRevenue()
+  await this.fetchNewMembersCount()
+  this.initChart()
   }
 }
 </script>
