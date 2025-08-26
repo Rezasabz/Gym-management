@@ -483,14 +483,14 @@
             <button
               @click="cancelEdit"
               type="button"
-              class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              class="text-white bg-gradient-to-r from-red-500 via-red-600 to-red-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center me-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
             >
               انصراف
             </button>
             <button
               @click="saveProduct"
               type="button"
-              class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 font-medium rounded-lg text-sm px-4 py-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               ذخیره
             </button>
@@ -740,7 +740,7 @@
                   <p class="mt-1 text-xl font-semibold text-gray-900">
                     {{ bestSellingProduct.name }}
                   </p>
-                  <p class="text-sm text-gray-500">{{ bestSellingProduct.count }} فروش</p>
+                  <p class="text-sm text-gray-500d" dir="rtl">فروش &nbsp;&nbsp;{{ bestSellingProduct.count }} &nbsp;&nbsp;عدد</p>
                 </div>
               </div>
             </div>
@@ -796,9 +796,9 @@
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                  <tr v-for="(sale, index) in sales" :key="sale.id">
+                  <tr v-for="(sale, index) in paginatedSales" :key="sale.id">
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <div class="text-sm font-medium text-gray-900">{{ index + 1 }}</div>
+                      <div class="text-sm font-medium text-gray-900">{{ index + 1 + ( (currentPageRecentSales - 1) * itemsPerPageRecentSales ) }}</div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <div class="text-sm font-medium text-gray-900">{{ sale.invoice }}</div>
@@ -840,6 +840,55 @@
                 </tbody>
               </table>
             </div>
+            
+          </div>
+                    <!-- صفحه‌بندی -->
+                    <div class="flex flex-col items-center justify-center mt-6 gap-4">
+            <div class="text-sm text-gray-500 text-center">
+              نمایش نمایش
+              <span class="font-medium">
+                {{ (currentPageRecentSales - 1) * itemsPerPageRecentSales + 1 }}
+              </span>
+              تا
+              <span class="font-medium">
+                {{ Math.min(currentPageRecentSales * itemsPerPageRecentSales, sales.length) }}
+              </span>
+              از
+              <span class="font-medium">{{ sales.length }}</span>
+              نتیجه
+            </div>
+
+            <nav class="flex flex-wrap justify-center gap-2">
+              <button
+                @click="changePageSales(currentPageRecentSales - 1)"
+                :disabled="currentPageRecentSales === 1"
+                class="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+              >
+                قبلی
+              </button>
+
+              <button
+                v-for="page in totalPagesSale"
+                :key="page"
+                @click="changePageSales(page)"
+                :class="[
+                  'px-3 py-1 border rounded-md text-sm',
+                  page === currentPageRecentSales
+                    ? 'border-indigo-500 bg-indigo-100 text-indigo-700'
+                    : 'border-gray-300 text-gray-600 hover:bg-gray-100'
+                ]"
+              >
+                {{ page }}
+              </button>
+
+              <button
+                @click="changePageSales(currentPageRecentSales + 1)"
+                :disabled="currentPageRecentSales === totalPagesSale"
+                class="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+              >
+                بعدی
+              </button>
+            </nav>
           </div>
         </div>
 
@@ -1024,7 +1073,8 @@ export default {
       selectedCategory: 'همه دسته‌بندی‌ها',
       showDeleteModalProd: false,
       prodToDelete: null,
-
+      currentPageRecentSales:1,
+      itemsPerPageRecentSales:5,
       tabs: [
         { id: 'products', name: 'مدیریت محصولات' },
         { id: 'sales', name: 'مدیریت فروش' },
@@ -1124,6 +1174,11 @@ export default {
     changePage(page) {
       if (page >= 1 && page <= this.totalPages) {
         this.currentPage = page
+      }
+    },
+    changePageSales(page) {
+      if (page >= 1 && page <= this.totalPagesSale) {
+        this.currentPageRecentSales = page
       }
     },
     editProduct(product) {
@@ -1579,8 +1634,15 @@ export default {
       const start = (this.currentPage - 1) * this.itemsPerPage
       return this.filteredProducts.slice(start, start + this.itemsPerPage)
     },
+    paginatedSales() {
+      const start = (this.currentPageRecentSales - 1) * this.itemsPerPageRecentSales
+      return this.sales.slice(start, start + this.itemsPerPageRecentSales)
+    },
     totalPages() {
       return Math.ceil(this.filteredProducts.length / this.itemsPerPage)
+    },
+    totalPagesSale() {
+      return Math.ceil(this.sales.length / this.itemsPerPageRecentSales)
     },
     // فروش امروز
     salesToday() {

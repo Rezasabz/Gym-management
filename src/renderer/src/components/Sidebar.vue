@@ -137,6 +137,7 @@
         <transition name="menu">
           <div
             v-if="isUserMenuOpen"
+            v-click-outside="() => (isUserMenuOpen = false)"
             class="absolute right-0 bottom-16 w-60 bg-white/95 backdrop-blur-xl border border-indigo-100/70 rounded-2xl shadow-2xl overflow-hidden z-50 rtl"
           >
             <!-- هدر منو -->
@@ -214,8 +215,23 @@
 import { useRouter } from 'vue-router'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 
+const clickOutside = {
+  mounted(el, binding) {
+    el.__clickOutside__ = (e) => {
+      if (!el.contains(e.target)) binding.value(e)
+    }
+    document.addEventListener('click', el.__clickOutside__)
+  },
+  unmounted(el) {
+    document.removeEventListener('click', el.__clickOutside__)
+    delete el.__clickOutside__
+  }
+}
+
 export default {
   name: 'Sidebar',
+
+  directives: { clickOutside },
 
   setup() {
     const router = useRouter()
