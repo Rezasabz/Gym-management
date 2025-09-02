@@ -374,11 +374,11 @@
       <div v-if="showModal" class="modal modal-open">
         <div class="modal-box w-11/12 max-w-4xl">
           <div
-            class="bg-gradient-to-l from-blue-100 to-white rounded-md p-2 flex items-center space-x-4 w-full max-w justify-end"
+            class="bg-gradient-to-l from-blue-100 to-white rounded-md p-1 flex items-center space-x-4 w-full max-w justify-end"
           >
             <div class="flex items-center justify-end gap-2 rtl">
-              <h3 class="font-bold text-lg">
-                {{ isEditMode ? 'ویرایش کاربر' : 'افزودن کاربر جدید' }}
+              <h3 class="font-bold text-md">
+                {{ isEditMode ? 'ویرایش عضو' : 'افزودن عضو جدید' }}
               </h3>
               <!-- آیکون ویرایش یا افزودن -->
               <svg
@@ -422,9 +422,10 @@
                   </label>
                   <input
                     type="text"
+                    tabindex="2"
                     v-model="newUser.lastName"
                     dir="rtl"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-10 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     required
                     placeholder="نام خانوادگی"
                   />
@@ -435,9 +436,10 @@
                   </label>
                   <input
                     type="text"
+                    tabindex="1"
                     v-model="newUser.firstName"
-                                        dir="rtl"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-10 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     required
                     placeholder="نام"
                   />
@@ -445,100 +447,46 @@
               </div>
 
               <div class="grid md:grid-cols-2 gap-4">
-                <div class="form-control mt-4">
+                <div class="form-control mt-2">
                   <label class="block mb-2 text-sm font-medium text-gray-900">
                     <span class="label-text">شماره عضویت</span>
                   </label>
                   <input
                     type="text"
+                    tabindex="4"
                     v-model="newUser.memberId"
-                                        dir="rtl"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-10 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     required
                     placeholder="شماره عضویت"
                   />
                 </div>
-                <div class="form-control mt-4">
+                <div class="form-control mt-2">
                   <label class="block mb-2 text-sm font-medium text-gray-900">
                     <span class="label-text">شماره موبایل</span>
                   </label>
                   <input
                     type="text"
+                    tabindex="3"
                     v-model="newUser.phone"
-                                        dir="rtl"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-10 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     required
                     placeholder="شماره موبایل"
                   />
                 </div>
               </div>
-              <div class="grid md:grid-cols-2 gap-4">
-                <div class="form-control mt-4">
-                  <label class="block mb-2 text-sm font-medium text-gray-900">
-                    <span class="label-text">وضعیت عضویت</span>
-                  </label>
-                  <select
-                    v-model="newUser.status"
-                                        dir="rtl"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  >
-                    <option class="font-semibold" value="فعال">فعال</option>
-                    <option class="font-semibold" value="منقضی‌شده">منقضی‌شده</option>
-                  </select>
-                </div>
-                <div class="form-control mt-4">
-                  <label class="block mb-2 text-sm font-medium text-gray-900">
-                    <span class="label-text"> شماره موبایل اضطراری</span>
-                  </label>
-                  <input
-                    type="text"
-                    v-model="newUser.emergencyPhone"
-                    dir="rtl"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                    required
-                    placeholder="شماره موبایل اضطراری"
-                  />
-                </div>
-              </div>
               <div class="grid md:grid-cols-3 gap-4">
-                <div class="mt-4">
-                  <label for="countries" class="block mb-2 text-sm font-medium text-gray-900"
-                    >روش پرداخت</label
-                  >
-                  <select
-                    id="countries"
-                    v-model="newUser.paymentMethod"
-                    dir="rtl"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  >
-                    <option class="font-semibold" value="کارت">کارت</option>
-                    <option class="font-semibold" value="نقدی">نقدی</option>
-                  </select>
-                </div>
-                <div class="mt-4">
-                  <label for="countries" class="block mb-2 text-sm font-medium text-gray-900"
-                    >مدت زمان دوره</label
-                  >
-                  <select
-                    id="countries"
-                    v-model.number="newUser.renewal_duration"
-                    dir="rtl"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  >
-                    <option class="font-semibold" :value="1" selected>1 ماهه</option>
-                    <option class="font-semibold" :value="2">2 ماهه</option>
-                  </select>
-                </div>
-                <div class="form-control mt-4">
+                <div class="form-control mt-2">
                   <label class="block mb-2 text-sm font-medium text-gray-900">
                     <span class="label-text">تاریخ ثبت‌نام</span>
                   </label>
                   <input
                     ref="dateInput"
+                    tabindex="8"
                     v-model="newUser.registrationDate"
-
                     dir="rtl"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 custom-date-input"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-10 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 custom-date-input"
                   />
 
                   <date-picker
@@ -552,48 +500,111 @@
                   <!-- <div id="my-datepicker-wrapper"></div> -->
                   <!-- تقویم فارسی -->
                 </div>
+                <div class="form-control mt-2">
+                  <label class="block mb-2 text-sm font-medium text-gray-900">
+                    <span class="label-text">وضعیت عضویت</span>
+                  </label>
+                  <select
+                    v-model="newUser.status"
+                    tabindex="7"
+                    dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-10 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  >
+                    <option class="font-semibold" value="فعال">فعال</option>
+                    <option class="font-semibold" value="منقضی‌شده">منقضی‌شده</option>
+                  </select>
+                </div>
+                <div class="form-control mt-2">
+                  <label class="block mb-2 text-sm font-medium text-gray-900">
+                    <span class="label-text"> شماره موبایل اضطراری</span>
+                  </label>
+                  <input
+                    type="text"
+                    tabindex="6"
+                    v-model="newUser.emergencyPhone"
+                    dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-10 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    required
+                    placeholder="شماره موبایل اضطراری"
+                  />
+                </div>
               </div>
-              <div class="grid md:grid-cols-2 gap-4">
-                <div class="mb-2 mt-4">
+              <div class="grid md:grid-cols-3 gap-4">
+                <div class="form-control mt-2">
+                  <label for="countries" class="block mb-2 text-sm font-medium text-gray-900"
+                    >روش پرداخت</label
+                  >
+                  <select
+                    id="countries"
+                    tabindex="10"
+                    v-model="newUser.paymentMethod"
+                    dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-10 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  >
+                    <option class="font-semibold" value="کارت">کارت</option>
+                    <option class="font-semibold" value="نقدی">نقدی</option>
+                  </select>
+                </div>
+                <div class="form-control mt-2">
+                  <label for="countries" class="block mb-2 text-sm font-medium text-gray-900"
+                    >مدت زمان دوره</label
+                  >
+                  <select
+                    id="countries"
+                    tabindex="9"
+                    v-model.number="newUser.renewal_duration"
+                    dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-10 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                  >
+                    <option class="font-semibold" :value="1" selected>1 ماهه</option>
+                    <option class="font-semibold" :value="2">2 ماهه</option>
+                  </select>
+                </div>
+                <div class="form-control mt-2">
                   <label for="small-input" class="block mb-2 text-sm font-medium text-gray-900"
                     >مبلغ</label
                   >
                   <input
                     type="text"
+                    tabindex="8"
                     v-model="newUser.paymentAmount"
                     id="small-input"
                     dir="rtl"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-10 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                     placeholder="مبلغ"
                   />
                 </div>
-                <div class="mb-2 mt-4">
+              </div>
+              <div class="grid md:grid-cols-2 gap-4">
+                <div class="form-control mt-2">
+                  <label class="block mb-2 text-sm font-medium text-gray-900">
+                    <span class="label-text"> آدرس</span>
+                  </label>
+                  <input
+                    type="text"
+                    tabindex="12"
+                    v-model="newUser.address"
+                    dir="rtl"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-10 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    required
+                    placeholder="آدرس"
+                  />
+                </div>
+                <div class="form-control mt-2">
                   <label for="countries" class="block mb-2 text-sm font-medium text-gray-900"
                     >وضعیت</label
                   >
                   <select
                     id="countries"
+                    tabindex="11"
                     v-model="newUser.paymentStatus"
                     dir="rtl"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-10 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                   >
                     <option class="font-semibold" value="پرداخت شده" selected>پرداخت شده</option>
                     <option class="font-semibold" value="پرداخت نشده">پرداخت نشده</option>
                   </select>
                 </div>
-              </div>
-              <div class="form-control mt-2">
-                <label class="block mb-2 text-sm font-medium text-gray-900">
-                  <span class="label-text"> آدرس</span>
-                </label>
-                <input
-                  type="text"
-                  v-model="newUser.address"
-                  dir="rtl"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  required
-                  placeholder="آدرس"
-                />
               </div>
 
               <div class="flex justify-center items-center modal-action mt-5">
@@ -644,7 +655,7 @@
             </div>
 
             <p>آیا از حذف این کاربر مطمئن هستید؟</p>
-            <div class="flex justify-center items-center modal-action mt-4">
+            <div class="flex justify-center items-center modal-action mt-2">
               <button
                 type="button"
                 class="btn-wide text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-300/50 dark:shadow-lg dark:shadow-blue-300/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
@@ -695,29 +706,22 @@
                     disabled
                     readonly
                   />
-                  
                 </div>
 
-
-
-
-
-
-
                 <div class="form-control">
-  <label class="block mb-2 text-sm font-medium text-gray-900">
-    <span class="label-text">تاریخ تمدید</span>
-  </label>
-  <input
-    v-model="obj_renewals.renewal_date"
-    class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs font-semibold"
-    disabled
-    readonly
-  />
-</div>
+                  <label class="block mb-2 text-sm font-medium text-gray-900">
+                    <span class="label-text">تاریخ تمدید</span>
+                  </label>
+                  <input
+                    v-model="obj_renewals.renewal_date"
+                    class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs font-semibold"
+                    disabled
+                    readonly
+                  />
+                </div>
 
-              <!-- </div> -->
-              <!-- <div class="grid md:grid-cols-1 gap-4"> -->
+                <!-- </div> -->
+                <!-- <div class="grid md:grid-cols-1 gap-4"> -->
                 <!-- <div class="mt-4 mb-4">
                         <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">روش پرداخت</label>
                         <select id="countries" v-model="obj_renewals.paymentMethod" class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl">
@@ -726,11 +730,8 @@
                         </select>
                     </div> -->
 
-
                 <div class="form-control">
-                  <label
-                    for="countries"
-                    class="block mb-2 text-sm font-medium text-gray-900"
+                  <label for="countries" class="block mb-2 text-sm font-medium text-gray-900"
                     >مدت زمان دوره</label
                   >
                   <select
@@ -745,19 +746,19 @@
                 </div>
               </div>
               <div class="flex justify-center items-center modal-action mt-4">
-              <button
-                type="button"
-                class="btn-wide text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-300/50 dark:shadow-lg dark:shadow-red-300/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-                @click="closeRenewalModal"
-              >
-                بستن
-              </button>
-              <button
-                type="submit"
-                class="btn-wide text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-300/50 dark:shadow-lg dark:shadow-blue-300/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-              >
-                ثبت
-              </button>
+                <button
+                  type="button"
+                  class="btn-wide text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-300/50 dark:shadow-lg dark:shadow-red-300/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                  @click="closeRenewalModal"
+                >
+                  بستن
+                </button>
+                <button
+                  type="submit"
+                  class="btn-wide text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-300/50 dark:shadow-lg dark:shadow-blue-300/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                >
+                  ثبت
+                </button>
               </div>
             </form>
           </div>
@@ -881,39 +882,39 @@ export default {
     //   }
     // },
     sortData() {
-    if (!this.sortColumn) return;
-    
-    this.users.sort((a, b) => {
-      let valueA = a[this.sortColumn];
-      let valueB = b[this.sortColumn];
-      
-      // برای ستون تاریخ شمسی
-      if (this.sortColumn === 'registrationDate') {
-        // تبدیل تاریخ شمسی به میلادی برای مقایسه
-        valueA = moment(valueA, 'jYYYY/jMM/jDD').unix();
-        valueB = moment(valueB, 'jYYYY/jMM/jDD').unix();
+      if (!this.sortColumn) return
+
+      this.users.sort((a, b) => {
+        let valueA = a[this.sortColumn]
+        let valueB = b[this.sortColumn]
+
+        // برای ستون تاریخ شمسی
+        if (this.sortColumn === 'registrationDate') {
+          // تبدیل تاریخ شمسی به میلادی برای مقایسه
+          valueA = moment(valueA, 'jYYYY/jMM/jDD').unix()
+          valueB = moment(valueB, 'jYYYY/jMM/jDD').unix()
+        }
+
+        // برای مقایسه رشته‌های فارسی
+        if (typeof valueA === 'string' && this.sortColumn !== 'registrationDate') {
+          return this.sortDirection === 'asc'
+            ? valueA.localeCompare(valueB, 'fa')
+            : valueB.localeCompare(valueA, 'fa')
+        }
+
+        const comparison = valueA > valueB ? 1 : valueA < valueB ? -1 : 0
+        return this.sortDirection === 'asc' ? comparison : -comparison
+      })
+    },
+    sortBy(column) {
+      if (this.sortColumn === column) {
+        this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc'
+      } else {
+        this.sortColumn = column
+        this.sortDirection = 'asc'
       }
-      
-      // برای مقایسه رشته‌های فارسی
-      if (typeof valueA === 'string' && this.sortColumn !== 'registrationDate') {
-        return this.sortDirection === 'asc' 
-          ? valueA.localeCompare(valueB, 'fa')
-          : valueB.localeCompare(valueA, 'fa');
-      }
-      
-      const comparison = valueA > valueB ? 1 : valueA < valueB ? -1 : 0;
-      return this.sortDirection === 'asc' ? comparison : -comparison;
-    });
-  },
-  sortBy(column) {
-  if (this.sortColumn === column) {
-    this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-  } else {
-    this.sortColumn = column;
-    this.sortDirection = 'asc';
-  }
-  this.sortData();
-},
+      this.sortData()
+    },
     downloadExcel() {
       // ایجاد هدر فارسی
       const headers = [
@@ -1088,7 +1089,9 @@ export default {
       }
 
       this.expirationDateMiladi = expirationDateMiladi.format('jYYYY/jMM/jDD')
-      console.log(`Progress: ${this.progress}%, Remaining Days: ${this.remainingDays} expirationDateMiladi: ${this.expirationDateMiladi} `)
+      console.log(
+        `Progress: ${this.progress}%, Remaining Days: ${this.remainingDays} expirationDateMiladi: ${this.expirationDateMiladi} `
+      )
       // return expirationDateMiladi
     },
 
@@ -1134,40 +1137,37 @@ export default {
       this.calculateProgress()
     },
 
-
     calculateTotalPaid(userId) {
-  const userPayments = this.payments.filter(p =>
-    (p.userId === userId || p.user_id === userId) &&
-    ['پرداخت شده', 'موفق', 'paid'].includes(p.status?.trim())
-  )
+      const userPayments = this.payments.filter(
+        (p) =>
+          (p.userId === userId || p.user_id === userId) &&
+          ['پرداخت شده', 'موفق', 'paid'].includes(p.status?.trim())
+      )
 
-  return userPayments.reduce((sum, p) => {
-    const cleanedAmount = (p.amount || '')
-      .toString()
-      .replace(/[٬،,]/g, '')
-      .replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
-    return sum + Number(cleanedAmount)
-  }, 0)
-}
-,
-  calculateDebtAmount(userId) {
-    const unpaid = this.payments.filter(p => p.userId === userId && p.status === 'پرداخت نشده')
-    return unpaid.reduce((sum, p) => sum + Number(p.amount), 0)
-  },
-  calculateRemainingSessions(userId) {
-  const user = this.users.find(u => u.id === userId)
-  if (!user || !user.registrationDate || !user.expirationDate) return 0
+      return userPayments.reduce((sum, p) => {
+        const cleanedAmount = (p.amount || '')
+          .toString()
+          .replace(/[٬،,]/g, '')
+          .replace(/[۰-۹]/g, (d) => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
+        return sum + Number(cleanedAmount)
+      }, 0)
+    },
+    calculateDebtAmount(userId) {
+      const unpaid = this.payments.filter((p) => p.userId === userId && p.status === 'پرداخت نشده')
+      return unpaid.reduce((sum, p) => sum + Number(p.amount), 0)
+    },
+    calculateRemainingSessions(userId) {
+      const user = this.users.find((u) => u.id === userId)
+      if (!user || !user.registrationDate || !user.expirationDate) return 0
 
-  const today = moment().locale('fa')
-  const expiration = moment.from(user.expirationDate, 'fa')
-  
-  if (today.isSameOrAfter(expiration)) return 0
+      const today = moment().locale('fa')
+      const expiration = moment.from(user.expirationDate, 'fa')
 
-  const remainingDays = expiration.diff(today, 'days')
-  return remainingDays
-}
-,
+      if (today.isSameOrAfter(expiration)) return 0
 
+      const remainingDays = expiration.diff(today, 'days')
+      return remainingDays
+    },
     closeDetailsModal() {
       this.showDetailsModal = false
       this.selectedUser = null
@@ -1204,13 +1204,7 @@ export default {
         this.users = this.users.filter((user) => user.id !== this.userToDelete.id)
         this.closeDeleteModal()
 
-        await this.showSwal(
-          'موفقیت',
-          'کاربر با موفقیت حذف شد',
-          'success'
-        )
-        
-
+        await this.showSwal('موفقیت', 'کاربر با موفقیت حذف شد', 'success')
       } catch (error) {
         console.error('Error deleting user:', error)
       }
@@ -1302,58 +1296,57 @@ export default {
       console.log('*********** 2')
       this.closeModal()
     },
-// ✅ نسخه اصلاح‌شده برای ذخیره تاریخ ثبت‌نام و تاریخ انقضا به صورت شمسی در دیتابیس:
+    // ✅ نسخه اصلاح‌شده برای ذخیره تاریخ ثبت‌نام و تاریخ انقضا به صورت شمسی در دیتابیس:
 
-calculateExpirationDate() {
-  if (!this.newUser.registrationDate || !this.newUser.renewal_duration) {
-    this.newUser.expirationDate = ''
-    return
-  }
+    calculateExpirationDate() {
+      if (!this.newUser.registrationDate || !this.newUser.renewal_duration) {
+        this.newUser.expirationDate = ''
+        return
+      }
 
-  const durationMonths = parseInt(this.newUser.renewal_duration, 10)
-  if (isNaN(durationMonths) || durationMonths <= 0) {
-    console.error('مدت دوره معتبر نیست')
-    return
-  }
+      const durationMonths = parseInt(this.newUser.renewal_duration, 10)
+      if (isNaN(durationMonths) || durationMonths <= 0) {
+        console.error('مدت دوره معتبر نیست')
+        return
+      }
 
-  // تبدیل تاریخ ثبت‌نام از شمسی به میلادی برای محاسبه
-  const registrationMiladi = moment
-    .from(this.newUser.registrationDate, 'fa', 'jYYYY/jMM/jDD')
-    .locale('en')
+      // تبدیل تاریخ ثبت‌نام از شمسی به میلادی برای محاسبه
+      const registrationMiladi = moment
+        .from(this.newUser.registrationDate, 'fa', 'jYYYY/jMM/jDD')
+        .locale('en')
 
-  const expirationMiladi = registrationMiladi.clone().add(durationMonths, 'months')
+      const expirationMiladi = registrationMiladi.clone().add(durationMonths, 'months')
 
-  // تبدیل هر دو به شمسی و ذخیره در دیتا
-  this.newUser.registrationDate = registrationMiladi
-    .clone()
-    .locale('fa')
-    .format('jYYYY/jMM/jDD')
+      // تبدیل هر دو به شمسی و ذخیره در دیتا
+      this.newUser.registrationDate = registrationMiladi
+        .clone()
+        .locale('fa')
+        .format('jYYYY/jMM/jDD')
 
-  this.newUser.expirationDate = expirationMiladi
-    .clone()
-    .locale('fa')
-    .format('jYYYY/jMM/jDD')
+      this.newUser.expirationDate = expirationMiladi.clone().locale('fa').format('jYYYY/jMM/jDD')
 
-  console.log('📅 ثبت‌نام شمسی:', this.newUser.registrationDate)
-  console.log('📆 انقضا شمسی:', this.newUser.expirationDate)
-},
-calculateExpirationDate_Renewal() {
-  const durationMonths = parseInt(this.obj_renewals.duration, 10)
-  if (isNaN(durationMonths) || durationMonths <= 0) {
-    console.error('مدت دوره معتبر نیست')
-    return
-  }
+      console.log('📅 ثبت‌نام شمسی:', this.newUser.registrationDate)
+      console.log('📆 انقضا شمسی:', this.newUser.expirationDate)
+    },
+    calculateExpirationDate_Renewal() {
+      const durationMonths = parseInt(this.obj_renewals.duration, 10)
+      if (isNaN(durationMonths) || durationMonths <= 0) {
+        console.error('مدت دوره معتبر نیست')
+        return
+      }
 
-  const now = moment().locale('en')
-  const expirationMiladi = now.clone().add(durationMonths, 'months')
+      const now = moment().locale('en')
+      const expirationMiladi = now.clone().add(durationMonths, 'months')
 
-  this.obj_renewals.renewal_date = now.clone().locale('fa').format('jYYYY/jMM/jDD')
-  this.obj_renewals.new_expiration_date = expirationMiladi.clone().locale('fa').format('jYYYY/jMM/jDD')
+      this.obj_renewals.renewal_date = now.clone().locale('fa').format('jYYYY/jMM/jDD')
+      this.obj_renewals.new_expiration_date = expirationMiladi
+        .clone()
+        .locale('fa')
+        .format('jYYYY/jMM/jDD')
 
-  console.log('📅 تمدید:', this.obj_renewals.renewal_date)
-  console.log('📆 انقضا جدید:', this.obj_renewals.new_expiration_date)
-}
-,
+      console.log('📅 تمدید:', this.obj_renewals.renewal_date)
+      console.log('📆 انقضا جدید:', this.obj_renewals.new_expiration_date)
+    },
     async addUser() {
       try {
         console.log('New User Data:', this.newUser) // بررسی مقدار قبل از ارسال
@@ -1463,7 +1456,6 @@ calculateExpirationDate_Renewal() {
     async submitFormRenewal() {
       console.log('this.userToRenewal.id ==> ', this.renewal_user_id) // باید "1" را چاپ کند
 
-
       console.log('🔁 ارسال به جدول renewals:', {
         user_id: this.renewal_user_id,
         renewal_date: this.obj_renewals.renewal_date,
@@ -1471,34 +1463,33 @@ calculateExpirationDate_Renewal() {
         new_expiration_date: this.obj_renewals.new_expiration_date
       })
 
-
       await this.addRenewals()
       await this.fetchUsers() // برای بروزرسانی جدول کاربران در UI
       await this.closeRenewalModal()
     },
     async addRenewals() {
-  console.log('🚀 ارسال تمدید:', this.obj_renewals)
+      console.log('🚀 ارسال تمدید:', this.obj_renewals)
 
-  const response = await window.api.addRenewals({
-    user_id: this.renewal_user_id,
-    renewal_date: this.obj_renewals.renewal_date,
-    duration: this.obj_renewals.duration,
-    new_expiration_date: this.obj_renewals.new_expiration_date
-  })
+      const response = await window.api.addRenewals({
+        user_id: this.renewal_user_id,
+        renewal_date: this.obj_renewals.renewal_date,
+        duration: this.obj_renewals.duration,
+        new_expiration_date: this.obj_renewals.new_expiration_date
+      })
 
-  if (response.success) {
-    // 🔁 به‌روزرسانی users.expirationDate
-    await window.api.updateUserExpiration({
-      id: this.renewal_user_id,
-      expirationDate: this.obj_renewals.new_expiration_date
-    })
+      if (response.success) {
+        // 🔁 به‌روزرسانی users.expirationDate
+        await window.api.updateUserExpiration({
+          id: this.renewal_user_id,
+          expirationDate: this.obj_renewals.new_expiration_date
+        })
 
-    // ⏬ اضافه شده‌ها
-    await this.fetchUsers()
-    this.renewals = await window.api.fetchRenewals()
-    await this.checkAndUpdateUserStatus(this.renewal_user_id)
-  }
-},
+        // ⏬ اضافه شده‌ها
+        await this.fetchUsers()
+        this.renewals = await window.api.fetchRenewals()
+        await this.checkAndUpdateUserStatus(this.renewal_user_id)
+      }
+    },
     async checkAndUpdateUserStatus(userId) {
       const response = await window.api.checkUserStatus(userId)
       if (response.success) {
@@ -1507,14 +1498,14 @@ calculateExpirationDate_Renewal() {
     },
 
     async updateUserStatus(userId, newStatus) {
-      const user = this.users.find(u => u.id === userId)
+      const user = this.users.find((u) => u.id === userId)
       if (user) user.status = newStatus
       console.log(`Updating status for user ${userId} to ${newStatus}`)
       await window.api.updateUserStatus({
         userId,
         status: newStatus
       })
-    },
+    }
   },
   async mounted() {
     for (const user of this.users) {

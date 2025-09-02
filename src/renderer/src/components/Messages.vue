@@ -3,10 +3,10 @@
     <div class="overflow-x-auto w-full sha">
       <div class="text-center mb-8">
         <h1 class="text-2xl font-bold text-center mb-6">ارسال پیامک به اعضا</h1>
-        <p class="text-blue-600 mt-2">پیام خود را برای اعضا ارسال کنید</p>
+        <!-- <p class="text-blue-600 mt-2">پیام خود را برای اعضا ارسال کنید</p> -->
       </div>
 
-      <div class="card bg-base-100 shadow-lg mb-6 rtl text-right border border-blue-100">
+      <div class="card bg-base-100 shadow-lg mb-2 rtl text-right border border-blue-100">
         <div class="card-body p-6 md:p-8 space-y-6 rtl">
           <!-- متن پیامک -->
           <div class="form-control">
@@ -19,8 +19,9 @@
               placeholder="...متن پیام خود را وارد کنید"
               :maxlength="maxLength"
             ></textarea>
-            <div class="text-sm text-blue-500 mt-1 text-right">
-              {{ message.length }}/{{ maxLength }} کاراکتر
+            <div class="text-sm text-blue-500 mt-3 text-right">
+              <span class="bg-blue-50 px-2 py-1 rounded-lg">{{ message.length }}/{{ maxLength }} کاراکتر</span>
+              
             </div>
           </div>
 
@@ -30,95 +31,74 @@
               <span class="label-text text-md font-semibold">ارسال به</span>
             </label>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+              <!-- همه اعضا -->
               <label
-                class="card bg-gradient-to-br from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 transition-all cursor-pointer border border-blue-100 rounded-xl"
+                class="card bg-gradient-to-br from-blue-50 to-indigo-50 hover:from-blue-100 hover:to-indigo-100 transition-all duration-300 cursor-pointer border-2 rounded-2xl"
+                :class="{'border-blue-400 shadow-md': sendTo === 'all', 'border-white': sendTo !== 'all'}"
               >
-                <div class="card-body p-4 flex items-center justify-end gap-3">
-                  <input
-                    type="radio"
-                    name="send-to"
-                    class="radio radio-primary ring-2 ring-offset-2 ring-blue-200"
-                    v-model="sendTo"
-                    value="all"
-                  />
-                  <span class="text-sm font-semibold text-blue-800">همه اعضا</span>
-                  <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 text-blue-600"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                      />
+                <div class="card-body p-5 flex flex-row items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <input
+                      type="radio"
+                      name="send-to"
+                      class="radio radio-primary"
+                      v-model="sendTo"
+                      value="all"
+                    />
+                    <span class="text-md font-semibold text-blue-800">همه اعضا</span>
+                  </div>
+                  <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
                   </div>
                 </div>
               </label>
 
+              <!-- اعضای فعال -->
               <label
-                class="card bg-gradient-to-br from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 transition-all cursor-pointer border border-blue-100 rounded-xl"
+                class="card bg-gradient-to-br from-green-50 to-emerald-50 hover:from-green-100 hover:to-emerald-100 transition-all duration-300 cursor-pointer border-2 rounded-2xl"
+                :class="{'border-green-400 shadow-md': sendTo === 'active', 'border-white': sendTo !== 'active'}"
               >
-                <div class="card-body p-4 flex items-center justify-end gap-3">
-                  <input
-                    type="radio"
-                    name="send-to"
-                    class="radio radio-primary ring-2 ring-offset-2 ring-blue-200"
-                    v-model="sendTo"
-                    value="active"
-                  />
-                  <span class="text-sm font-semibold text-blue-800">اعضای فعال</span>
-                  <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 text-green-600"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
+                <div class="card-body p-5 flex flex-row items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <input
+                      type="radio"
+                      name="send-to"
+                      class="radio radio-success"
+                      v-model="sendTo"
+                      value="active"
+                    />
+                    <span class="text-md font-semibold text-green-800">اعضای فعال</span>
+                  </div>
+                  <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
                 </div>
               </label>
 
+              <!-- انتخاب دستی -->
               <label
-                class="card bg-gradient-to-br from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 transition-all cursor-pointer border border-blue-100 rounded-xl"
+                class="card bg-gradient-to-br from-amber-50 to-orange-50 hover:from-amber-100 hover:to-orange-100 transition-all duration-300 cursor-pointer border-2 rounded-2xl"
+                :class="{'border-amber-400 shadow-md': sendTo === 'custom', 'border-white': sendTo !== 'custom'}"
               >
-                <div class="card-body p-4 flex items-center justify-end gap-3">
-                  <input
-                    type="radio"
-                    name="send-to"
-                    class="radio radio-primary ring-2 ring-offset-2 ring-blue-200"
-                    v-model="sendTo"
-                    value="custom"
-                  />
-                  <span class="text-sm font-semibold text-blue-800">انتخاب دستی</span>
-                  <div class="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 text-yellow-600"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                      />
+                <div class="card-body p-5 flex flex-row items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <input
+                      type="radio"
+                      name="send-to"
+                      class="radio radio-warning"
+                      v-model="sendTo"
+                      value="custom"
+                    />
+                    <span class="text-md font-semibold text-amber-800">انتخاب دستی</span>
+                  </div>
+                  <div class="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                     </svg>
                   </div>
                 </div>
@@ -128,7 +108,7 @@
             <!-- لیست انتخاب اعضا (در حالت انتخاب دستی) -->
 
             <div v-if="sendTo === 'active' || sendTo === 'custom'" class="mt-4">
-              <div class="overflow-x-auto shadow-md rounded-xl border border-blue-100">
+              <div class="overflow-x-auto rounded-xl border border-blue-100">
                 <table class="table table-zebra w-full text-right">
                   <thead>
                     <tr class="bg-blue-100 text-blue-800">
@@ -203,62 +183,46 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
               <label
-                class="card bg-gradient-to-br from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 transition-all cursor-pointer border border-blue-100 rounded-xl"
+                class="card bg-gradient-to-br from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 transition-all duration-300 cursor-pointer border-2 rounded-2xl"
+                :class="{'border-purple-400 shadow-md': sendTime === 'now', 'border-white': sendTime !== 'now'}"
               >
-                <div class="card-body p-4 flex items-center justify-end gap-3">
-                  <input
-                    type="radio"
-                    name="send-time"
-                    class="radio radio-primary ring-2 ring-offset-2 ring-blue-200"
-                    v-model="sendTime"
-                    value="now"
-                  />
-                  <span class="text-sm font-semibold text-blue-800">همین حالا</span>
-                  <div class="w-8 h-8 rounded-full bg-purple-100 flex items-center justify-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 text-purple-600"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
+                <div class="card-body p-5 flex flex-row items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <input
+                      type="radio"
+                      name="send-time"
+                      class="radio radio-secondary"
+                      v-model="sendTime"
+                      value="now"
+                    />
+                    <span class="text-md font-semibold text-purple-800">همین حالا</span>
+                  </div>
+                  <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-purple-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
                 </div>
               </label>
 
               <label
-                class="card bg-gradient-to-br from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 transition-all cursor-pointer border border-blue-100 rounded-xl"
+                class="card bg-gradient-to-br from-pink-50 to-rose-50 hover:from-pink-100 hover:to-rose-100 transition-all duration-300 cursor-pointer border-2 rounded-2xl"
+                :class="{'border-pink-400 shadow-md': sendTime === 'scheduled', 'border-white': sendTime !== 'scheduled'}"
               >
-                <div class="card-body p-4 flex items-center justify-end gap-3">
-                  <input
-                    type="radio"
-                    name="send-time"
-                    class="radio radio-primary ring-2 ring-offset-2 ring-blue-200"
-                    v-model="sendTime"
-                    value="scheduled"
-                  />
-                  <span class="text-sm font-semibold text-blue-800">زمانبندی شده</span>
-                  <div class="w-8 h-8 rounded-full bg-pink-100 flex items-center justify-center">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 text-pink-600"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
+                <div class="card-body p-5 flex flex-row items-center justify-between">
+                  <div class="flex items-center gap-3">
+                    <input
+                      type="radio"
+                      name="send-time"
+                      class="radio radio-accent"
+                      v-model="sendTime"
+                      value="scheduled"
+                    />
+                    <span class="text-md font-semibold text-pink-800">زمانبندی شده</span>
+                  </div>
+                  <div class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-pink-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                   </div>
                 </div>
@@ -352,10 +316,11 @@
           <div class="mt-8">
             <button
               @click="sendSms"
-              class="btn w-full gap-2 text-md h-14 rounded-xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-none text-white shadow-lg transition-all transform hover:scale-[1.01]"
+              class="btn w-full gap-3 text-lg h-16 rounded-2xl bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 border-none text-white shadow-lg transition-all duration-300 transform hover:scale-[1.01]"
               :disabled="isSending || !message"
+              :class="{'opacity-50 cursor-not-allowed': isSending || !message}"
             >
-              <span v-if="isSending" class="loading loading-spinner"></span>
+              <span v-if="isSending" class="loading loading-spinner loading-md"></span>
               <svg
                 v-else
                 xmlns="http://www.w3.org/2000/svg"
@@ -372,6 +337,7 @@
                 />
               </svg>
               ارسال پیامک
+              <span class="badge badge-lg bg-blue-100 text-blue-700 border-0 ml-2">{{ selectedCount }}</span>
             </button>
           </div>
 
@@ -423,7 +389,7 @@ import Swal from 'sweetalert2'
 export default {
   data() {
     return {
-      maxLength: 160,
+      maxLength: 500,
       message: '',
       sendTo: 'all', // all, active, custom
       sendTime: 'now', // now, scheduled
@@ -481,6 +447,21 @@ export default {
         this.showSwal('خطا', 'خطا در دریافت لیست کاربران', 'error')
       }
     },
+        // تغییر این تابع به استفاده از main process
+    async sendToAmootSMS(phoneNumbers, message, sendDateTime = null) {
+      try {
+        const result = await window.api.sendSMS({
+          phoneNumbers,
+          message,
+          sendDateTime
+        });
+        
+        return result;
+      } catch (error) {
+        console.error('Error in sendToAmootSMS:', error);
+        throw error;
+      }
+    },
     async sendSms() {
       // اعتبارسنجی اولیه
       if (!this.message) {
@@ -515,30 +496,39 @@ export default {
             .map((u) => u.phone)
         }
 
-        // چک کردن خالی بودن متن پیام
+                // اضافه کردن امضا به پیام
+        let finalMessage = this.message
         if (this.message.trim() !== '') {
-          this.message += this.signature
+          finalMessage += this.signature
         }
 
-        // در اینجا باید فراخوانی API واقعی انجام شود
-        // برای نمونه از یک تاخیر استفاده می‌کنیم
-        await new Promise((resolve) => setTimeout(resolve, 1500))
+                // تعیین زمان ارسال
+        let sendDateTime = null
+        if (this.sendTime === 'scheduled' && this.scheduledDate && this.scheduledTime) {
+          sendDateTime = `${this.scheduledDate} ${this.scheduledTime}`
+        }
+
+        // ارسال پیامک از طریق main process
+        const result = await this.sendToAmootSMS(phoneNumbers, finalMessage, sendDateTime)
 
         // نمایش پیام موفقیت
+        this.resultMessage = `پیامک با موفقیت برای ${phoneNumbers.length} کاربر ارسال شد`
+        this.resultClass = 'alert alert-success'
+
         await this.showSwal(
           'موفقیت',
-          `پیامک با موفقیت برای ${this.selectedCount} کاربر ارسال شد`,
+          `پیامک با موفقیت برای ${phoneNumbers.length} کاربر ارسال شد`,
           'success'
         )
-
-        console.log('date => ', this.scheduledDate + ' ' + this.scheduledTime)
-        console.log('message => ', this.message)
 
         // ریست فرم
         this.message = ''
         this.selectedUsers = []
       } catch (error) {
         console.error('Error sending SMS:', error)
+        this.resultMessage = 'خطا در ارسال پیامک: ' + error.message
+        this.resultClass = 'alert alert-error'
+
         await this.showSwal('خطا', 'خطا در ارسال پیامک. لطفا دوباره تلاش کنید', 'error')
       } finally {
         this.isSending = false

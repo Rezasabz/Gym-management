@@ -63,7 +63,6 @@
 
           <div class="text-center">
             <h2 class="text-2xl font-bold text-white mb-2">ورود به پنل مدیریت</h2>
-            <!-- <p class="text-gray-300">باشگاه بدنسازی SOHRABY</p> -->
           </div>
 
           <form @submit.prevent="handleLogin" novalidate class="space-y-5">
@@ -263,7 +262,6 @@
 
           <div class="text-center">
             <h2 class="text-2xl font-bold text-white mb-2">ایجاد حساب کاربری</h2>
-            <!-- <p class="text-gray-300">باشگاه بدنسازی SOHRABY</p> -->
           </div>
 
           <form @submit.prevent="handleRegister" novalidate class="space-y-5">
@@ -536,44 +534,40 @@
           </div>
         </div>
       </div>
-      <!-- Overlay اسپینر ورود -->
-      <div
-        v-if="isLoggingIn"
-        class="fixed inset-0 z-50 grid place-items-center bg-slate-900/70 backdrop-blur-sm"
-      >
-        <div class="flex flex-col items-center gap-4">
-          <div class="relative">
-            <!-- رینگ چرخان -->
-            <div
-              class="w-16 h-16 rounded-full border-4 border-white/20 border-t-cyan-400 animate-spin"
-            ></div>
-            <!-- آیکن داخل رینگ -->
-            <div class="absolute inset-0 flex items-center justify-center">
-              <svg
-                class="w-6 h-6 text-white/90"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M16 12H4m12 0-4 4m4-4-4-4m3-4h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2"
-                />
-              </svg>
-            </div>
+    </div>
+
+    <!-- Overlay اسپینر ورود -->
+    <div
+      v-if="isLoggingIn"
+      class="fixed inset-0 z-50 grid place-items-center bg-slate-900/70 backdrop-blur-sm"
+    >
+      <div class="flex flex-col items-center gap-4">
+        <div class="relative">
+          <!-- رینگ چرخان -->
+          <div
+            class="w-16 h-16 rounded-full border-4 border-white/20 border-t-cyan-400 animate-spin"
+          ></div>
+          <!-- آیکن داخل رینگ -->
+          <div class="absolute inset-0 flex items-center justify-center">
+            <svg
+              class="w-6 h-6 text-white/90"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M16 12H4m12 0-4 4m4-4-4-4m3-4h2a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3h-2"
+              />
+            </svg>
           </div>
-          <p class="text-white/90 font-semibold">در حال ورود به داشبورد…</p>
         </div>
+        <p class="text-white/90 font-semibold">در حال ورود به داشبورد…</p>
       </div>
     </div>
-  </div>
 
-  <div
-    dir="rtl"
-    class="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden"
-  >
     <!-- Modal: Forgot Password -->
     <div
       v-if="showForgotModal"
@@ -759,94 +753,95 @@
                 <!-- دکمه بستن -->
       <button
         @click="showForgotModal = false"
-        class="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-transparent disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+        class="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:ring-offset-2 focus:ring-offset-transparent disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-3"
       >
         بستن
       </button>
         </form>
       </div>
     </div>
-<!-- Modal: Show Recovery Key after register -->
-<div
-  v-if="registerSuccessKey"
-  class="fixed inset-0 z-50 grid place-items-center bg-slate-900/70 backdrop-blur-sm"
->
-  <div class="w-full max-w-md bg-gradient-to-br from-indigo-900/30 to-purple-900/30 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
-    <!-- Header with gradient -->
-    <div class="px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600">
-      <h3 class="font-bold text-2xl text-white text-center">🔐 کلید بازیابی شما</h3>
-    </div>
-    
-    <!-- Content -->
-    <div class="p-6 space-y-5 text-center">
-      <!-- Animated icon -->
-      <div class="flex justify-center">
-        <div class="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center animate-pulse">
-          <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
-          </svg>
-        </div>
-      </div>
-      
-      <p class="text-slate-200 text-sm leading-relaxed">
-        این کلید را در جای امن نگه دارید. فقط همین یک‌بار نمایش داده می‌شود و برای بازیابی حساب ضروری است.
-      </p>
-      
-      <!-- Key container with copy functionality -->
-      <div class="relative group">
-        <div class="font-mono text-lg bg-slate-800/50 rounded-xl px-5 py-4 select-all text-cyan-100 border border-cyan-500/30 shadow-lg">
-          {{ registerSuccessKey }}
+
+    <!-- Modal: Show Recovery Key after register -->
+    <div
+      v-if="registerSuccessKey"
+      class="fixed inset-0 z-50 grid place-items-center bg-slate-900/70 backdrop-blur-sm"
+    >
+      <div class="w-full max-w-md bg-gradient-to-br from-indigo-900/30 to-purple-900/30 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
+        <!-- Header with gradient -->
+        <div class="px-6 py-4 bg-gradient-to-r from-indigo-600 to-purple-600">
+          <h3 class="font-bold text-2xl text-white text-center">🔐 کلید بازیابی شما</h3>
         </div>
         
-        <!-- Copy button with state -->
-        <button 
-          @click="copyKeyToClipboard"
-          class="absolute left-3 top-1/2 transform -translate-y-1/2 p-1.5 rounded-lg transition-all duration-300 flex items-center justify-center"
-          :class="copyButtonState === 'default' ? 
-                 'bg-slate-700/80 hover:bg-slate-600 opacity-0 group-hover:opacity-100' : 
-                 copyButtonState === 'copying' ? 
-                 'bg-cyan-500/90 opacity-100 w-24' : 
-                 'bg-green-500/90 opacity-100'"
-          :title="copyButtonState === 'default' ? 'کپی کلید' : ''"
-          :disabled="copyButtonState !== 'default'"
-        >
-          <span v-if="copyButtonState === 'default'">
-            <svg class="w-4 h-4 text-cyan-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+        <!-- Content -->
+        <div class="p-6 space-y-5 text-center">
+          <!-- Animated icon -->
+          <div class="flex justify-center">
+            <div class="w-16 h-16 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center animate-pulse">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+              </svg>
+            </div>
+          </div>
+          
+          <p class="text-slate-200 text-sm leading-relaxed">
+            این کلید را در جای امن نگه دارید. فقط همین یک‌بار نمایش داده می‌شود و برای بازیابی حساب ضروری است.
+          </p>
+          
+          <!-- Key container with copy functionality -->
+          <div class="relative group">
+            <div class="font-mono text-lg bg-slate-800/50 rounded-xl px-5 py-4 select-all text-cyan-100 border border-cyan-500/30 shadow-lg">
+              {{ registerSuccessKey }}
+            </div>
+            
+            <!-- Copy button with state -->
+            <button 
+              @click="copyKeyToClipboard"
+              class="absolute left-3 top-1/2 transform -translate-y-1/2 p-1.5 rounded-lg transition-all duration-300 flex items-center justify-center"
+              :class="copyButtonState === 'default' ? 
+                     'bg-slate-700/80 hover:bg-slate-600 opacity-0 group-hover:opacity-100' : 
+                     copyButtonState === 'copying' ? 
+                     'bg-cyan-500/90 opacity-100 w-24' : 
+                     'bg-green-500/90 opacity-100'"
+              :title="copyButtonState === 'default' ? 'کپی کلید' : ''"
+              :disabled="copyButtonState !== 'default'"
+            >
+              <span v-if="copyButtonState === 'default'">
+                <svg class="w-4 h-4 text-cyan-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                </svg>
+              </span>
+              <span v-else-if="copyButtonState === 'copying'" class="text-xs text-white font-medium animate-pulse">
+                در حال کپی...
+              </span>
+              <span v-else class="text-xs text-white font-medium flex items-center">
+                <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                </svg>
+                کپی شد!
+              </span>
+            </button>
+          </div>
+          
+          <!-- Warning message -->
+          <div class="flex items-start p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg">
+            <svg class="w-5 h-5 text-amber-400 mt-0.5 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
             </svg>
-          </span>
-          <span v-else-if="copyButtonState === 'copying'" class="text-xs text-white font-medium animate-pulse">
-            در حال کپی...
-          </span>
-          <span v-else class="text-xs text-white font-medium flex items-center">
-            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-            </svg>
-            کپی شد!
-          </span>
-        </button>
-      </div>
-      
-      <!-- Warning message -->
-      <div class="flex items-start p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg">
-        <svg class="w-5 h-5 text-amber-400 mt-0.5 ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
-        </svg>
-        <span class="text-xs text-amber-300 text-right">در صورت از دست دادن این کلید، دسترسی به حساب خود را از دست خواهید داد.</span>
+            <span class="text-xs text-amber-300 text-right">در صورت از دست دادن این کلید، دسترسی به حساب خود را از دست خواهید داد.</span>
+          </div>
+        </div>
+        
+        <!-- Footer with action button -->
+        <div class="px-6 py-4 bg-slate-800/30 border-t border-white/10 flex justify-center">
+          <button
+            @click="registerSuccessKey = null"
+            class="relative w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-cyan-500/20 flex items-center justify-center group"
+          >
+            <span class="transition-transform duration-300 group-hover:translate-x-1">✓ متوجه شدم</span>
+          </button>
+        </div>
       </div>
     </div>
-    
-    <!-- Footer with action button -->
-    <div class="px-6 py-4 bg-slate-800/30 border-t border-white/10 flex justify-center">
-      <button
-        @click="registerSuccessKey = null"
-        class="relative w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 text-white font-semibold transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-cyan-500/20 flex items-center justify-center group"
-      >
-        <span class="transition-transform duration-300 group-hover:translate-x-1">✓ متوجه شدم</span>
-      </button>
-    </div>
-  </div>
-</div>
   </div>
 </template>
 
@@ -857,12 +852,14 @@ export default {
     return {
       isLoginMode: true,
       isLoading: false,
+      isLoggingIn: false,
       showPassword: false,
       showForgotModal: false,
       flash: { type: null, message: '', place: null },
       fpLoading: false,
       fp: { username: '', recoveryKey: '', newPass: '', confirm: '' },
-      registerSuccessKey: null, // برای نمایش Recovery Key بعد از ثبت‌نام
+      registerSuccessKey: null,
+      copyButtonState: 'default',
       loginForm: { username: '', password: '' },
       registerForm: {
         fullName: '',
@@ -871,33 +868,26 @@ export default {
         phone: '',
         password: '',
         confirmPassword: ''
-      },
-      copyButtonState: 'default' // حالت دکمه: 'default', 'copying', 'success'
+      }
     }
   },
   methods: {
     async copyKeyToClipboard() {
-    // تغییر حالت به "در حال کپی"
-    this.copyButtonState = 'copying';
-    
-    try {
-      // کپی کردن کلید به کلیپ‌بورد
-      await navigator.clipboard.writeText(this.registerSuccessKey);
+      this.copyButtonState = 'copying';
       
-      // تغییر حالت به "موفقیت‌آمیز"
-      this.copyButtonState = 'success';
-      
-      // بعد از 2 ثانیه بازگشت به حالت پیش‌فرض
-      setTimeout(() => {
+      try {
+        await navigator.clipboard.writeText(this.registerSuccessKey);
+        this.copyButtonState = 'success';
+        
+        setTimeout(() => {
+          this.copyButtonState = 'default';
+        }, 2000);
+        
+      } catch (err) {
+        console.error('خطا در کپی کردن:', err);
         this.copyButtonState = 'default';
-      }, 2000);
-      
-    } catch (err) {
-      console.error('خطا در کپی کردن:', err);
-      // در صورت خطا، بازگشت به حالت پیش‌فرض
-      this.copyButtonState = 'default';
-    }
-  },
+      }
+    },
     async handleLogin() {
       try {
         this.isLoading = true
@@ -908,12 +898,10 @@ export default {
           const user = JSON.parse(JSON.stringify(result.user || {}))
           window.api?.setUserData?.(user)
 
-          // پیام کوتاه + اسپینر تمام‌صفحه
           this.notify('success', 'ورود با موفقیت انجام شد', 'login')
           this.isLoggingIn = true
-          this.isLoading = false // دکمه از حالت لودینگ خارج شود
+          this.isLoading = false
 
-          // مکث کوتاه و سپس رفتن به داشبورد
           await new Promise((r) => setTimeout(r, 1200))
           this.$router.push('/')
         } else {
@@ -923,7 +911,6 @@ export default {
         console.error('Login error:', e)
         this.notify('error', 'خطا در ورود به سیستم', 'login')
       } finally {
-        // اگر لاگین موفق باشد overlay روشن می‌ماند تا ریدایرکت؛ در غیر اینصورت خاموش
         if (!this._isBeingDestroyed && !this._isDestroyed && !this._isUnmounted) {
           if (!this.isLoggingIn) this.isLoading = false
         }
@@ -952,17 +939,14 @@ export default {
         const result = await window.api?.registerMember?.(payload)
 
         if (result?.success) {
-          // ذخیره کد بازیابی پس از ثبت‌نام موفق
           this.registerSuccessKey = result.recoveryKey || null
 
-          // پیام موفقیت
           this.notify(
             'success',
             'ثبت‌نام با موفقیت انجام شد. تا لحظاتی دیگر به صفحه ورود منتقل می‌شوید…',
             'register'
           )
 
-          // پاک‌سازی فرم و توقف لودینگ
           this.registerForm = {
             fullName: '',
             username: '',
@@ -973,16 +957,9 @@ export default {
           }
           this.isLoading = false
 
-          // نمایش مودال کد بازیابی
-          if (this.registerSuccessKey) {
-            this.showRecoveryKeyModal = true
-          }
-
-          // مکث کوتاه و سپس سوییچ به فرم ورود
           await new Promise((r) => setTimeout(r, 1600))
           this.isLoginMode = true
 
-          // پیام کوتاه روی فرم ورود
           this.notify('success', 'حساب شما ایجاد شد. اکنون وارد شوید.', 'login')
         } else {
           this.notify('error', result?.error || 'ثبت‌نام ناموفق', 'register')
@@ -1031,7 +1008,6 @@ export default {
 
           if (res.newRecoveryKey) this.registerSuccessKey = res.newRecoveryKey
 
-          // یک مکث کوتاه و سپس بستن مودال و بازگشت به فرم لاگین
           await new Promise((r) => setTimeout(r, 900))
           this.showForgotModal = false
           this.isLoginMode = true
@@ -1048,7 +1024,6 @@ export default {
     },
     toggleMode() {
       this.isLoginMode = !this.isLoginMode
-      // پاک‌سازی پیام‌های قبلی
       this.flash = { type: null, message: '', place: null }
     },
 

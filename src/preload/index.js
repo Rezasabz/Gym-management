@@ -75,7 +75,9 @@ const api = {
   setUserData: (userData) => {
     localStorage.setItem('authToken', 'authenticated')
     localStorage.setItem('userData', JSON.stringify(userData))
-  }
+  },
+
+  sendSMS: (data) => ipcRenderer.invoke('send-sms', data),
 
 }
 

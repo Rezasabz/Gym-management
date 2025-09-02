@@ -7,6 +7,7 @@ const sqlite3 = require('better-sqlite3')
 const fs = require('fs')
 import moment from 'jalali-moment'
 const crypto = require('crypto')
+const https = require('https');
 // import { addUser, updateUser, deleteUser, getUsers } from './database/database.js';
 
 let db
@@ -249,7 +250,7 @@ function createWindow() {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
       nodeIntegration: true,
-      devTools: false
+      devTools: true
     }
   })
 
@@ -1352,6 +1353,50 @@ app.whenReady().then(() => {
       return { success: false, error: err.message }
     }
   })
+
+
+  // ارسال پیامک
+ipcMain.handle('send-sms', async (event, data) => {
+  const { phoneNumbers, message, sendDateTime } = data;
+  
+  return new Promise((resolve, reject) => {
+    try {
+      const token = 'D255EA6F2C882649DCB1846EBCBE826F47947221'; // توکن شما
+      const lineNumber = '98';
+      
+      let url = 'https://portal.amootsms.com/rest/SendSimple';
+      url += '?Token=' + encodeURIComponent(token);
+      url += '&SMSMessageText=' + encodeURIComponent(message);
+      url += '&LineNumber=' + encodeURIComponent(lineNumber);
+      url += '&Mobiles=' + encodeURIComponent(phoneNumbers.join(','));
+      
+      if (sendDateTime) {
+        url += '&SendDateTime=' + encodeURIComponent(sendDateTime);
+      }
+      
+      https.get(url, (resp) => {
+        let data = '';
+        
+        resp.on('data', (chunk) => {
+          data += chunk;
+        });
+        
+        resp.on('end', () => {
+          try {
+            const result = JSON.parse(data);
+            resolve(result);
+          } catch (error) {
+            reject(error);
+          }
+        });
+      }).on("error", (err) => {
+        reject(err);
+      });
+    } catch (error) {
+      reject(error);
+    }
+  });
+});
 
   createWindow()
 
