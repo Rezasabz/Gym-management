@@ -113,6 +113,8 @@ function initDatabase() {
                 lastName TEXT,
                 amount REAL NOT NULL,
                 paymentDate TEXT DEFAULT CURRENT_TIMESTAMP,
+                startDate TEXT,
+                endDate TEXT,
                 paymentMethod TEXT NOT NULL,
                 status TEXT DEFAULT 'pending',
                 FOREIGN KEY (userId) REFERENCES users(id) ON DELETE CASCADE
@@ -133,6 +135,7 @@ function initDatabase() {
                         renewal_date TEXT, -- تاریخ تمدید
                         duration INTEGER, -- مدت‌زمان تمدید (مثلاً 3 ماه)
                         new_expiration_date TEXT, -- تاریخ جدید انقضا
+                        paymentStatus TEXT,
                         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
                     )
                 `)
@@ -171,22 +174,27 @@ function initDatabase() {
   // ایجاد جدول فروش (sales) اگر وجود ندارد
   try {
     const stmt = db.prepare(`
-      CREATE TABLE IF NOT EXISTS sales (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        invoice TEXT,
-        customer TEXT,
-        date TEXT,
-        amount INTEGER,
-        status TEXT,
-        name TEXT
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      )
+  CREATE TABLE IF NOT EXISTS sales (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    invoice TEXT NOT NULL,
+    customer TEXT NOT NULL,
+    date TEXT NOT NULL,
+    amount REAL NOT NULL,
+    paidAmount REAL DEFAULT 0,
+    remainingAmount REAL DEFAULT 0,
+    status TEXT DEFAULT 'در حال پردازش',
+    product TEXT,
+    name TEXT,
+    paymentStatus TEXT DEFAULT 'نقدی',
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  )
     `)
     stmt.run()
     console.log('sales table is ready.')
   } catch (err) {
     console.error('Error creating sales table', err)
   }
+
 
   // try {
   //   db.prepare('ALTER TABLE members ADD COLUMN recovery_key_hash TEXT').run()
@@ -456,9 +464,10 @@ app.whenReady().then(() => {
     }
   })
 
-  // افزودن کاربر جدید
-  ipcMain.handle('add-user-with-payment', async (_, user) => {
-    return new Promise((resolve, reject) => {
+// افزودن کاربر جدید + ثبت همزمان پرداخت (اتمی)
+ipcMain.handle('add-user-with-payment', async (_, user) => {
+  try {
+    const runTx = db.transaction((u) => {
       const {
         firstName,
         lastName,
@@ -467,46 +476,94 @@ app.whenReady().then(() => {
         status,
         emergencyPhone,
         address,
-        registrationDate,
+        registrationDate,   // تاریخ ثبت‌نام (شمسی: jYYYY/jMM/jDD)
         paymentAmount,
         paymentMethod,
-        paymentStatus
-      } = user
+        paymentStatus,
+        // اختیاری‌ها:
+        paymentDate,        // اگر ندهید، از registrationDate یا الان پر می‌شود
+        startDate,          // اگر ندهید، = registrationDate
+        endDate,            // اگر ندهید، از renewal_duration محاسبه می‌شود
+        renewal_duration,   // مدت به ماه (اختیاری، برای محاسبه endDate)
+        expirationDate      // اگر ندهید، با endDateFinal در users ذخیره می‌شود
+      } = u
 
-      db.run(
-        `
-                INSERT INTO users (firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
-            `,
-        [firstName, lastName, memberId, phone, status, emergencyPhone, address, registrationDate],
-        function (err) {
-          if (err) {
-            console.error('Error adding user', err)
-            reject(err)
-          } else {
-            const userId = this.lastID // دریافت شناسه کاربر اضافه شده
+      // تاریخ‌ها را تعیین/محاسبه کن (همه به جلالی)
+      const fmt = 'jYYYY/jMM/jDD'
+      const startDateFinal =
+        startDate?.trim()
+          || registrationDate?.trim()
+          || moment().locale('fa').format(fmt)
 
-            db.run(
-              `
-                        INSERT INTO payments (userId, amount, paymentDate, paymentMethod, status)
-                        VALUES (?, ?, datetime('now'), ?, ?)
-                    `,
-              [userId, paymentAmount, paymentMethod, paymentStatus],
-              function (err) {
-                if (err) {
-                  console.error('Error inserting payment', err)
-                  reject(err)
-                } else {
-                  console.log('User and payment added successfully')
-                  resolve({ userId, paymentId: this.lastID })
-                }
-              }
-            )
-          }
+      let endDateFinal = endDate?.trim()
+      if (!endDateFinal) {
+        const base = moment(startDateFinal, fmt).locale('fa')
+        if (renewal_duration && Number.isFinite(+renewal_duration)) {
+          endDateFinal = base.clone().add(+renewal_duration, 'jMonth').format(fmt)
+        } else {
+          // پیش‌فرض: ۳۰ روز
+          endDateFinal = base.clone().add(30, 'day').format(fmt)
         }
+      }
+
+      const paymentDateFinal =
+        paymentDate?.trim()
+          || registrationDate?.trim()
+          || moment().locale('fa').format(fmt)
+
+      // 1) درج کاربر
+      const insertUser = db.prepare(`
+        INSERT INTO users (
+          firstName, lastName, memberId, phone, status, emergencyPhone, address,
+          registrationDate, renewal_duration, expirationDate
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `)
+
+      const userRes = insertUser.run(
+        firstName ?? null,
+        lastName ?? null,
+        memberId ?? null,
+        phone ?? null,
+        status ?? 'فعال',
+        emergencyPhone ?? null,
+        address ?? null,
+        registrationDate ?? startDateFinal,
+        renewal_duration ?? null,
+        (expirationDate ?? endDateFinal)
       )
+
+      const newUserId = userRes.lastInsertRowid
+
+      // 2) درج پرداخت
+      const insertPayment = db.prepare(`
+        INSERT INTO payments (
+          userId, firstName, lastName, amount, paymentDate, startDate, endDate, paymentMethod, status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `)
+
+      const payRes = insertPayment.run(
+        newUserId,
+        firstName ?? null,
+        lastName ?? null,
+        paymentAmount ?? 0,
+        paymentDateFinal,
+        startDateFinal,
+        endDateFinal,
+        paymentMethod ?? 'نقدی',
+        paymentStatus ?? 'پرداخت شده'
+      )
+
+      return { success: true, userId: newUserId, paymentId: payRes.lastInsertRowid }
     })
-  })
+
+    // اجرای تراکنش
+    return runTx(user)
+  } catch (err) {
+    console.error('add-user-with-payment error:', err)
+    return { success: false, error: err.message }
+  }
+})
+
 
   ipcMain.handle('add-user', async (_, user) => {
     // return new Promise((resolve, reject) => {
@@ -653,37 +710,86 @@ app.whenReady().then(() => {
     })
   })
 
-  // افزودن پرداختی جدید
-  ipcMain.handle('add-payment', async (_, payment) => {
-    // return new Promise((resolve, reject) => {
-    //     const { userId, firstName, lastName, amount, paymentDate, paymentMethod, status } = payment;
-    //     db.run(`
-    //         INSERT INTO payments (userId, firstName, lastName, amount, paymentDate, paymentMethod, status)
-    //         VALUES (?, ?, ?, ?, ?, ?, ?)
-    // `, [userId, firstName, lastName, amount, paymentDate, paymentMethod, status], function(err) {
-    //         if (err) {
-    //             console.error('Error inserting payment', err);
-    //             reject(err); // ارسال خطا به renderer
-    //         } else {
-    //             console.log('Payment added successfully with paymentId:', this.lastID);
-    //             resolve({ success: true, paymentId: this.lastID }); // ارسال نتیجه موفقیت
-    //         }
-    //     });
-    // });
-    return new Promise((resolve, reject) => {
-      const { userId, firstName, lastName, amount, paymentDate, paymentMethod, status } = payment
-      db.prepare(
-        `
-                INSERT INTO payments (userId, firstName, lastName, amount, paymentDate, paymentMethod, status)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-            `
-      ).run(userId, firstName, lastName, amount, paymentDate, paymentMethod, status)
-      resolve({
-        success: true,
-        paymentId: db.prepare('SELECT last_insert_rowid()').get().last_insert_rowid
-      })
-    })
-  })
+// main
+ipcMain.handle('add-payment', async (_, payment) => {
+  try {
+    const {
+      userId,
+      firstName,
+      lastName,
+      amount,
+      paymentDate,     // jYYYY/jMM/jDD (شمسی) - اختیاری
+      startDate,       // jYYYY/jMM/jDD (شمسی) - اختیاری
+      endDate,         // jYYYY/jMM/jDD (شمسی) - اختیاری
+      paymentMethod,
+      status,
+      duration         // اختیاری: مدت به ماه (برای محاسبه endDate در صورت نبود بقیه منابع)
+    } = payment
+
+    const isBlank = (v) => !v || String(v).trim() === ''
+    const fmt = 'jYYYY/jMM/jDD'
+
+    // 1) گرفتن اطلاعات کاربر
+    const user = db.prepare(`SELECT registrationDate, expirationDate FROM users WHERE id = ?`).get(userId)
+    if (!user) return { success: false, error: 'User not found' }
+
+    // 2) آخرین تمدید کاربر
+    const lastRenewal = db.prepare(`
+      SELECT renewal_date, new_expiration_date, duration
+      FROM renewals
+      WHERE user_id = ?
+      ORDER BY id DESC
+      LIMIT 1
+    `).get(userId)
+
+    // 3) تعیین startDate نهایی
+    let startDateFinal = !isBlank(startDate)
+      ? startDate
+      : (lastRenewal?.renewal_date || user.registrationDate || moment().locale('fa').format(fmt))
+
+    // 4) تعیین endDate نهایی
+    let endDateFinal = !isBlank(endDate)
+      ? endDate
+      : (lastRenewal?.new_expiration_date || user.expirationDate || null)
+
+    // اگر هیچ‌کدام نبود و duration داریم، endDate را از startDateFinal محاسبه کن (ماه شمسی)
+    if (isBlank(endDateFinal) && !isBlank(duration)) {
+      const base = moment.from(startDateFinal, 'fa', fmt).locale('fa')
+      endDateFinal = base.clone().add(+duration, 'jMonth').format(fmt)
+    }
+
+    // 5) تعیین paymentDate نهایی
+    const paymentDateFinal = !isBlank(paymentDate)
+      ? paymentDate
+      : (user.registrationDate || moment().locale('fa').format(fmt))
+
+    // 6) درج پرداخت
+    const stmt = db.prepare(`
+      INSERT INTO payments (
+        userId, firstName, lastName, amount, paymentDate, startDate, endDate, paymentMethod, status
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `)
+
+    const res = stmt.run(
+      userId,
+      firstName ?? null,
+      lastName ?? null,
+      amount ?? 0,
+      paymentDateFinal,
+      startDateFinal,
+      endDateFinal,
+      paymentMethod ?? 'کارت',
+      status ?? 'پرداخت شده'
+    )
+
+    return { success: true, paymentId: res.lastInsertRowid, startDate: startDateFinal, endDate: endDateFinal }
+  } catch (err) {
+    console.error('Error inserting payment', err)
+    return { success: false, error: err.message }
+  }
+})
+
+
 
   // ویرایش پرداختی موجود
   ipcMain.handle('edit-payment', async (_, payment) => {
@@ -837,16 +943,16 @@ app.whenReady().then(() => {
   // افزودن تمدید
   ipcMain.handle('add-renewals', async (_, renewal) => {
     try {
-      const { user_id, renewal_date, duration, new_expiration_date } = renewal
+      const { user_id, renewal_date, duration, new_expiration_date, paymentStatus } = renewal
 
       console.log('🟡 دریافت تمدید جدید:', renewal)
 
       const insert = db.prepare(`
-      INSERT INTO renewals (user_id, renewal_date, duration, new_expiration_date)
-      VALUES (?, ?, ?, ?)
+      INSERT INTO renewals (user_id, renewal_date, duration, new_expiration_date, paymentStatus)
+      VALUES (?, ?, ?, ?, ?)
     `)
 
-      insert.run(user_id, renewal_date, duration, new_expiration_date)
+      insert.run(user_id, renewal_date, duration, new_expiration_date, paymentStatus)
 
       const result = db.prepare('SELECT last_insert_rowid() AS id').get()
 
@@ -881,6 +987,24 @@ app.whenReady().then(() => {
       }
     })
   })
+
+  ipcMain.handle('update-payment', async (_, payment) => {
+  return new Promise((resolve, reject) => {
+    try {
+      // آپدیت رکورد پرداخت در پایگاه داده
+      db.prepare(`
+        UPDATE payments
+        SET status = ?, paymentDate = ?
+        WHERE userId = ? AND status = 'پرداخت نشده'
+      `).run(payment.status, payment.paymentDate, payment.userId)
+
+      resolve({ success: true })
+    } catch (error) {
+      reject({ success: false, error: error.message })
+    }
+  })
+})
+
 
   ipcMain.handle('check-user-status', async (_, userId) => {
     const user = db.prepare('SELECT expirationDate FROM users WHERE id = ?').get(userId)
@@ -1016,35 +1140,51 @@ app.whenReady().then(() => {
   })
 
   // add sale
-  ipcMain.handle('add-sale', async (_, saleData) => {
-    try {
-      const stmt = db.prepare(`
-      INSERT INTO sales (invoice, customer, date, amount, status, name)
-      VALUES (?, ?, ?, ?, ?, ?)
-    `)
-      const result = stmt.run(
-        saleData.invoice,
-        saleData.customer,
-        saleData.date,
-        saleData.amount,
-        saleData.status,
-        saleData.name
-      )
-      return { success: true, id: result.lastInsertRowid }
-    } catch (error) {
-      return { success: false, error: error.message }
-    }
-  })
+// در main process
+// اصلاح شده - استفاده از better-sqlite3
+ipcMain.handle('add-sale', async (event, saleData) => {
+  try {
+    const { invoice, customer, date, amount, paidAmount, remainingAmount, status, product, name, paymentStatus } = saleData;
+    
+    const stmt = db.prepare(`
+      INSERT INTO sales (invoice, customer, date, amount, paidAmount, remainingAmount, status, product, name, paymentStatus) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `);
+    
+    const result = stmt.run(
+      invoice, 
+      customer, 
+      date, 
+      amount, 
+      paidAmount, 
+      remainingAmount, 
+      status, 
+      product, 
+      name, 
+      paymentStatus
+    );
+    
+    return { success: true, id: result.lastInsertRowid };
+  } catch (error) {
+    console.error('Error adding sale:', error);
+    return { success: false, error: error.message };
+  }
+});
 
   // fetch sale
-  ipcMain.handle('fetch-sales', async () => {
-    try {
-      const sales = db.prepare('SELECT * FROM sales ORDER BY date DESC').all()
-      return sales
-    } catch (error) {
-      return []
-    }
-  })
+// در main process
+// اصلاح شده - استفاده از better-sqlite3
+ipcMain.handle('fetch-sales', async () => {
+  try {
+    const stmt = db.prepare('SELECT * FROM sales ORDER BY created_at DESC');
+    const sales = stmt.all();
+    console.log('فروش‌های دریافت شده از دیتابیس:', sales);
+    return sales;
+  } catch (error) {
+    console.error('Error fetching sales:', error);
+    return [];
+  }
+});
 
   // fetch sales reports
   ipcMain.handle('fetch-sales-report', async () => {
@@ -1396,6 +1536,51 @@ ipcMain.handle('send-sms', async (event, data) => {
       reject(error);
     }
   });
+});
+
+// در فایل main.js (index.js)
+ipcMain.handle('register-payment', async (event, paymentData) => {
+  try {
+    const { saleId, amount } = paymentData;
+    
+    // ابتدا اطلاعات فروش رو بگیریم
+    const sale = db.prepare('SELECT * FROM sales WHERE id = ?').get(saleId);
+    
+    if (!sale) {
+      return { success: false, error: 'فاکتور یافت نشد' };
+    }
+    
+    // محاسبه مقادیر جدید
+    const newPaidAmount = sale.paidAmount + amount;
+    const newRemainingAmount = Math.max(0, sale.amount - newPaidAmount);
+    
+    // بررسی اگر پرداخت کامل شده
+    let newStatus = sale.status;
+    
+    if (newRemainingAmount <= 0) {
+      newStatus = 'تکمیل شده';
+    }
+    
+    // بروزرسانی رکورد فروش
+    const stmt = db.prepare(`
+      UPDATE sales 
+      SET paidAmount = ?, remainingAmount = ?, status = ?
+      WHERE id = ?
+    `);
+    
+    const result = stmt.run(newPaidAmount, newRemainingAmount, newStatus, saleId);
+    
+    return { 
+      success: true, 
+      changes: result.changes,
+      newPaidAmount,
+      newRemainingAmount
+    };
+    
+  } catch (error) {
+    console.error('Error registering payment:', error);
+    return { success: false, error: error.message };
+  }
 });
 
   createWindow()

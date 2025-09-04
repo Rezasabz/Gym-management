@@ -80,22 +80,81 @@
         <table class="table w-full text-right rtl">
           <thead>
             <tr class="bg-blue-200">
+              <th></th>
               <th>وضعیت</th>
               <th>روش پرداخت</th>
               <th>مبلغ (تومان)</th>
-              <th>تاریخ</th>
+              <th>دوره</th>
+              <th>تاریخ ثبت</th>
               <th>نام و نام خانوادگی</th>
               <th>ردیف</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(payment, index) in paginatedMembers" :key="payment.id" class="hover">
+              <!-- دکمه پرداخت معوقات -->
+              <td class="whitespace-nowrap">
+                <div v-if="payment.status === 'پرداخت نشده'" class="flex justify-start">
+                  <button
+                    @click="handleLatePayment(payment)"
+                    :disabled="isPayingLate(payment)"
+                    class="inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-white bg-gradient-to-r from-emerald-500 via-emerald-600 to-emerald-700 hover:from-emerald-600 hover:via-emerald-700 hover:to-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-300 disabled:opacity-60 disabled:cursor-not-allowed shadow-md transition"
+                    title="تسویه پرداخت عقب‌افتاده"
+                  >
+                    <!-- آیکون کارت -->
+                    <svg
+                      v-if="!isPayingLate(payment)"
+                      class="w-4 h-4"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <path
+                        d="M3 7h18M3 10h18M5 14h6"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                        stroke-linecap="round"
+                      />
+                      <rect
+                        x="3"
+                        y="5"
+                        width="18"
+                        height="14"
+                        rx="2"
+                        stroke="currentColor"
+                        stroke-width="1.6"
+                      />
+                    </svg>
+
+                    <!-- لودینگ -->
+                    <svg v-else class="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                      <circle
+                        class="opacity-30"
+                        cx="12"
+                        cy="12"
+                        r="9"
+                        stroke="currentColor"
+                        stroke-width="3"
+                      />
+                      <path
+                        d="M21 12a9 9 0 0 1-9 9"
+                        stroke="currentColor"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                      />
+                    </svg>
+
+                    <span>{{ isPayingLate(payment) ? 'در حال پردازش...' : 'پرداخت معوقات' }}</span>
+                  </button>
+                </div>
+              </td>
+
+              <!-- وضعیت پرداخت -->
               <td>
                 <div class="flex items-center justify-end">
                   <span
                     :class="{
                       'mr-2 font-semibold text-emerald-500': payment.status === 'پرداخت شده',
-                      'mr-2 font-semibold text-red-500': payment.status !== 'پرداخت شده'
+                      'mr-2 font-semibold text-red-500': payment.status === 'پرداخت نشده'
                     }"
                   >
                     {{ payment.status }}
@@ -105,20 +164,13 @@
                       'badge-dot w-3 h-3 border border-white rounded-full text-xs font-semibold text-white bg-emerald-500':
                         payment.status === 'پرداخت شده',
                       'badge-dot w-3 h-3 border border-white rounded-full text-xs font-semibold text-white bg-red-500':
-                        payment.status !== 'پرداخت شده'
+                        payment.status === 'پرداخت نشده'
                     }"
-                  >
-                  </span>
+                  ></span>
                 </div>
-
-                <!-- <span class="font-semibold" :class="{
-                    'text-xs font-medium me-2 px-2.5 py-0.5 rounded-full shadow-sm': true,
-                    'bg-green-100 text-green-800 dark:bg-green-700 dark:text-green-100': payment.status === 'پرداخت شده',
-                    'bg-red-100 text-red-800 dark:bg-red-700 dark:text-red-100': payment.status !== 'پرداخت شده'
-                  }">{{ payment.status }}</span> -->
-
-                <!-- <span class="font-semibold bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300 shadow-sm shadow-blue-500/50">{{ payment.status }}</span> -->
               </td>
+
+              <!-- روش پرداخت -->
               <td>
                 <span
                   class="badge font-semibold"
@@ -131,11 +183,91 @@
                   {{ payment.paymentMethod === 'کارت' ? 'کارت' : 'نقدی' }}
                 </span>
               </td>
+
+              <!-- مبلغ پرداخت -->
               <td class="font-bold">{{ payment.amount.toLocaleString() }}</td>
+
+              <!-- دوره -->
+              <td class="whitespace-nowrap">
+                <div class="inline-flex items-center gap-1.5 rtl">
+                  <!-- شروع -->
+                  <span
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset bg-blue-50 text-blue-700 ring-blue-200"
+                    :title="formatJalali(payment.startDate) || '—'"
+                  >
+                    <svg
+                      class="w-3.5 h-3.5 ml-1"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M7 2v3M17 2v3M4 8h16M5 5h14a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    {{ formatJalali(payment.startDate) || '—' }}
+                  </span>
+
+                  <!-- فلش بین بازه -->
+                  <svg
+                    class="w-4 h-4 text-gray-400"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M8 5l8 7-8 7"
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+
+                  <!-- پایان -->
+                  <span
+                    class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset"
+                    :class="
+                      isExpired(payment)
+                        ? 'bg-rose-50 text-rose-700 ring-rose-200'
+                        : 'bg-emerald-50 text-emerald-700 ring-emerald-200'
+                    "
+                    :title="formatJalali(payment.endDate) || '—'"
+                  >
+                    <svg
+                      class="w-3.5 h-3.5 ml-1"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M12 6v6l4 2M12 22a10 10 0 1 1 0-20a10 10 0 0 1 0 20Z"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    {{ formatJalali(payment.endDate) || '—' }}
+                  </span>
+                </div>
+              </td>
+
+              <!-- تاریخ پرداخت -->
               <td class="font-bold">{{ payment.paymentDate }}</td>
+
+              <!-- نام و نام خانوادگی -->
               <td class="font-bold">{{ payment.firstName }} {{ payment.lastName }}</td>
+
+              <!-- ردیف -->
               <td class="font-bold">{{ index + 1 }}</td>
             </tr>
+
+            <!-- نمایش پیغام وقتی پرداخت‌ها خالی هستند -->
             <tr v-if="filterPayments.length === 0">
               <td colspan="12" class="text-center font-semibold">
                 <div class="flex justify-center items-center w-full py-8">
@@ -177,7 +309,38 @@
         </table>
       </div>
       <!-- صفحه‌بندی -->
-      <div class="flex justify-center mt-4">
+      <nav class="flex flex-wrap justify-center gap-2 mt-4">
+        <button
+          @click="changePage(currentPage - 1)"
+          :disabled="currentPage === 1"
+          class="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+        >
+          قبلی
+        </button>
+
+        <button
+          v-for="page in totalPages"
+          :key="page"
+          @click="changePage(page)"
+          :class="[
+            'px-3 py-1 border rounded-md text-sm',
+            page === currentPage
+              ? 'border-indigo-500 bg-indigo-100 text-indigo-700'
+              : 'border-gray-300 text-gray-600 hover:bg-gray-100'
+          ]"
+        >
+          {{ page }}
+        </button>
+
+        <button
+          @click="changePage(currentPage + 1)"
+          :disabled="currentPage === totalPages"
+          class="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+        >
+          بعدی
+        </button>
+      </nav>
+      <!-- <div class="flex justify-center mt-4">
         <div class="flex-row">
           <button
             v-for="page in totalPages"
@@ -189,7 +352,7 @@
             {{ page }}
           </button>
         </div>
-      </div>
+      </div> -->
     </div>
 
     <!-- افزوردن پرداخت -->
@@ -419,19 +582,28 @@
 import '@majidh1/jalalidatepicker/dist/jalalidatepicker.min.js'
 import '@majidh1/jalalidatepicker/dist/jalalidatepicker.min.css'
 import * as XLSX from 'xlsx'
+import Swal from 'sweetalert2'
+import moment from 'jalali-moment'
 export default {
   data() {
     return {
+      renewals: [],
+      users: [],
       payments: [],
       isModalOpen: false,
       newPayment: {
+        userId: '',
+        firstName: '',
+        lastName: '',
         amount: '',
         paymentDate: '',
-        paymentMethod: ''
+        paymentMethod: '',
+        status: ''
       },
       searchQueryPayment: '',
       currentPage: 1,
-      pageSize: 10
+      pageSize: 10,
+      isPayingLateId: null
     }
   },
   computed: {
@@ -452,6 +624,28 @@ export default {
     }
   },
   methods: {
+    async fetchRenewals() {
+      try {
+        this.renewals = await window.api.fetchRenewals() // فرض بر این است که یک API برای دریافت renewals دارید
+      } catch (error) {
+        console.error('Error fetching renewals:', error)
+      }
+    },
+    async fetchUsers() {
+      try {
+        this.users = await window.api.getUsers() // فرض بر این است که یک API برای گرفتن اطلاعات کاربران دارید
+      } catch (error) {
+        console.error('Error fetching users:', error)
+      }
+    },
+    showSwal(title, text, icon) {
+      Swal.fire({
+        title: title,
+        text: text,
+        icon: icon,
+        confirmButtonText: 'باشه'
+      })
+    },
     sortData() {
       if (!this.sortColumn) return
 
@@ -533,6 +727,29 @@ export default {
     closeModal() {
       this.isModalOpen = false
     },
+    // 👇 کمکی: تاریخ ورودی رو (اگر جلالی نبود) به جلالی نشون بده
+    formatJalali(dateStr) {
+      if (!dateStr) return ''
+      // اگر خودش جلالی با فرمت jYYYY/jMM/jDD بود، همونو برگردون
+      const isJalali = /^\d{4}\/\d{2}\/\d{2}$/.test(String(dateStr))
+      if (isJalali) return dateStr
+      // در غیر این صورت تلاش به تبدیل
+      try {
+        return moment(dateStr).locale('fa').format('jYYYY/jMM/jDD')
+      } catch {
+        return String(dateStr || '')
+      }
+    },
+
+    // 👇 این همون رشته‌ی «start - end» رو می‌سازه
+    makePeriod(payment) {
+      const s = this.formatJalali(payment.startDate)
+      const e = this.formatJalali(payment.endDate)
+      if (s && e) return `${s} - ${e}`
+      if (s) return `${s} - ...`
+      if (e) return `... - ${e}`
+      return '—'
+    },
     async fetchPayments() {
       try {
         this.payments = await window.api.getPayments()
@@ -554,10 +771,171 @@ export default {
       } catch (error) {
         console.error('Failed to add payment:', error)
       }
+    },
+    async handleLatePayment(payment) {
+      try {
+        // نمایش مدال تایید
+        const result = await Swal.fire({
+          title: 'آیا مطمئنید؟',
+          text: 'آیا می‌خواهید پرداخت معوقات را انجام دهید؟',
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonText: 'بله',
+          cancelButtonText: 'خیر'
+        })
+
+        // اگر کاربر تایید کرد، عملیات ادامه پیدا می‌کند
+        if (result.isConfirmed) {
+          this.isPayingLateId = this._pid(payment)
+
+          const todayJalali = moment().locale('fa').format('jYYYY/jMM/jDD') // تاریخ شمسی امروز
+
+          // چک کردن اگر پرداخت معوقات قبلاً وجود داشته باشد
+          const existingPayment = this.payments.find(
+            (p) => p.userId === payment.userId && p.status === 'پرداخت نشده'
+          )
+
+          if (existingPayment) {
+            // به‌روزرسانی رکورد پرداخت معوقات
+            const updatedPayment = {
+              ...existingPayment,
+              status: 'پرداخت شده', // تغییر وضعیت
+              paymentDate: todayJalali // بروزرسانی تاریخ پرداخت به تاریخ شمسی
+            }
+
+            // آپدیت پرداخت در دیتابیس
+            const result = await window.api.updatePayment(updatedPayment)
+            if (result.success) {
+              // به‌روزرسانی وضعیت پرداخت در UI
+              existingPayment.status = 'پرداخت شده'
+              existingPayment.paymentDate = todayJalali // بروزرسانی تاریخ پرداخت در UI
+            }
+          } else {
+            // اگر رکورد معوقات وجود نداشت، ثبت رکورد جدید
+            const newPayment = {
+              userId: payment.userId,
+              amount: payment.amount,
+              paymentDate: todayJalali, // تاریخ شمسی جدید
+              paymentMethod: 'کارت',
+              status: 'پرداخت شده'
+            }
+
+            await window.api.addPayment(newPayment) // افزودن پرداخت جدید
+          }
+
+          // آپدیت وضعیت کاربر
+          await window.api.updateUserStatus({ userId: payment.userId, status: 'فعال' })
+
+          this.showSwal('موفقیت', 'پرداخت معوقات با موفقیت انجام شد.', 'success')
+
+          // بارگذاری مجدد پرداخت‌ها
+          await this.fetchPayments()
+        }
+      } catch (err) {
+        console.error('Error handling late payment:', err)
+        this.showSwal('خطا', 'مشکلی در ثبت پرداخت معوقات پیش آمد.', 'error')
+      } finally {
+        this.isPayingLateId = null
+      }
+    },
+    getPaymentPeriod(userId) {
+      const user = this.users?.find((u) => u.id === userId) // استفاده از optional chaining
+      if (!user) return 'اطلاعات یافت نشد'
+
+      const lastRenewal = this.renewals
+        .filter((r) => r.user_id === user.id)
+        .sort(
+          (a, b) =>
+            moment(b.new_expiration_date, 'fa', 'jYYYY/jMM/jDD').valueOf() -
+            moment(a.new_expiration_date, 'fa', 'jYYYY/jMM/jDD').valueOf()
+        )[0]
+
+      if (lastRenewal) {
+        const startDate = moment
+          .from(lastRenewal.renewal_date, 'fa', 'jYYYY/jMM/jDD')
+          .locale('fa')
+          .format('jYYYY/jMM/jDD')
+        const endDate = moment
+          .from(lastRenewal.new_expiration_date, 'fa', 'jYYYY/jMM/jDD')
+          .locale('fa')
+          .format('jYYYY/jMM/jDD')
+        return `از ${startDate} تا ${endDate}`
+      }
+      return 'بدون تمدید'
+    },
+    async updateUserStatus(userId, status) {
+      try {
+        // فرض کنید این متد یک درخواست API ارسال می‌کند
+        await window.api.updateUserStatus(userId, status)
+        console.log(`User status updated to: ${status}`)
+      } catch (error) {
+        console.error('Error updating user status:', error)
+      }
+    },
+    changePage(page) {
+      // گاردهای ساده
+      if (!page || page < 1 || page > this.totalPages) return
+      this.currentPage = page
+    },
+    isExpired(payment) {
+      if (!payment?.endDate) return false
+      try {
+        const end = moment(String(payment.endDate)).locale('en') // اگه endDate میلادیه
+        // اگه جلالی ذخیره می‌کنی، از این یکی استفاده کن:
+        // const end = moment.from(payment.endDate, 'fa', 'jYYYY/jMM/jDD').locale('en');
+        return moment().isAfter(end)
+      } catch {
+        return false
+      }
+    },
+    isExpired(payment) {
+      if (!payment?.endDate) return false
+      try {
+        const end = moment(String(payment.endDate)).locale('en') // اگه endDate میلادیه
+        // اگه جلالی ذخیره می‌کنی، از این یکی استفاده کن:
+        // const end = moment.from(payment.endDate, 'fa', 'jYYYY/jMM/jDD').locale('en');
+        return moment().isAfter(end)
+      } catch {
+        return false
+      }
+    },
+    _pid(p) {
+      return p?.paymentId ?? p?.id
+    },
+    isPayingLate(payment) {
+      return this.isPayingLateId === this._pid(payment)
     }
+
+    // async handleLatePayment(payment) {
+    //   try {
+    //     this.isPayingLateId = this._pid(payment)
+
+    //     const resPayment = await window.api.addPayment({
+    //       userId: payment.userId,
+    //       amount: payment.amount,
+    //       paymentDate: new Date().toISOString(),
+    //       paymentMethod: 'کارت',
+    //       status: 'پرداخت شده'
+    //     })
+
+    //     // آپدیت UI
+    //     payment.status = 'پرداخت شده'
+    //     await this.updateUserStatus(payment.userId, 'فعال')
+
+    //     this.showSwal('موفقیت', 'پرداخت معوقات با موفقیت انجام شد.', 'success')
+    //     await this.fetchPayments()
+    //   } catch (err) {
+    //     console.error('Error handling late payment:', err)
+    //     this.showSwal('خطا', 'مشکلی در ثبت پرداخت معوقات پیش آمد.', 'error')
+    //   } finally {
+    //     this.isPayingLateId = null
+    //   }
+    // }
   },
   async mounted() {
+    await this.fetchRenewals()
     await this.fetchPayments()
+    await this.fetchUsers() // بارگذاری اطلاعات کاربران
     console.log('----------- ', this.payments)
     jalaliDatepicker.startWatch()
   }

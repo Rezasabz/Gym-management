@@ -687,82 +687,149 @@
           @close="closeDetailsModal"
         />
         <!-- تمدید کاربر -->
-        <dialog v-if="showRenewalModal" className="modal modal-open">
-          <div class="modal-box w-11/12 max-w-3xl">
-            <h3 class="font-bold text-lg">تمدید</h3>
-            <h4>{{ userToRenewal.firstName }} {{ userToRenewal.lastName }}</h4>
-            <div className="divider"></div>
-            <form @submit.prevent="submitFormRenewal">
-              <div class="grid md:grid-cols-3 gap-4">
-                <div class="form-control mb-8">
-                  <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-                    <span class="label-text">مبلغ</span>
-                  </label>
-                  <input
-                    type="text"
-                    v-model="renewal_payment"
-                    dir="rtl"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                    disabled
-                    readonly
-                  />
+        <div v-if="showRenewalModal" class="modal modal-open" dir="rtl">
+          <div class="modal-box w-11/12 max-w-4xl p-0 overflow-hidden">
+            <div class="bg-gradient-to-l from-blue-600 to-blue-800 text-white p-6">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <i class="fas fa-calendar-plus text-2xl"></i>
+                  <h3 class="text-xl font-bold">تمدید اشتراک</h3>
                 </div>
-
-                <div class="form-control">
-                  <label class="block mb-2 text-sm font-medium text-gray-900">
-                    <span class="label-text">تاریخ تمدید</span>
-                  </label>
-                  <input
-                    v-model="obj_renewals.renewal_date"
-                    class="block w-full p-4 text-gray-900 rounded-xl bg-gray-100 text-xs font-semibold"
-                    disabled
-                    readonly
-                  />
-                </div>
-
-                <!-- </div> -->
-                <!-- <div class="grid md:grid-cols-1 gap-4"> -->
-                <!-- <div class="mt-4 mb-4">
-                        <label for="countries" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">روش پرداخت</label>
-                        <select id="countries" v-model="obj_renewals.paymentMethod" class="bg-gray-100 text-gray-900 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 custom-rtl">
-                            <option value="کارت">کارت</option>
-                            <option value="نقدی">نقدی</option>
-                        </select>
-                    </div> -->
-
-                <div class="form-control">
-                  <label for="countries" class="block mb-2 text-sm font-medium text-gray-900"
-                    >مدت زمان دوره</label
-                  >
-                  <select
-                    id="countries"
-                    v-model="obj_renewals.duration"
-                    dir="rtl"
-                    class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                  >
-                    <option value="1">1 ماهه</option>
-                    <option value="2">2 ماهه</option>
-                  </select>
-                </div>
-              </div>
-              <div class="flex justify-center items-center modal-action mt-4">
-                <button
-                  type="button"
-                  class="btn-wide text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-300/50 dark:shadow-lg dark:shadow-red-300/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-                  @click="closeRenewalModal"
-                >
-                  بستن
-                </button>
-                <button
-                  type="submit"
-                  class="btn-wide text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-300/50 dark:shadow-lg dark:shadow-blue-300/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
-                >
-                  ثبت
+                <button class="btn btn-ghost btn-circle text-white" @click="closeRenewalModal">
+                  <i class="fas fa-times"></i>
                 </button>
               </div>
-            </form>
+              <div class="mt-2 flex items-center gap-2">
+                <i class="fas fa-user-circle"></i>
+                <span class="font-semibold"
+                  >{{ userToRenewal.firstName }} {{ userToRenewal.lastName }}</span
+                >
+                <span class="badge badge-accent badge-outline"
+                  >شماره عضویت: {{ userToRenewal.memberId }}</span
+                >
+              </div>
+            </div>
+
+            <div class="p-6">
+              <form @submit.prevent="submitFormRenewal">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-6">
+                  <!-- مبلغ -->
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text font-semibold">مبلغ تمدید (تومان)</span>
+                    </label>
+                    <div class="relative">
+                      <input
+                        type="text"
+                        v-model="renewal_payment"
+                        class="input input-bordered w-full pl-10 text-left font-mono bg-gray-50"
+                        disabled
+                        readonly
+                      />
+                      <span class="absolute left-3 top-3 text-gray-500">
+                        <i class="fas fa-money-bill-wave"></i>
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- تاریخ تمدید -->
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text font-semibold">تاریخ تمدید</span>
+                    </label>
+                    <div class="relative">
+                      <input
+                        v-model="obj_renewals.renewal_date"
+                        class="input input-bordered w-full pl-10 bg-gray-50"
+                        disabled
+                        readonly
+                      />
+                      <span class="absolute left-3 top-3 text-gray-500">
+                        <i class="fas fa-calendar-day"></i>
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- مدت زمان دوره -->
+                  <div class="form-control">
+                    <label class="label">
+                      <span class="label-text font-semibold">مدت زمان دوره</span>
+                    </label>
+                    <div class="relative">
+                      <select
+                        v-model="obj_renewals.duration"
+                        class="select select-bordered w-full pl-10"
+                      >
+                        <option value="1">1 ماهه</option>
+                        <option value="2">2 ماهه</option>
+                      </select>
+                      <span class="absolute left-3 top-3 text-gray-500">
+                        <i class="fas fa-clock"></i>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="form-control">
+                    <label class="label-text font-semibold mb-2">وضعیت پرداخت</label>
+                    <select
+                      v-model="obj_renewals.paymentStatus"
+                      id="payment-status"
+                      class="select select-bordered w-full pl-10"
+                    >
+                      <option value="پرداخت شده">پرداخت شده</option>
+                      <option value="پرداخت نشده">پرداخت نشده</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- اطلاعات اضافی -->
+                <div class="bg-blue-50 rounded-xl p-4 mb-6">
+                  <div class="flex items-center gap-2 mb-2">
+                    <i class="fas fa-info-circle text-blue-600"></i>
+                    <span class="font-semibold text-blue-800">اطلاعات تمدید</span>
+                  </div>
+                  <div class="grid grid-cols-2 gap-4 text-sm">
+                    <div class="flex justify-between">
+                      <span>تاریخ انقضای فعلی:</span>
+                      <span class="font-semibold">{{ userToRenewal.expirationDate }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>وضعیت فعلی:</span>
+                      <span
+                        :class="
+                          userToRenewal.status === 'فعال'
+                            ? 'text-green-600 font-semibold'
+                            : 'text-red-600 font-semibold'
+                        "
+                      >
+                        {{ userToRenewal.status }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- دکمه‌های اقدام -->
+                <div class="modal-action justify-center gap-3 mt-2">
+                  <button
+                    type="button"
+                    class="btn-wide text-white bg-gradient-to-r from-red-500 via-red-600 to-red-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-300/50 dark:shadow-lg dark:shadow-red-300/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                    @click="closeRenewalModal"
+                  >
+                    <i class="fas fa-times"></i>
+                    انصراف
+                  </button>
+                  <button
+                    type="submit"
+                    class="btn-wide text-white bg-gradient-to-r from-green-500 via-green-600 to-green-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-300/50 dark:shadow-lg dark:shadow-green-300/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2"
+                  >
+                    <i class="fas fa-check"></i>
+                    تأیید تمدید
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-        </dialog>
+        </div>
       </div>
     </div>
   </div>
@@ -818,7 +885,8 @@ export default {
         userId: '',
         renewal_date: '',
         duration: '1',
-        new_expiration_date: ''
+        new_expiration_date: '',
+        paymentStatus: 'پرداخت شده'
       },
       progress: 0, // مقدار اولیه پراگرس بار
       expirationDateMiladi: null,
@@ -1175,6 +1243,11 @@ export default {
     async fetchUsers() {
       try {
         this.users = await window.api.getUsers()
+
+        // بررسی وضعیت انقضای هر کاربر
+        this.users.forEach((user) => {
+          this.checkAndUpdateUserStatus(user.id)
+        })
       } catch (error) {
         console.error('Error fetching users:', error)
       }
@@ -1372,6 +1445,8 @@ export default {
             lastName: this.newUser.lastName,
             amount: this.newUser.paymentAmount,
             paymentDate: this.newUser.registrationDate,
+            startDate: this.newUser.registrationDate,
+            endDate: this.newUser.expirationDate,
             paymentMethod: this.newUser.paymentMethod,
             status: this.newUser.paymentStatus
           })
@@ -1454,18 +1529,20 @@ export default {
       this.showRenewalModal = false
     },
     async submitFormRenewal() {
-      console.log('this.userToRenewal.id ==> ', this.renewal_user_id) // باید "1" را چاپ کند
+      // این متد فقط زمانی فراخوانی می‌شود که کاربر روی دکمه "ثبت" کلیک کند
+      console.log('this.userToRenewal.id ==> ', this.renewal_user_id)
 
       console.log('🔁 ارسال به جدول renewals:', {
         user_id: this.renewal_user_id,
         renewal_date: this.obj_renewals.renewal_date,
         duration: this.obj_renewals.duration,
-        new_expiration_date: this.obj_renewals.new_expiration_date
+        new_expiration_date: this.obj_renewals.new_expiration_date,
+        paymentStatus: this.obj_renewals.paymentStatus
       })
 
       await this.addRenewals()
-      await this.fetchUsers() // برای بروزرسانی جدول کاربران در UI
-      await this.closeRenewalModal()
+      await this.fetchUsers()
+      await this.closeRenewalModal() // پس از ثبت موفق، مدال بسته می‌شود
     },
     async addRenewals() {
       console.log('🚀 ارسال تمدید:', this.obj_renewals)
@@ -1474,10 +1551,26 @@ export default {
         user_id: this.renewal_user_id,
         renewal_date: this.obj_renewals.renewal_date,
         duration: this.obj_renewals.duration,
-        new_expiration_date: this.obj_renewals.new_expiration_date
+        new_expiration_date: this.obj_renewals.new_expiration_date,
+        paymentStatus: this.obj_renewals.paymentStatus
       })
 
       if (response.success) {
+        // افزودن رکورد پرداخت جدید مشابه به آنچه که در هنگام افزودن کاربر جدید انجام می‌دهید
+        await window.api.addPayment({
+          userId: this.renewal_user_id, // آیدی کاربری که تمدید می‌شود
+          firstName: this.userToRenewal.firstName, // نام کاربر
+          lastName: this.userToRenewal.lastName, // نام خانوادگی کاربر
+          amount: 500000, // مبلغ پرداختی که برای تمدید وارد شده است
+          paymentDate: this.obj_renewals.renewal_date, // تاریخ تمدید
+          paymentMethod: '', // استفاده از روش پرداخت انتخابی
+          status: this.obj_renewals.paymentStatus // وضعیت پرداخت (پرداخت شده یا پرداخت نشده)
+        })
+
+        await window.api.updateUserStatus({
+          userId: this.renewal_user_id,
+          status: 'فعال' // تغییر وضعیت به "فعال" بعد از تمدید
+        })
         // 🔁 به‌روزرسانی users.expirationDate
         await window.api.updateUserExpiration({
           id: this.renewal_user_id,
@@ -1491,9 +1584,29 @@ export default {
       }
     },
     async checkAndUpdateUserStatus(userId) {
-      const response = await window.api.checkUserStatus(userId)
-      if (response.success) {
-        this.updateUserStatus(userId, response.status) // وضعیت جدید را به‌روزرسانی کن
+      try {
+        const user = this.users.find((u) => u.id === userId)
+        if (!user || !user.expirationDate) return
+
+        // تبدیل تاریخ انقضای شمسی به میلادی
+        const expirationMiladi = moment
+          .from(user.expirationDate, 'fa', 'jYYYY/jMM/jDD')
+          .locale('en')
+        const currentDate = moment()
+
+        // اگر تاریخ امروز بعد از تاریخ انقضا باشد
+        if (currentDate.isAfter(expirationMiladi)) {
+          // به‌روزرسانی وضعیت در UI
+          user.status = 'منقضی‌شده'
+
+          // به‌روزرسانی وضعیت در دیتابیس
+          await window.api.updateUserStatus({
+            userId: user.id,
+            status: 'منقضی‌شده'
+          })
+        }
+      } catch (error) {
+        console.error('Error checking user status:', error)
       }
     },
 
@@ -1526,17 +1639,31 @@ export default {
       //   hideAfterChange: true,
       //   container: "#my-datepicker-wrapper"
     })
-    for (const user of this.users) {
-      await this.checkAndUpdateUserStatus(user.id)
-    }
+    // for (const user of this.users) {
+    //   await this.checkAndUpdateUserStatus(user.id)
+    // }
+
+    // بررسی وضعیت همه کاربران
+    this.users.forEach((user) => {
+      this.checkAndUpdateUserStatus(user.id)
+    })
 
     this.renewals = await window.api.fetchRenewals()
   },
   watch: {
-    // اگر تاریخ ثبت‌نام تغییر کند، دوباره پراگرس بار را به‌روز می‌کنیم
+    // Watcher برای $route (با syntax معمولی)
+    $route(to, from) {
+      // وقتی کاربر به این صفحه برمی‌گردد، وضعیت را بررسی کن
+      if (to.name === 'users-page') {
+        this.fetchUsers()
+      }
+    },
+
+    // Watcher برای properties دیگر (با syntax تابع)
     'newUser.registrationDate': function () {
       this.calculateProgress()
     },
+
     'newUser.renewal_duration': function () {
       this.calculateExpirationDate()
     }
