@@ -1,25 +1,107 @@
-import { contextBridge } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import { electronAPI } from '@electron-toolkit/preload'
 
-
 // Custom APIs for renderer
-const api = {}
+// const api = {}
+// توابع سفارشی برای پردازش رندر
+const api = {
+
+  // توابع احراز هویت
+  loginUser: (loginData) => ipcRenderer.invoke('login-user', loginData),
+  registerMember: (memberData) => ipcRenderer.invoke('register-member', memberData),
+  resetPasswordWithRecoveryKey: (payload) => ipcRenderer.invoke('reset-password-with-recovery-key', payload),
+  
+  // توابع مدیریت ادمین
+  fetchAdmins: () => ipcRenderer.invoke('fetch-admins'),
+  addAdmin: (adminData) => ipcRenderer.invoke('add-admin', adminData),
+  updateAdmin: (adminData) => ipcRenderer.invoke('update-admin', adminData),
+  changeAdminPassword: (passwordData) => ipcRenderer.invoke('change-admin-password', passwordData),
+  deleteAdmin: (adminId) => ipcRenderer.invoke('delete-admin', adminId),
+
+  invoke: (channel, data) => ipcRenderer.invoke(channel, data),
+  getUsers: () => ipcRenderer.invoke('fetch-users'),
+  getUserStatus: (userId) => ipcRenderer.invoke('get-user-status', userId),
+  addUser: (newUser) => ipcRenderer.invoke('add-user', newUser),
+  updateUser: (updatedUser) => ipcRenderer.invoke('update-user', updatedUser),
+  updateUserExpiration: (payload) => ipcRenderer.invoke('update-user-expiration', payload),
+  deleteUser: (userId) => ipcRenderer.invoke('delete-user', userId),
+  addPayment: (paymentData) => ipcRenderer.invoke('add-payment', paymentData),
+  getPayments: () => ipcRenderer.invoke('fetch-payments'),
+  editPayments: (editPayments) => ipcRenderer.invoke('edit-payment', editPayments),
+  // افزودن کاربر همراه با اطلاعات پرداخت
+  addUserWithPayment: (userData) => ipcRenderer.invoke('add-user-with-payment', userData),
+
+  updatePayment: (payment) => ipcRenderer.invoke('update-payment', payment),
+  registerPayment: (data) => ipcRenderer.invoke('register-payment', data),
+  // ویرایش کاربر همراه با اطلاعات پرداخت
+  updateUserWithPayment: (userData) => ipcRenderer.invoke('update-user-with-payment', userData),
+  // دریافت جدیدترین اعضا
+  getLatestUsers: () => ipcRenderer.invoke('fetch-new-users'),
+  fetchActiveMembersCount: () => ipcRenderer.invoke('fetch-active-members-count'),
+  fetchDebtors: () => ipcRenderer.invoke('fetch-debtors'),
+  fetchCurrentMonthRevenue: () => ipcRenderer.invoke('fetch-current-month-revenue'),
+  fetchNewMembersCount: () => ipcRenderer.invoke('fetch-new-members-count'),
+  addRenewals: (renewal) => ipcRenderer.invoke('add-renewals', renewal),
+  updateUserStatus: (userId, status) => ipcRenderer.invoke('update-user-status', userId, status),
+  checkUserStatus: (userId) => ipcRenderer.invoke('check-user-status', userId),
+  fetchRenewals: () => ipcRenderer.invoke('fetch-renewals')
+  ,
+  // محصولات
+  addProduct: (currentProduct) => ipcRenderer.invoke('add-product', currentProduct),
+  fetchProducts: () => ipcRenderer.invoke('fetch-products'),
+  updateProduct: (currentProduct) => ipcRenderer.invoke('update-product', currentProduct),
+  deleteProduct: (productId) => ipcRenderer.invoke('delete-product', productId),
+  
+  // sales
+  addSale: (sale) => ipcRenderer.invoke('add-sale', sale),
+  fetchSales: () => ipcRenderer.invoke('fetch-sales'),
+  fetchSalesReport: () => ipcRenderer.invoke('fetch-sales-report'),
+
+  // مدیریت وضعیت لاگین
+  logout: () => {
+    localStorage.removeItem('authToken')
+    localStorage.removeItem('userData')
+  },
+  
+  // بررسی وضعیت لاگین
+  isLoggedIn: () => {
+    return !!localStorage.getItem('authToken')
+  },
+  
+  // دریافت اطلاعات کاربر
+  getUserData: () => {
+    const userData = localStorage.getItem('userData')
+    return userData ? JSON.parse(userData) : null
+  },
+  
+  // ذخیره اطلاعات کاربر پس از لاگین
+  setUserData: (userData) => {
+    localStorage.setItem('authToken', 'authenticated')
+    localStorage.setItem('userData', JSON.stringify(userData))
+  },
+
+  sendSMS: (data) => ipcRenderer.invoke('send-sms', data),
+
+}
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
 // just add to the DOM global.
 if (process.contextIsolated) {
-    try {
-        contextBridge.exposeInMainWorld('electron', electronAPI)
-        contextBridge.exposeInMainWorld('api', api)
-    } catch (error) {
-        console.error(error)
-    }
+  try {
+    contextBridge.exposeInMainWorld('electron', electronAPI)
+    contextBridge.exposeInMainWorld('api', api)
+  } catch (error) {
+    console.error(error)
+  }
 } else {
-    window.electron = electronAPI
-    window.api = api
+  window.electron = electronAPI
+  window.api = api
 }
 
+// contextBridge.exposeInMainWorld('electron', {
+//     invoke: (channel, data) => ipcRenderer.invoke(channel, data)
+// });
 // در دسترس قرار دادن توابع از پردازش اصلی به پردازش رندر
 // contextBridge.exposeInMainWorld('electron', {
 //     getUsers: () => ipcRenderer.invoke('get-users'),
