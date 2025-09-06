@@ -1,6 +1,6 @@
 {
     "name": "gym-management",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "productName": "Gym Management",
     "description": "A desktop application for managing gym members, subscriptions, and payments.",
     "main": "./out/main/index.js",

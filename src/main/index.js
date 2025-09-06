@@ -258,7 +258,7 @@ function createWindow() {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
       nodeIntegration: true,
-      devTools: true
+      devTools: false
     }
   })
 

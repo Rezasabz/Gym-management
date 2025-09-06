@@ -584,71 +584,78 @@
                     </div>
                   </div>
 
-<div class="grid md:grid-cols-2 gap-4 mt-4">
-  <div class="form-control">
-    <label class="block mb-2 text-sm font-medium text-gray-900">مبلغ کل (تومان)</label>
-    <input
-      dir="rtl"
-      type="number"
-      v-model="newSale.amount"
-      @change="updatePaymentFields"
-      class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-      placeholder="مبلغ کل"
-      required
-      readonly 
-    />
-  </div>
-  <div class="form-control">
-    <label class="block mb-2 text-sm font-medium text-gray-900">نوع پرداخت</label>
-    <select
-      dir="rtl"
-      v-model="newSale.paymentStatus"
-      @change="updatePaymentFields"
-      class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-      required
-    >
-      <option value="نقدی">نقدی (پرداخت کامل)</option>
-      <option value="پرداخت قسطی">پرداخت قسطی</option>
-    </select>
-  </div>
-</div>
+                  <div class="grid md:grid-cols-2 gap-4 mt-4">
+                    <div class="form-control">
+                      <label class="block mb-2 text-sm font-medium text-gray-900"
+                        >مبلغ کل (تومان)</label
+                      >
+                      <input
+                        dir="rtl"
+                        type="number"
+                        v-model="newSale.amount"
+                        @change="updatePaymentFields"
+                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="مبلغ کل"
+                        required
+                        readonly
+                      />
+                    </div>
+                    <div class="form-control">
+                      <label class="block mb-2 text-sm font-medium text-gray-900">نوع پرداخت</label>
+                      <select
+                        dir="rtl"
+                        v-model="newSale.paymentStatus"
+                        @change="updatePaymentFields"
+                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        required
+                      >
+                        <option value="نقدی">نقدی (پرداخت کامل)</option>
+                        <option value="پرداخت قسطی">پرداخت قسطی</option>
+                      </select>
+                    </div>
+                  </div>
 
-
-<div v-if="newSale.paymentStatus === 'پرداخت قسطی'" class="grid md:grid-cols-2 gap-4 mt-4">
-    <div class="form-control">
-    <label class="block mb-2 text-sm font-medium text-gray-900">مبلغ باقیمانده (تومان)</label>
-    <input
-      dir="rtl"
-      type="number"
-      :value="newSale.remainingAmount"
-      class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-100"
-      placeholder="مبلغ باقیمانده"
-      readonly
-    />
-    <p class="text-xs text-gray-500 mt-1" v-if="newSale.remainingAmount > 0">
-      وضعیت: پرداخت نشده
-    </p>
-    <p class="text-xs text-green-500 mt-1" v-else>
-      وضعیت: تکمیل شده
-    </p>
-  </div>
-  <div class="form-control">
-    <label class="block mb-2 text-sm font-medium text-gray-900">مبلغ پرداخت شده (تومان)</label>
-    <input
-      dir="rtl"
-      type="number"
-      v-model="newSale.paidAmount"
-      @input="updateRemainingAmount"
-      :max="newSale.amount"
-      :min="0"
-      class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-      placeholder="مبلغ پرداخت شده"
-      required
-    />
-    <p class="text-xs text-gray-500 mt-1">حداکثر: {{ newSale.amount.toLocaleString('fa-IR') }} تومان</p>
-  </div>
-
-</div>
+                  <div
+                    v-if="newSale.paymentStatus === 'پرداخت قسطی'"
+                    class="grid md:grid-cols-2 gap-4 mt-4"
+                  >
+                    <div class="form-control">
+                      <label class="block mb-2 text-sm font-medium text-gray-900"
+                        >مبلغ باقیمانده (تومان)</label
+                      >
+                      <input
+                        dir="rtl"
+                        type="number"
+                        :value="newSale.remainingAmount"
+                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 bg-gray-100"
+                        placeholder="مبلغ باقیمانده"
+                        readonly
+                      />
+                      <p class="text-xs text-gray-500 mt-1" v-if="newSale.remainingAmount > 0">
+                        وضعیت: پرداخت نشده
+                      </p>
+                      <p class="text-xs text-green-500 mt-1" v-else>وضعیت: تکمیل شده</p>
+                    </div>
+                    <div class="form-control">
+                      <label class="block mb-2 text-sm font-medium text-gray-900"
+                        >مبلغ پرداخت شده (تومان)</label
+                      >
+                      <input
+                        dir="rtl"
+                        type="number"
+                        v-model="newSale.paidAmount"
+                        @input="updateRemainingAmount"
+                        :max="newSale.amount"
+                        :min="0"
+                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm h-11 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                        placeholder="مبلغ پرداخت شده"
+                        required
+                      />
+                      <p class="text-xs text-gray-500 mt-1">
+                        حداکثر: {{ newSale.amount.toLocaleString('fa-IR') }} تومان
+                      </p>
+                    </div>
+                  </div>
 
                   <div class="flex justify-center items-center modal-action mt-6">
                     <button
@@ -786,6 +793,29 @@
           </div>
 
           <!-- جدول فروش اخیر -->
+          <div class="relative w-full mb-6">
+            <div class="absolute left-3 top-3 text-black-500">
+              <svg
+                class="h-6 w-6"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  fill-rule="evenodd"
+                  clip-rule="evenodd"
+                  d="M11.5 2.75C6.66751 2.75 2.75 6.66751 2.75 11.5C2.75 16.3325 6.66751 20.25 11.5 20.25C16.3325 20.25 20.25 16.3325 20.25 11.5C20.25 6.66751 16.3325 2.75 11.5 2.75ZM1.25 11.5C1.25 5.83908 5.83908 1.25 11.5 1.25C17.1609 1.25 21.75 5.83908 21.75 11.5C21.75 14.0605 20.8111 16.4017 19.2589 18.1982L22.5303 21.4697C22.8232 21.7626 22.8232 22.2374 22.5303 22.5303C22.2374 22.8232 21.7626 22.8232 21.4697 22.5303L18.1982 19.2589C16.4017 20.8111 14.0605 21.75 11.5 21.75C5.83908 21.75 1.25 17.1609 1.25 11.5Z"
+                  fill="rgb(59, 130, 246)"
+                />
+              </svg>
+            </div>
+            <input
+              v-model="searchQueryBill"
+              type="text"
+              placeholder="جستجو براساس نام مشتری..."
+              class="input input-bordered w-full input input-bordered w-full pl-12 bg-white border-black-200 focus:border-black-400 focus:ring-2 focus:ring-black-200 custom-rtl"
+            />
+          </div>
           <div class="bg-white shadow rounded-lg overflow-hidden">
             <div class="px-6 py-4 border-b border-gray-200">
               <h3 class="text-lg font-medium text-gray-900">فروش اخیر</h3>
@@ -835,7 +865,7 @@
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                  <tr v-for="(sale, index) in paginatedSales" :key="sale.id">
+                  <tr v-for="(sale, index) in paginatedBills" :key="sale.id">
                     <td class="px-6 py-4 whitespace-nowrap">
                       <div class="text-sm font-medium text-gray-900">
                         {{ index + 1 + (currentPageRecentSales - 1) * itemsPerPageRecentSales }}
@@ -907,10 +937,10 @@
               </span>
               تا
               <span class="font-medium">
-                {{ Math.min(currentPageRecentSales * itemsPerPageRecentSales, sales.length) }}
+                {{ Math.min(currentPageRecentSales * itemsPerPageRecentSales, filterBills.length) }}
               </span>
               از
-              <span class="font-medium">{{ sales.length }}</span>
+              <span class="font-medium">{{ filterBills.length }}</span>
               نتیجه
             </div>
 
@@ -924,7 +954,7 @@
               </button>
 
               <button
-                v-for="page in totalPagesSale"
+                v-for="page in totalPagesBills"
                 :key="page"
                 @click="changePageSales(page)"
                 :class="[
@@ -939,7 +969,7 @@
 
               <button
                 @click="changePageSales(currentPageRecentSales + 1)"
-                :disabled="currentPageRecentSales === totalPagesSale"
+                :disabled="currentPageRecentSales === totalPagesBills"
                 class="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-50"
               >
                 بعدی
@@ -952,7 +982,25 @@
         <div v-if="activeTab === 'pendingPayments'">
           <!-- <h2 class="text-lg font-medium text-gray-900 mb-6">پرداخت‌های باقیمانده</h2> -->
 
-          <div class="bg-white shadow rounded-lg overflow-hidden">
+          <div class="relative w-full">
+          <div class="absolute left-3 top-3 text-blue-500">
+            <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                fill-rule="evenodd"
+                clip-rule="evenodd"
+                d="M11.5 2.75C6.66751 2.75 2.75 6.66751 2.75 11.5C2.75 16.3325 6.66751 20.25 11.5 20.25C16.3325 20.25 20.25 16.3325 20.25 11.5C20.25 6.66751 16.3325 2.75 11.5 2.75ZM1.25 11.5C1.25 5.83908 5.83908 1.25 11.5 1.25C17.1609 1.25 21.75 5.83908 21.75 11.5C21.75 14.0605 20.8111 16.4017 19.2589 18.1982L22.5303 21.4697C22.8232 21.7626 22.8232 22.2374 22.5303 22.5303C22.2374 22.8232 21.7626 22.8232 21.4697 22.5303L18.1982 19.2589C16.4017 20.8111 14.0605 21.75 11.5 21.75C5.83908 21.75 1.25 17.1609 1.25 11.5Z"
+                fill="rgb(59, 130, 246)"
+              />
+            </svg>
+          </div>
+          <input
+            v-model="searchQueryPendingSales"
+            type="text"
+            placeholder="جستجو براساس نام مشتری..."
+            class="input input-bordered w-full input input-bordered w-full pl-12 bg-white border-black-200 focus:border-black-400 focus:ring-2 focus:ring-black-200 custom-rtl"
+          />
+        </div>
+          <div class="bg-white shadow rounded-lg overflow-hidden mt-6">
             <div class="px-6 py-4 border-b border-gray-200">
               <h3 class="text-lg font-medium text-gray-900">فاکتورهای پرداخت نشده</h3>
             </div>
@@ -993,7 +1041,7 @@
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                  <tr v-for="sale in pendingSales" :key="sale.id">
+                  <tr v-for="sale in paginatedPendingSales" :key="sale.id">
                     <td class="px-6 py-4 whitespace-nowrap">{{ sale.invoice }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">{{ sale.customer }}</td>
                     <td class="px-6 py-4 whitespace-nowrap">
@@ -1017,6 +1065,54 @@
                 </tbody>
               </table>
             </div>
+          </div>
+                    <!-- صفحه‌بندی -->
+                    <div class="flex flex-col items-center justify-center mt-6 gap-4">
+            <div class="text-sm text-gray-500 text-center">
+              نمایش نمایش
+              <span class="font-medium">
+                {{ (currentPagePendingSales - 1) * pageSizePendingSales + 1 }}
+              </span>
+              تا
+              <span class="font-medium">
+                {{ Math.min(currentPagePendingSales * pageSizePendingSales, filterPendingSales.length) }}
+              </span>
+              از
+              <span class="font-medium">{{ filterPendingSales.length }}</span>
+              نتیجه
+            </div>
+
+            <nav class="flex flex-wrap justify-center gap-2">
+              <button
+                @click="changePagePending(currentPagePendingSales - 1)"
+                :disabled="currentPageRecentSales === 1"
+                class="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+              >
+                قبلی
+              </button>
+
+              <button
+                v-for="page in totalPagesPendingSales"
+                :key="page"
+                @click="changePagePending(page)"
+                :class="[
+                  'px-3 py-1 border rounded-md text-sm',
+                  page === currentPageRecentSales
+                    ? 'border-indigo-500 bg-indigo-100 text-indigo-700'
+                    : 'border-gray-300 text-gray-600 hover:bg-gray-100'
+                ]"
+              >
+                {{ page }}
+              </button>
+
+              <button
+                @click="changePagePending(currentPagePendingSales + 1)"
+                :disabled="currentPagePendingSales === totalPagesPendingSales"
+                class="px-3 py-1 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+              >
+                بعدی
+              </button>
+            </nav>
           </div>
         </div>
         <!-- تب گزارشات مالی -->
@@ -1201,6 +1297,7 @@ export default {
       showDeleteModalProd: false,
       prodToDelete: null,
       currentPageRecentSales: 1,
+      currentPagePendingSales: 1,
       itemsPerPageRecentSales: 5,
       tabs: [
         { id: 'products', name: 'مدیریت محصولات' },
@@ -1236,35 +1333,14 @@ export default {
         brand: ''
       },
       editingProduct: null,
-      recentSales: [
-        {
-          id: 1,
-          invoice: 'INV-2023-001',
-          customer: 'علی محمدی',
-          date: '1402/05/15',
-          amount: 1850000,
-          status: 'تکمیل شده'
-        },
-        {
-          id: 2,
-          invoice: 'INV-2023-002',
-          customer: 'رضا احمدی',
-          date: '1402/05/14',
-          amount: 750000,
-          status: 'تکمیل شده'
-        },
-        {
-          id: 3,
-          invoice: 'INV-2023-003',
-          customer: 'سارا حسینی',
-          date: '1402/05/14',
-          amount: 1200000,
-          status: 'در حال پردازش'
-        }
-      ],
+      recentSales: [],
       reportType: 'daily',
       salesReport: [],
-      chart: null
+      chart: null,
+      searchQueryBill: '',
+      pageSizeBill: 10,
+      pageSizePendingSales: 10,
+      searchQueryPendingSales: '',
 
       // salesReports: [
       //   {
@@ -1477,7 +1553,6 @@ export default {
         </div>
       </div>
     `
-
       })
     },
     confirmDeleteProd(prod) {
@@ -1600,111 +1675,113 @@ export default {
         this.sales = []
       }
     },
-onProductChange() {
-  // وقتی محصول تغییر کرد، اسم محصول انتخاب شده رو توی newSale.name ذخیره کن
-  this.newSale.name = this.newSale.product;
-  
-  // پیدا کردن محصول انتخاب شده و تنظیم قیمت آن به عنوان مبلغ کل
-  const selectedProduct = this.availableProducts.find(product => product.name === this.newSale.product);
-  if (selectedProduct) {
-    this.newSale.amount = selectedProduct.price;
-    this.updatePaymentFields(); // به روزرسانی فیلدهای پرداخت
-  }
-},
+    onProductChange() {
+      // وقتی محصول تغییر کرد، اسم محصول انتخاب شده رو توی newSale.name ذخیره کن
+      this.newSale.name = this.newSale.product
+
+      // پیدا کردن محصول انتخاب شده و تنظیم قیمت آن به عنوان مبلغ کل
+      const selectedProduct = this.availableProducts.find(
+        (product) => product.name === this.newSale.product
+      )
+      if (selectedProduct) {
+        this.newSale.amount = selectedProduct.price
+        this.updatePaymentFields() // به روزرسانی فیلدهای پرداخت
+      }
+    },
     // تغییر در متد addManualSale برای پرداخت‌های چندمرحله‌ای
     // متد addManualSale را با این نسخه کامل جایگزین کنید:
-async addManualSale() {
-  // تبدیل مقادیر به عدد برای اطمینان از محاسبات صحیح
-  const amount = Number(this.newSale.amount) || 0;
-  const paidAmount = Number(this.newSale.paidAmount) || 0;
-  const remainingAmount = Number(this.newSale.remainingAmount) || 0;
+    async addManualSale() {
+      // تبدیل مقادیر به عدد برای اطمینان از محاسبات صحیح
+      const amount = Number(this.newSale.amount) || 0
+      const paidAmount = Number(this.newSale.paidAmount) || 0
+      const remainingAmount = Number(this.newSale.remainingAmount) || 0
 
-  // اعتبارسنجی
-  if (amount <= 0) {
-    alert('مبلغ کل باید بیشتر از صفر باشد.');
-    return;
-  }
+      // اعتبارسنجی
+      if (amount <= 0) {
+        alert('مبلغ کل باید بیشتر از صفر باشد.')
+        return
+      }
 
-  if (this.newSale.paymentStatus === 'پرداخت قسطی') {
-    if (paidAmount <= 0) {
-      alert('برای پرداخت قسطی، مبلغ پرداخت شده باید بیشتر از صفر باشد.');
-      return;
-    }
-    
-    if (paidAmount >= amount) {
-      alert('برای پرداخت قسطی، مبلغ پرداخت شده باید کمتر از مبلغ کل باشد.');
-      return;
-    }
-  }
+      if (this.newSale.paymentStatus === 'پرداخت قسطی') {
+        if (paidAmount <= 0) {
+          alert('برای پرداخت قسطی، مبلغ پرداخت شده باید بیشتر از صفر باشد.')
+          return
+        }
 
-  // پیدا کردن محصول در آرایه محصولات
-  const product = this.products.find((p) => p.name === this.newSale.product);
-  if (!product) {
-    alert('محصول انتخاب شده معتبر نیست.');
-    return;
-  }
+        if (paidAmount >= amount) {
+          alert('برای پرداخت قسطی، مبلغ پرداخت شده باید کمتر از مبلغ کل باشد.')
+          return
+        }
+      }
 
-  // بررسی موجودی محصول
-  if (product.stock <= 0) {
-    alert('موجودی این محصول به اتمام رسیده است.');
-    return;
-  }
+      // پیدا کردن محصول در آرایه محصولات
+      const product = this.products.find((p) => p.name === this.newSale.product)
+      if (!product) {
+        alert('محصول انتخاب شده معتبر نیست.')
+        return
+      }
 
-  try {
-    // تولید شماره فاکتور خودکار
-    const invoiceNumber = `INV-${Date.now()}`;
-    const currentDate = new Date().toLocaleDateString('fa-IR');
-    
-    // ایجاد رکورد فروش جدید
-    const saleData = {
-      invoice: invoiceNumber,
-      customer: this.newSale.customer,
-      date: currentDate,
-      amount: amount,
-      paidAmount: paidAmount,
-      remainingAmount: remainingAmount,
-      status: this.newSale.status,
-      product: this.newSale.product,
-      name: this.newSale.name,
-      paymentStatus: this.newSale.paymentStatus
-    };
+      // بررسی موجودی محصول
+      if (product.stock <= 0) {
+        alert('موجودی این محصول به اتمام رسیده است.')
+        return
+      }
 
-    // ذخیره فروش در دیتابیس
-    const result = await window.api.addSale(saleData);
-    
-    if (result.success) {
-      // کاهش موجودی محصول
-      const updatedProduct = {...product, stock: product.stock - 1};
-      await window.api.updateProduct(updatedProduct);
-      
-      // به روزرسانی لیست محصولات
-      await this.fetchProducts();
-      
-      // به روزرسانی لیست فروش‌ها
-      await this.fetchSales();
-      
-      // بستن مودال و ریست فرم
-      this.showAddSaleModal = false;
-      this.newSale = {
-        product: '',
-        customer: '',
-        amount: 0,
-        paidAmount: 0,
-        remainingAmount: 0,
-        paymentStatus: 'نقدی',
-        status: 'در حال پردازش',
-        name: ''
-      };
-      
-      alert('فاکتور با موفقیت ثبت شد');
-    } else {
-      alert('خطا در ثبت فاکتور: ' + (result.error || ''));
-    }
-  } catch (error) {
-    console.error('Error adding manual sale:', error);
-    alert('خطا در ثبت فاکتور');
-  }
-},
+      try {
+        // تولید شماره فاکتور خودکار
+        const invoiceNumber = `INV-${Date.now()}`
+        const currentDate = new Date().toLocaleDateString('fa-IR')
+
+        // ایجاد رکورد فروش جدید
+        const saleData = {
+          invoice: invoiceNumber,
+          customer: this.newSale.customer,
+          date: currentDate,
+          amount: amount,
+          paidAmount: paidAmount,
+          remainingAmount: remainingAmount,
+          status: this.newSale.status,
+          product: this.newSale.product,
+          name: this.newSale.name,
+          paymentStatus: this.newSale.paymentStatus
+        }
+
+        // ذخیره فروش در دیتابیس
+        const result = await window.api.addSale(saleData)
+
+        if (result.success) {
+          // کاهش موجودی محصول
+          const updatedProduct = { ...product, stock: product.stock - 1 }
+          await window.api.updateProduct(updatedProduct)
+
+          // به روزرسانی لیست محصولات
+          await this.fetchProducts()
+
+          // به روزرسانی لیست فروش‌ها
+          await this.fetchSales()
+
+          // بستن مودال و ریست فرم
+          this.showAddSaleModal = false
+          this.newSale = {
+            product: '',
+            customer: '',
+            amount: 0,
+            paidAmount: 0,
+            remainingAmount: 0,
+            paymentStatus: 'نقدی',
+            status: 'در حال پردازش',
+            name: ''
+          }
+
+          alert('فاکتور با موفقیت ثبت شد')
+        } else {
+          alert('خطا در ثبت فاکتور: ' + (result.error || ''))
+        }
+      } catch (error) {
+        console.error('Error adding manual sale:', error)
+        alert('خطا در ثبت فاکتور')
+      }
+    },
     initChart() {
       if (this.chart) {
         this.chart.destroy()
@@ -1778,47 +1855,47 @@ async addManualSale() {
       }
     },
 
-updatePaymentFields() {
-  if (this.newSale.paymentStatus === 'نقدی') {
-    this.newSale.paidAmount = this.newSale.amount;
-    this.newSale.remainingAmount = 0;
-    this.newSale.status = 'تکمیل شده';
-  } else {
-    // برای پرداخت قسطی، paidAmount را صفر کنید و remainingAmount را برابر amount قرار دهید
-    this.newSale.paidAmount = 0;
-    this.newSale.remainingAmount = this.newSale.amount;
-    this.newSale.status = 'در حال پردازش';
-  }
-},
+    updatePaymentFields() {
+      if (this.newSale.paymentStatus === 'نقدی') {
+        this.newSale.paidAmount = this.newSale.amount
+        this.newSale.remainingAmount = 0
+        this.newSale.status = 'تکمیل شده'
+      } else {
+        // برای پرداخت قسطی، paidAmount را صفر کنید و remainingAmount را برابر amount قرار دهید
+        this.newSale.paidAmount = 0
+        this.newSale.remainingAmount = this.newSale.amount
+        this.newSale.status = 'در حال پردازش'
+      }
+    },
 
-updateRemainingAmount() {
-  const paid = Number(this.newSale.paidAmount) || 0;
-  const total = Number(this.newSale.amount) || 0;
-  
-  this.newSale.remainingAmount = total - paid;
-  
-  // وضعیت پرداخت را بر اساس مبلغ پرداخت شده به روز کنید
-  if (this.newSale.remainingAmount === 0) {
-    this.newSale.status = 'تکمیل شده';
-    this.newSale.paymentStatus = 'نقدی'; // اگر کامل پرداخت شد، به نقدی تغییر کند
-  } else if (this.newSale.remainingAmount > 0) {
-    this.newSale.status = 'در حال پردازش';
-    this.newSale.paymentStatus = 'پرداخت قسطی';
-  }
-},
-async registerPayment(sale) {
-  try {
-    // ایجاد یک شناسه منحصر به فرد برای عناصر HTML
-    const inputId = `payment-amount-${Date.now()}`;
-    
-    const { value: amount } = await Swal.fire({
-      title: `
+    updateRemainingAmount() {
+      const paid = Number(this.newSale.paidAmount) || 0
+      const total = Number(this.newSale.amount) || 0
+
+      this.newSale.remainingAmount = total - paid
+
+      // وضعیت پرداخت را بر اساس مبلغ پرداخت شده به روز کنید
+      if (this.newSale.remainingAmount === 0) {
+        this.newSale.status = 'تکمیل شده'
+        this.newSale.paymentStatus = 'نقدی' // اگر کامل پرداخت شد، به نقدی تغییر کند
+      } else if (this.newSale.remainingAmount > 0) {
+        this.newSale.status = 'در حال پردازش'
+        this.newSale.paymentStatus = 'پرداخت قسطی'
+      }
+    },
+    async registerPayment(sale) {
+      try {
+        // ایجاد یک شناسه منحصر به فرد برای عناصر HTML
+        const inputId = `payment-amount-${Date.now()}`
+
+        const { value: amount } = await Swal.fire({
+          title: `
         <div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
           <i class="fas fa-credit-card" style="font-size: 24px; color: #4361ee;"></i>
           <span>ثبت پرداخت جدید</span>
         </div>
       `,
-      html: `
+          html: `
         <div class="payment-modal" dir="rtl">
           <div class="payment-info">
             <div class="info-row">
@@ -2008,109 +2085,118 @@ async registerPayment(sale) {
           }
         </style>
       `,
-      focusConfirm: false,
-      showCancelButton: true,
-      confirmButtonText: '<i class="fas fa-check-circle"></i> ثبت پرداخت',
-      cancelButtonText: '<i class="fas fa-times"></i> لغو',
-      reverseButtons: true,
-      showLoaderOnConfirm: true,
-      preConfirm: () => {
-        const amountInput = document.getElementById(inputId);
-        const amount = parseFloat(amountInput.value);
-        
-        if (!amount || amount <= 0) {
-          Swal.showValidationMessage('مبلغ پرداختی باید بیشتر از صفر باشد');
-          return false;
-        }
-        
-        if (amount < 1000) {
-          Swal.showValidationMessage('مبلغ پرداختی باید حداقل ۱,۰۰۰ تومان باشد');
-          return false;
-        }
-        
-        if (amount > sale.remainingAmount) {
-          Swal.showValidationMessage(`مبلغ پرداختی نمی‌تواند بیشتر از ${sale.remainingAmount.toLocaleString('fa-IR')} تومان باشد`);
-          return false;
-        }
-        
-        // بررسی مضرب 1000 تومان
-        if (amount % 1000 !== 0) {
-          Swal.showValidationMessage('مبلغ پرداختی باید مضرب ۱,۰۰۰ تومان باشد');
-          return false;
-        }
-        
-        return amount;
-      },
-      didOpen: () => {
-        const input = document.getElementById(inputId);
-        input.focus();
-        
-        // اضافه کردن رویداد برای دکمه پرداخت کل باقیمانده
-        const payFullButton = document.getElementById('pay-full-amount');
-        payFullButton.addEventListener('click', function() {
-          // قرار دادن مقدار عددی خام (بدون فرمت) در input
-          input.value = sale.remainingAmount;
-          input.focus();
-          
-          // نمایش مقدار فرمت شده به کاربر در عنوان input (اختیاری)
-          input.setAttribute('title', sale.remainingAmount.toLocaleString('fa-IR') + ' تومان');
-        });
-        
-        // نمایش مقدار فرمت شده هنگام تایپ (اختیاری)
-        input.addEventListener('input', function(e) {
-          const numericValue = e.target.value.replace(/\D/g, '');
-          if (numericValue) {
-            const num = parseInt(numericValue);
-            e.target.setAttribute('title', num.toLocaleString('fa-IR') + ' تومان');
+          focusConfirm: false,
+          showCancelButton: true,
+          confirmButtonText: '<i class="fas fa-check-circle"></i> ثبت پرداخت',
+          cancelButtonText: '<i class="fas fa-times"></i> لغو',
+          reverseButtons: true,
+          showLoaderOnConfirm: true,
+          preConfirm: () => {
+            const amountInput = document.getElementById(inputId)
+            const amount = parseFloat(amountInput.value)
+
+            if (!amount || amount <= 0) {
+              Swal.showValidationMessage('مبلغ پرداختی باید بیشتر از صفر باشد')
+              return false
+            }
+
+            if (amount < 1000) {
+              Swal.showValidationMessage('مبلغ پرداختی باید حداقل ۱,۰۰۰ تومان باشد')
+              return false
+            }
+
+            if (amount > sale.remainingAmount) {
+              Swal.showValidationMessage(
+                `مبلغ پرداختی نمی‌تواند بیشتر از ${sale.remainingAmount.toLocaleString('fa-IR')} تومان باشد`
+              )
+              return false
+            }
+
+            // بررسی مضرب 1000 تومان
+            if (amount % 1000 !== 0) {
+              Swal.showValidationMessage('مبلغ پرداختی باید مضرب ۱,۰۰۰ تومان باشد')
+              return false
+            }
+
+            return amount
+          },
+          didOpen: () => {
+            const input = document.getElementById(inputId)
+            input.focus()
+
+            // اضافه کردن رویداد برای دکمه پرداخت کل باقیمانده
+            const payFullButton = document.getElementById('pay-full-amount')
+            payFullButton.addEventListener('click', function () {
+              // قرار دادن مقدار عددی خام (بدون فرمت) در input
+              input.value = sale.remainingAmount
+              input.focus()
+
+              // نمایش مقدار فرمت شده به کاربر در عنوان input (اختیاری)
+              input.setAttribute('title', sale.remainingAmount.toLocaleString('fa-IR') + ' تومان')
+            })
+
+            // نمایش مقدار فرمت شده هنگام تایپ (اختیاری)
+            input.addEventListener('input', function (e) {
+              const numericValue = e.target.value.replace(/\D/g, '')
+              if (numericValue) {
+                const num = parseInt(numericValue)
+                e.target.setAttribute('title', num.toLocaleString('fa-IR') + ' تومان')
+              }
+            })
           }
-        });
-      }
-    });
+        })
 
-    if (amount) {
-      // ارسال درخواست به main process برای ثبت پرداخت
-      const result = await window.api.registerPayment({
-        saleId: sale.id,
-        amount: amount
-      });
+        if (amount) {
+          // ارسال درخواست به main process برای ثبت پرداخت
+          const result = await window.api.registerPayment({
+            saleId: sale.id,
+            amount: amount
+          })
 
-      if (result.success) {
-        await Swal.fire({
-          title: 'پرداخت با موفقیت ثبت شد',
-          icon: 'success',
-          html: `
+          if (result.success) {
+            await Swal.fire({
+              title: 'پرداخت با موفقیت ثبت شد',
+              icon: 'success',
+              html: `
             <div dir="rtl">
               <p>مبلغ <strong>${amount.toLocaleString('fa-IR')} تومان</strong> برای فاکتور <strong>${sale.invoice}</strong> ثبت شد.</p>
               <p>مانده باقیمانده: <strong>${(sale.remainingAmount - amount).toLocaleString('fa-IR')} تومان</strong></p>
             </div>
           `,
-          confirmButtonText: 'متوجه شدم',
-          confirmButtonColor: '#06d6a0'
-        });
-        
-        // refresh data
-        await this.fetchSales();
-      } else {
+              confirmButtonText: 'متوجه شدم',
+              confirmButtonColor: '#06d6a0'
+            })
+
+            // refresh data
+            await this.fetchSales()
+          } else {
+            await Swal.fire({
+              title: 'خطا در ثبت پرداخت',
+              text: result.error || 'خطای نامشخصی رخ داده است',
+              icon: 'error',
+              confirmButtonText: 'متوجه شدم',
+              confirmButtonColor: '#ef476f'
+            })
+          }
+        }
+      } catch (error) {
+        console.error('Error registering payment:', error)
         await Swal.fire({
           title: 'خطا در ثبت پرداخت',
-          text: result.error || 'خطای نامشخصی رخ داده است',
+          text: 'خطای نامشخصی رخ داده است',
           icon: 'error',
           confirmButtonText: 'متوجه شدم',
           confirmButtonColor: '#ef476f'
-        });
+        })
       }
-    }
-  } catch (error) {
-    console.error('Error registering payment:', error);
-    await Swal.fire({
-      title: 'خطا در ثبت پرداخت',
-      text: 'خطای نامشخصی رخ داده است',
-      icon: 'error',
-      confirmButtonText: 'متوجه شدم',
-      confirmButtonColor: '#ef476f'
-    });
+    },
+    changePagePending(page) {
+  if (page >= 1 && page <= this.totalPagesPendingSales) {
+    this.currentPagePendingSales = page
   }
-}
+},
+
+
   },
   mounted() {
     ;(this.fetchProducts(), this.fetchSales(), this.fetchSalesReport(), this.initChart())
@@ -2147,25 +2233,41 @@ async registerPayment(sale) {
     totalPagesSale() {
       return Math.ceil(this.sales.length / this.itemsPerPageRecentSales)
     },
-// فروش امروز (مجموع مبالغ پرداخت شده)
-salesToday() {
-  // جمع مبلغ پرداخت شده فروش‌های امروز
-  const today = new Date().toLocaleDateString('fa-IR')
-  return this.sales
-    .filter((sale) => sale.date === today)
-    .reduce((sum, sale) => sum + (sale.paidAmount || 0), 0) // استفاده از paidAmount به جای amount
-},
 
-// فروش دیروز (مجموع مبالغ پرداخت شده)
-salesYesterday() {
-  const yesterdayDate = new Date()
-  yesterdayDate.setDate(yesterdayDate.getDate() - 1)
-  const yesterday = yesterdayDate.toLocaleDateString('fa-IR')
+    filterBills() {
+      return this.sales.filter(
+        (sale) =>
+          sale.customer?.includes(this.searchQueryBill))
+    },
+    totalPagesBills() {
+      return Math.ceil(this.filterBills.length / this.pageSizeBill)
+    },
+    paginatedBills() {
+      const start = (this.currentPage - 1) * this.pageSizeBill
+      const end = start + this.pageSizeBill
+      console.log('filterBills =======> ', this.filterBills)
+      return this.filterBills.slice(start, end)
+    },
 
-  return this.sales
-    .filter((sale) => sale.date === yesterday)
-    .reduce((sum, sale) => sum + (sale.paidAmount || 0), 0) // استفاده از paidAmount به جای amount
-},
+    // فروش امروز (مجموع مبالغ پرداخت شده)
+    salesToday() {
+      // جمع مبلغ پرداخت شده فروش‌های امروز
+      const today = new Date().toLocaleDateString('fa-IR')
+      return this.sales
+        .filter((sale) => sale.date === today)
+        .reduce((sum, sale) => sum + (sale.paidAmount || 0), 0) // استفاده از paidAmount به جای amount
+    },
+
+    // فروش دیروز (مجموع مبالغ پرداخت شده)
+    salesYesterday() {
+      const yesterdayDate = new Date()
+      yesterdayDate.setDate(yesterdayDate.getDate() - 1)
+      const yesterday = yesterdayDate.toLocaleDateString('fa-IR')
+
+      return this.sales
+        .filter((sale) => sale.date === yesterday)
+        .reduce((sum, sale) => sum + (sale.paidAmount || 0), 0) // استفاده از paidAmount به جای amount
+    },
 
     // درصد تغییر فروش امروز نسبت به دیروز
     salesChangePercent() {
@@ -2235,12 +2337,13 @@ salesYesterday() {
       }
 
       return { name: bestProduct, count: maxCount }
+
+
+      
     },
-availableProducts() {
-  return this.products.filter((product) => 
-    product.status === 'موجود' && product.stock > 0
-  )
-},
+    availableProducts() {
+      return this.products.filter((product) => product.status === 'موجود' && product.stock > 0)
+    },
     salesCount() {
       return this.sales.length
     },
@@ -2252,15 +2355,27 @@ availableProducts() {
     averageRevenue() {
       return this.totalRevenue / this.salesCount
     },
-pendingSales() {
-  console.log('همه فروش‌ها:', this.sales);
-  const pending = this.sales.filter(sale => {
-    console.log(`فاکتور ${sale.invoice}: remainingAmount = ${sale.remainingAmount}`);
-    return sale.remainingAmount > 0;
-  });
-  console.log('فروش‌های باقیمانده:', pending);
-  return pending;
-},
+    pendingSales() {
+      console.log('همه فروش‌ها:', this.sales)
+      const pending = this.sales.filter((sale) => {
+        console.log(`فاکتور ${sale.invoice}: remainingAmount = ${sale.remainingAmount}`)
+        return sale.remainingAmount > 0
+      })
+      console.log('فروش‌های باقیمانده:', pending)
+      return pending
+    },
+    filterPendingSales() {
+      return this.sales.filter((sale) => sale.customer?.includes(this.searchQueryPendingSales) && sale.remainingAmount > 0)
+    },
+    totalPagesPendingSales() {
+      return Math.ceil(this.filterPendingSales.length / this.pageSizePendingSales)
+    },
+    paginatedPendingSales() {
+      const start = (this.currentPagePendingSales - 1) * this.pageSizePendingSales
+      const end = start + this.pageSizePendingSales
+      return this.filterPendingSales.slice(start, end)
+    },
+
     // جزئیات فروش
     // شامل : تاریخ، تعداد فروش، درآمد
     // salesReports() {
@@ -2283,26 +2398,26 @@ pendingSales() {
       this.fetchSalesReport()
     },
 
-      'newSale.paidAmount': function(newVal) {
-    this.updateRemainingAmount();
-  },
-  
-  'newSale.amount': function(newVal) {
-    this.updateRemainingAmount();
-  },
-    'newSale.paymentStatus': function(newVal) {
-    if (newVal === 'نقدی') {
-      this.newSale.paidAmount = this.newSale.amount;
-      this.newSale.remainingAmount = 0;
-    } else if (newVal === 'پرداخت قسطی') {
-      // فقط اگر paidAmount صفر است، آن را تنظیم کنید
-      if (this.newSale.paidAmount === 0 || this.newSale.paidAmount === this.newSale.amount) {
-        this.newSale.paidAmount = 0;
-        this.newSale.remainingAmount = this.newSale.amount;
+    'newSale.paidAmount': function (newVal) {
+      this.updateRemainingAmount()
+    },
+
+    'newSale.amount': function (newVal) {
+      this.updateRemainingAmount()
+    },
+    'newSale.paymentStatus': function (newVal) {
+      if (newVal === 'نقدی') {
+        this.newSale.paidAmount = this.newSale.amount
+        this.newSale.remainingAmount = 0
+      } else if (newVal === 'پرداخت قسطی') {
+        // فقط اگر paidAmount صفر است، آن را تنظیم کنید
+        if (this.newSale.paidAmount === 0 || this.newSale.paidAmount === this.newSale.amount) {
+          this.newSale.paidAmount = 0
+          this.newSale.remainingAmount = this.newSale.amount
+        }
       }
+      this.updateRemainingAmount()
     }
-    this.updateRemainingAmount();
-  }
   }
 }
 </script>
